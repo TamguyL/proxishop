@@ -11,13 +11,21 @@ public class DatabaseCreator {
     private static final String PASSWORD = "";
 
     public void createDatabaseAndTables(String databaseName, List<Class<?>> classes) {
-        Connection connection = null;
-        Statement statement = null;
+
+        // Lancer une exception si l'un ou plusieurs des paramètres sont null ou vides
+        if (databaseName == null || databaseName.trim().isEmpty() || classes == null || classes.isEmpty()) {
+            throw new IllegalArgumentException("Database name and classes must not be null or empty.");
+        }
 
         try {
             // Établir une connexion à la base de données principale
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            statement = connection.createStatement();
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            Statement statement = connection.createStatement();
+
+            //Verification pour éviter l'injection SQL
+            if (!databaseName.matches("^[a-zA-Z0-9_]+$")) {
+                throw new IllegalArgumentException("Invalid database name.");
+            }
 
             // Créer la base de données
             String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + databaseName;
@@ -28,7 +36,7 @@ public class DatabaseCreator {
             String useDatabaseSQL = "USE " + databaseName;
             statement.executeUpdate(useDatabaseSQL);
 
-            // Créer les tables
+            // Créer les tables en appelant la fonction de TablesCreator
             List<String> createTableSQLs = TablesCreator.generateCreateTableSQL(classes);
             for (String createTableSQL : createTableSQLs) {
                 statement.executeUpdate(createTableSQL);
@@ -36,15 +44,11 @@ public class DatabaseCreator {
             System.out.println("All Tables created successfully.");
 
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Fermer les ressources
-            try {
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            // Journalisation sécurisée sans exposer de données sensibles
+            System.err.println("SQL error occurred: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // Gérer les exceptions d'arguments invalides
+            System.err.println("Invalid input: " + e.getMessage());
         }
     }
 }

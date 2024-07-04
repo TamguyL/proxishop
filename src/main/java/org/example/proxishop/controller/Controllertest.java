@@ -32,6 +32,16 @@ public class Controllertest {
         return "shopkeeper";
     }
 
+    /**
+     * Création de la base de donner du nouveau site créé par le shopkeeper.
+     * pour le moment il faut entrée le nom de la base de donner dans l'url
+     * --
+     * ! Amelioration : faire la reception du nom par un formulaire get (voir secu si OK) !
+     * --
+     * Pour créé les table il faut bien remplir la List<Class<?>> classes avec les models exemple.class
+     * --
+     * ! Ne pas oublier de transferer les info du shopkeeper sur son nouveau site !
+     */
     @GetMapping("/newbdd/{bddname}")
     public String newbdd(@PathVariable String bddname) {
         DatabaseCreator db = new DatabaseCreator();
