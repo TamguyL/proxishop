@@ -6,17 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Entity
-@Table(name="cartline")
 public class Cartline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Double id_product;
-
     private Double productQuantity;
-
-
     private Double id_shoppingCart;
 
 

@@ -6,8 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Entity
-@Table(name="costumer")
 public class Costumer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +13,6 @@ public class Costumer {
     private String lastName;
     private String firstName;
     private String email;
-
-
     private Double id_shoppingCart;
 
 

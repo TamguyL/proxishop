@@ -6,8 +6,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Entity
-@Table(name="socialmedia")
 public class SocialMedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
