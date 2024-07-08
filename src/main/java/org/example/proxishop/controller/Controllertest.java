@@ -10,10 +10,13 @@ import org.example.proxishop.model.costumer.Cartline;
 import org.example.proxishop.model.costumer.Costumer;
 import org.example.proxishop.model.costumer.Orders;
 import org.example.proxishop.model.costumer.ShoppingCart;
+import org.example.proxishop.service.DataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +24,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/")
 public class Controllertest {
+
+    @Autowired
+    private DataService dataService;
 
     @GetMapping("/proxishop")
     public String proxishop() {
@@ -34,19 +40,23 @@ public class Controllertest {
 
     /**
      * Création de la base de donner du nouveau site créé par le shopkeeper.
-     * pour le moment il faut entrée le nom de la base de donner dans l'url
-     * --
-     * ! Amelioration : faire la reception du nom par un formulaire get (voir secu si OK) !
      * --
      * Pour créé les table il faut bien remplir la List<Class<?>> classes avec les models exemple.class
      * --
      * ! Ne pas oublier de transferer les info du shopkeeper sur son nouveau site !
      */
-    @GetMapping("/newbdd/{bddname}")
-    public String newbdd(@PathVariable String bddname) {
+    @GetMapping("/newbdd")
+    public String newbdd(){return "newbdd";}
+    @PostMapping("/newbdd")
+    public String newbdd(@RequestParam String bddname, @RequestParam String firm_name, @RequestParam Double siret,
+                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
+                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option) {
+        dataService.saveDataProxi(bddname, firm_name, siret, firstName, lastName, email, adress, option);
         DatabaseCreator db = new DatabaseCreator();
-        List<Class<?>> classes = Arrays.asList(Cartline.class, Costumer.class, Orders.class, ShoppingCart.class, Costumize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
+        List<Class<?>> classes = Arrays.asList(Cartline.class, Costumer.class, Orders.class, ShoppingCart.class,
+                Costumize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
         db.createDatabaseAndTables(bddname, classes);
+        dataService.saveData(siret, firstName, lastName, email, adress, profilePicture);
         return "newbdd";
     }
 }

@@ -47,4 +47,5 @@ public class Shopkeepers {
         this.adress = adress;
         this.id_offer = id_offer;
     }
+
 }

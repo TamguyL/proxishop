@@ -3,9 +3,12 @@ package org.example.proxishop.model.shopkeeper;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Profile;
 
+@Profile("!disableJpa")
 @Getter
 @Setter
+@Entity
 public class Shopkeeper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,5 +6,41 @@
 </head>
 <body>
 <h1>NewBdd</h1>
+<form action="newbdd" method="post">
+    <label for="bddname">Nom du site :</label>
+    <input type="text" id="bddname" name="bddname" required>
+    <br>
+    <label for="firm_name">Nom de l'entreprise :</label>
+    <input type="text" id="firm_name" name="firm_name" required>
+    <br>
+    <label for="siret">Numéro Siret :</label>
+    <input type="number" id="siret" name="siret" required>
+    <br>
+    <label for="firstName">Prénom :</label>
+    <input type="text" id="firstName" name="firstName" required>
+    <br>
+    <label for="lastName">Nom :</label>
+    <input type="text" id="lastName" name="lastName" required>
+    <br>
+    <label for="email">Email :</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="adress">Adresse :</label>
+    <input type="text" id="adress" name="adress" required>
+    <br>
+    <label for="profilePicture">Photo de profil :</label>
+    <input type="text" id="profilePicture" name="profilePicture" required>
+    <br>
+    <label>Choisissez votre Offre:</label>
+    <input type="radio" id="option1" name="option" value="1" required>
+    <label for="option1">Option 1 : 1.99€</label>
+    <input type="radio" id="option2" name="option" value="2">
+    <label for="option2">Option 2 : 4.99€</label>
+    <input type="radio" id="option3" name="option" value="3">
+    <label for="option3">Option 3 : 8.99€</label>
+    <br>
+    <br>
+    <button type="submit">Créé le site</button>
+</form>
 </body>
 </html>
