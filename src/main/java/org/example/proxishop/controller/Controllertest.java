@@ -1,15 +1,15 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.DatabaseCreator;
-import org.example.proxishop.model.shopkeeper.Customize;
-import org.example.proxishop.model.shopkeeper.Product;
-import org.example.proxishop.model.shopkeeper.ProductCategory;
-import org.example.proxishop.model.shopkeeper.Shopkeeper;
-import org.example.proxishop.model.shopkeeper.SocialMedia;
-import org.example.proxishop.model.customer.Cartline;
-import org.example.proxishop.model.customer.Customer;
-import org.example.proxishop.model.customer.Orders;
-import org.example.proxishop.model.customer.ShoppingCart;
+import org.example.proxishop.model.database.DatabaseManager;
+import org.example.proxishop.model.entities.shopkeeper.Customize;
+import org.example.proxishop.model.entities.shopkeeper.Product;
+import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
+import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
+import org.example.proxishop.model.entities.shopkeeper.SocialMedia;
+import org.example.proxishop.model.entities.customer.Cartline;
+import org.example.proxishop.model.entities.customer.Customer;
+import org.example.proxishop.model.entities.customer.Orders;
+import org.example.proxishop.model.entities.customer.ShoppingCart;
 import org.example.proxishop.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class Controllertest {
      * --
      * Pour créé les table il faut bien remplir la List<Class<?>> classes avec les models exemple.class
      * --
-     * ! Ne pas oublier de transferer les info du shopkeeper sur son nouveau site !
+     * ! Ne pas oublier d'ajouter le PASSWORD dans DatabaseManager
      */
     @GetMapping("/newbdd")
     public String newbdd(){return "newbdd";}
@@ -53,13 +52,13 @@ public class Controllertest {
                          @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
                          @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option) {
         dataService.saveDataProxi(bddname, firm_name, siret, firstName, lastName, email, adress, option);
-        DatabaseCreator db = new DatabaseCreator();
+        DatabaseManager db = new DatabaseManager();
         List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
                 Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
         List shopkeeper = Arrays.asList(siret, firstName, lastName, email, adress, profilePicture);
-//        System.out.println(shopkeeper.toString());
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
-//        dataService.saveData(siret, firstName, lastName, email, adress, profilePicture);
         return "newbdd";
     }
+
+
 }

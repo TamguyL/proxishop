@@ -1,4 +1,4 @@
-package org.example.proxishop.model.shopkeeper;
+package org.example.proxishop.model.entities.shopkeeper;
 
 import jakarta.persistence.*;
 import lombok.Getter;
