@@ -4,10 +4,11 @@
 <head th:include="header">
     <meta charset="UTF-8">
     <title>ProxiShop</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
-<div class="container">
+<div class="flex_container">
         <div id="template_choice1" class="template_choice">
 
                 <img src="/images/téléchargement.png" alt="insérer ici une demo de la 1ere template_client">
@@ -22,12 +23,17 @@
                 <img src="/images/téléchargement.png" alt="insérer ici une demo de la 3eme template_client">
         </div>
 
-        <p class="text1">Selectionnez l'un des designs mis à votre disposition ci-dessus et apportez-y vos propres touches uniques en adaptant chaque élément à <span class="italique">votre</span> style et à <span class="italique">votre</span> vision commerciale </p>
+
 </div>
 
-<div class="container">
+<div class="text_container">
+<p class="text1">Selectionnez l'un des designs mis à votre disposition ci-dessus et apportez-y vos propres touches uniques en adaptant chaque élément à <span class="italique">votre</span> style et à <span class="italique">votre</span> vision commerciale </p>
 
-    <p class="text">Notre objectif? Vous faciliter la vie!<br>Créez votre site d'e-commerce local avec simplicité et rapidité grâce à l'une de nos offres flexibles qui saura s'adapter à vos besoins!</p>
+</div>
+
+
+
+<div class="flex_container">
 
         <div id="offer_b" class="offer_choice">
             <h2>Basique</h2>
@@ -56,8 +62,12 @@
             </ul></P>
         </div>
 </div>
+<div class="text_container">
+<p class="text">Notre objectif? Vous faciliter la vie!<br>Créez votre site d'e-commerce local avec simplicité et rapidité grâce à l'une de nos offres flexibles qui saura s'adapter à vos besoins!</p>
 <span class="tiny_text"> *Assistance par mail ou téléphone durant les horaires d'ouvertures hors jours fériés et fermetures exceptionnelles.</span>
-<br></body>
+<br>
+</div>
+</body>
 <footer th:include="footer">
 </footer>
 </html>
