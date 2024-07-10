@@ -1,9 +1,7 @@
-package org.example.proxishop.model.costumer;
+package org.example.proxishop.model.customer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -12,17 +10,17 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Double id;
     private Double totalPrice;
-    private Double id_costumer;
+    private Double id_customer;
 
 
-    public ShoppingCart(Double id, Double totalPrice, Double id_costumer) {
+    public ShoppingCart(Double id, Double totalPrice, Double id_customer) {
         this.id = id;
         this.totalPrice = totalPrice;
-        this.id_costumer = id_costumer;
+        this.id_customer = id_customer;
     }
-    public ShoppingCart(Double totalPrice, Double id_costumer) {
+    public ShoppingCart(Double totalPrice, Double id_customer) {
         this.totalPrice = totalPrice;
-        this.id_costumer = id_costumer;
+        this.id_customer = id_customer;
     }
     public ShoppingCart() {}
 }

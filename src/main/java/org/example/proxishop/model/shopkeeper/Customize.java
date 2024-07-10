@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Costumize {
+public class Customize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Double id;
@@ -15,7 +15,7 @@ public class Costumize {
     private String businessDescription;
 
 
-    public Costumize(Double id, Double template, String logo, String businessDescription) {
+    public Customize(Double id, Double template, String logo, String businessDescription) {
         this.id = id;
         this.template = template;
         this.logo = logo;
@@ -24,11 +24,11 @@ public class Costumize {
 
 
 
-    public Costumize( Double template, String logo, String businessDescription) {
+    public Customize(Double template, String logo, String businessDescription) {
         this.template = template;
         this.logo = logo;
         this.businessDescription = businessDescription;
 }
 
-public Costumize() {};
+public Customize() {};
 }

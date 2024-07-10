@@ -6,6 +6,7 @@ import org.example.proxishop.repository.ShopkeeperRepository;
 import org.example.proxishop.repository.ShopkeepersRepositoryProxi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DataService {

@@ -1,8 +1,7 @@
 package org.example.proxishop;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import org.example.proxishop.model.shopkeeper.Shopkeeper;
+
+import java.sql.*;
 import java.util.List;
 
 public class DatabaseCreator {
@@ -10,7 +9,7 @@ public class DatabaseCreator {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
-    public void createDatabaseAndTables(String databaseName, List<Class<?>> classes) {
+    public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, List shopkeeper) {
 
         // Lancer une exception si l'un ou plusieurs des paramètres sont null ou vides
         if (databaseName == null || databaseName.trim().isEmpty() || classes == null || classes.isEmpty()) {
@@ -42,6 +41,19 @@ public class DatabaseCreator {
                 statement.executeUpdate(createTableSQL);
             }
             System.out.println("All Tables created successfully.");
+
+            PreparedStatement preparedStatement = connection.prepareStatement
+                    ("INSERT INTO shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)"); {
+                preparedStatement.setDouble(1, (Double) shopkeeper.get(0));
+                preparedStatement.setString(2, (String) shopkeeper.get(1));
+                preparedStatement.setString(3, (String) shopkeeper.get(2));
+                preparedStatement.setString(4, (String) shopkeeper.get(3));
+                preparedStatement.setString(5, (String) shopkeeper.get(4));
+                preparedStatement.setString(6, (String) shopkeeper.get(5));
+                preparedStatement.executeUpdate();
+                System.out.println("Shopkeeper created successfully.");
+                }
+
 
         } catch (SQLException e) {
             // Journalisation sécurisée sans exposer de données sensibles
