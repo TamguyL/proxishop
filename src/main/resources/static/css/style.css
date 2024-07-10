@@ -4,7 +4,6 @@
     justify-content:center;
     margin-bottom:1%;
     margin-top:1%;
-    font-family: 'Quicksand', sans-serif;
 }
 
 #main_title{
@@ -20,7 +19,17 @@ h3{
 }
 .text_container{
     text-align:center;
-    margin-bottom:1%;
+    font-style:italic;
+    font-weight:500;
+    margin-bottom:1vw;
+    font-family: 'Quicksand', sans-serif;
+    font-size:20px;
+
+}
+
+.contact_container{
+    margin:2%;
+    text-align:center;
     font-family: 'Lobster Two', sans-serif;
     font-size:24px;
 }
@@ -35,8 +44,7 @@ h2{
 }
 
 .offer_choice{
-    margin:1%;
-    margin-bottom:0%;
+    margin:1vh 1vw 2vh 1vw;
     font-family: 'Quicksand', sans-serif;
     font-size:18px;
     font-style:oblique;
@@ -51,12 +59,26 @@ h2{
 .offer_choice{
     padding:1%;
     border:solid black 2px;
-    border-radius:10%;
+    border-radius:1vw;
 }
 
-.footer_flex{
-    margin-left:1%;
-    margin-right:1%;
-    align-self:flex-end;
+.bold{
+    font-weight:1000;
+    font-style:inherit;
+}
+
+p.footer_flex{
+    margin-left: 1vw;
+    margin-right:1vw;
     font-family: 'Quicksand', sans-serif;
+
+}
+
+p.text{
+    font-family: 'Quicksand', sans-serif;
+
+}
+
+a{
+    text-decoration:none;
 }
