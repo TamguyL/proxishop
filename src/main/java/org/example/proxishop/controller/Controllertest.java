@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
@@ -60,5 +59,85 @@ public class Controllertest {
         return "newbdd";
     }
 
+    @GetMapping("/categories")
+    public String categories(){return "categories";}
+    @PostMapping("/categories")
+    public String handleSubmit(@RequestParam Map<String, String> allParams) {
+        Map<Double, String> categories = new HashMap<>();
+        List<Product> products = new ArrayList<>();
 
-}
+        for (Map.Entry<String, String> entry : allParams.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            if (key.startsWith("categories[")) {
+                String[] parts = key.split("\\]");
+                if (parts.length >= 2) {
+                    String categoryPart = parts[0].replace("categories[", "");
+                    double categoryId = Double.parseDouble(categoryPart);
+
+                    if (key.contains(".name") && !key.contains(".products")) {
+                        categories.put(categoryId, value);
+                    } else if (key.contains(".products[")) {
+                        String productPart = parts[1].replace(".products[", "").split("\\.")[0];
+                        double productId = Double.parseDouble(productPart);
+
+                        if (key.contains(".name")) {
+                            products.add(new Product(productId, value, categoryId));
+                        }
+                    }
+                }
+            }
+        }
+
+        // Affiche les catégories et produits pour la vérification
+        System.out.println("Catégories:");
+        for (Map.Entry<Double, String> category : categories.entrySet()) {
+            System.out.println("ID: " + category.getKey() + ", Nom: " + category.getValue());
+        }
+
+        System.out.println("Produits:");
+        for (Product product : products) {
+            System.out.println("ID: " + product.getId() + ", Nom: " + product.getProductName() + ", Catégorie ID: " + product.getId_category());
+        }
+
+        // Retourne une vue ou redirige selon votre logique
+        return "categories";
+    }
+    }
+
+
+
+
+//    @PostMapping("/categories")
+//    public List<ProductCategory> categories(@RequestParam Map<String, String> allParams) {
+//        List<ProductCategory> categories = new ArrayList<>();
+//        List<Product> products = new ArrayList<>();
+//
+//        // Parcourir les paramètres pour extraire les catégories et les produits
+//        allParams.forEach((key, value) -> {
+//            if (key.startsWith("categoryName_")) {
+//                Double categoryId = Double.valueOf(key.substring(key.indexOf('_') + 1));
+//                ProductCategory category = new ProductCategory(categoryId, value);
+//                categories.add(category);
+//            } else if (key.startsWith("productName_")) {
+//                String[] parts = key.split("_");
+//                Double productId = Double.valueOf(parts[1]);
+//                Double categoryId = Double.valueOf(parts[2]);
+//                Product product = new Product(productId, value, categoryId);
+//                products.add(product);
+//            }
+//        });
+//
+//        // Associer les produits à leurs catégories
+//        categories.forEach(category -> {
+//            category.setProducts(new ArrayList<>());
+//            products.forEach(product -> {
+//                if (product.getId_category().equals(category.getId())) {
+//                    category.getProducts().add(product);
+//                }
+//            });
+//        });
+//        return categories;
+//    }
+//}

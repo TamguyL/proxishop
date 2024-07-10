@@ -41,4 +41,10 @@ public class Product {
         this.id_category = category;
     }
 
+    public Product(Double id, String productName, Double category) {
+        this.id = id;
+        this.productName = productName;
+        this.id_category = category;
+    }
+
 }

@@ -13,9 +13,10 @@ public class ProductCategory{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Double id;
     private String CategoryName;
+    private List<Product> products;
 
 
-    public ProductCategory(Double id, String categoryName, List<Product> products) {
+    public ProductCategory(Double id, String categoryName) {
         this.id = id;
         CategoryName = categoryName;
     }
