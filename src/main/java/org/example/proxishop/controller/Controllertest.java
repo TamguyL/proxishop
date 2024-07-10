@@ -32,6 +32,20 @@ public class Controllertest {
         return "shopkeeper";
     }
 
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";
+    }
+
+    @GetMapping("/mentions")
+    public String mentions() {
+        return "mentions";
+    }
+    @GetMapping("/cookies")
+    public String cookies() {
+        return "cookies";
+    }
+
     /**
      * Création de la base de donner du nouveau site créé par le shopkeeper.
      * pour le moment il faut entrée le nom de la base de donner dans l'url
