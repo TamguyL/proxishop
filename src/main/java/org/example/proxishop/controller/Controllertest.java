@@ -31,6 +31,12 @@ public class Controllertest {
     public String template_choice1() {
         return "template_choice1";
     }
+
+
+    @GetMapping("/template_choice2")
+    public String template_choice2() {
+        return "template_choice2";
+    }
     @GetMapping("/shopkeeper")
     public String shopkeeper() {
         return "shopkeeper";

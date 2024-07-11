@@ -1,9 +1,25 @@
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .flex_container{
     display:flex;
     justify-content:center;
     margin-bottom:1%;
     margin-top:1%;
+}
+
+body{
+    display:flex;
+    flex-direction:column;
+
+}
+
+main{
+    flex:1;
 }
 
 #main_title{
@@ -32,6 +48,7 @@ h3{
     text-align:center;
     font-family: 'Lobster Two', sans-serif;
     font-size:24px;
+    min-height: 60vh;
 }
 
 .template_choice{
@@ -51,6 +68,7 @@ h2{
 }
 
 .tiny_text{
+
     font-family:'Quicksand', sans-serif;
     font-size:12px;
     font-style:italic;
@@ -85,9 +103,16 @@ a{
 
 #mentions_container{
     display:flex;
-    justify-content: center;
+    text-align:center;
     margin-bottom:1%;
     margin-top:1%;
+
+
+}
+
+#plus{
+    display:flex;
+    justify-content: center;
 }
 
 .mentions{
