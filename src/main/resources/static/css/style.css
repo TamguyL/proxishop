@@ -82,3 +82,14 @@ p.text{
 a{
     text-decoration:none;
 }
+
+#mentions_container{
+    display:flex;
+    justify-content: center;
+    margin-bottom:1%;
+    margin-top:1%;
+}
+
+.mentions{
+    margin:0vw 1vw 0vw 1vw;
+}
