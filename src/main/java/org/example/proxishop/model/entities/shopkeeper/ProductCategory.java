@@ -13,7 +13,6 @@ public class ProductCategory{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Double id;
     private String CategoryName;
-    private List<Product> products;
 
 
     public ProductCategory(Double id, String categoryName) {
@@ -21,9 +20,6 @@ public class ProductCategory{
         CategoryName = categoryName;
     }
 
-    public ProductCategory(String categoryName, List<Product> products) {
-        CategoryName = categoryName;
-    }
 
     public ProductCategory() {};
 }

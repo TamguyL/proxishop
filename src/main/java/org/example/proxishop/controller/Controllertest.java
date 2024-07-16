@@ -13,11 +13,13 @@ import org.example.proxishop.model.entities.customer.ShoppingCart;
 import org.example.proxishop.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -49,20 +51,21 @@ public class Controllertest {
     @PostMapping("/newbdd")
     public String newbdd(@RequestParam String bddname, @RequestParam String firm_name, @RequestParam Double siret,
                          @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
-                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option) {
+                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option,
+                         Model model) {
         dataService.saveDataProxi(bddname, firm_name, siret, firstName, lastName, email, adress, option);
         DatabaseManager db = new DatabaseManager();
         List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
                 Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
         Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
-        return "newbdd";
+        model.addAttribute("bddname", bddname);
+        return "categories";
     }
 
-    @GetMapping("/categories")
-    public String categories(){return "categories";}
     @PostMapping("/categories")
-    public String handleSubmit(@RequestParam Map<String, String> allParams) {
+    public String handleSubmit(@RequestParam Map<String, String> allParams) throws SQLException {
+        String bddname = allParams.get("bddname");
         Map<Double, String> categories = new HashMap<>();
         List<Product> products = new ArrayList<>();
 
@@ -90,54 +93,20 @@ public class Controllertest {
             }
         }
 
-        // Affiche les catégories et produits pour la vérification
+        // Enregistre les catégories et produits dans la bdd du shopkeeper
         System.out.println("Catégories:");
         for (Map.Entry<Double, String> category : categories.entrySet()) {
-            System.out.println("ID: " + category.getKey() + ", Nom: " + category.getValue());
+            DatabaseManager db = new DatabaseManager();
+            db.insertProductCategoryData(category.getKey(), category.getValue(), bddname);
         }
 
         System.out.println("Produits:");
         for (Product product : products) {
-            System.out.println("ID: " + product.getId() + ", Nom: " + product.getProductName() + ", Catégorie ID: " + product.getId_category());
+            DatabaseManager db = new DatabaseManager();
+            db.insertProductData(product.getId(), product.getProductName(), product.getId_category(), bddname);
         }
 
         // Retourne une vue ou redirige selon votre logique
-        return "categories";
+        return "index";
     }
     }
-
-
-
-
-//    @PostMapping("/categories")
-//    public List<ProductCategory> categories(@RequestParam Map<String, String> allParams) {
-//        List<ProductCategory> categories = new ArrayList<>();
-//        List<Product> products = new ArrayList<>();
-//
-//        // Parcourir les paramètres pour extraire les catégories et les produits
-//        allParams.forEach((key, value) -> {
-//            if (key.startsWith("categoryName_")) {
-//                Double categoryId = Double.valueOf(key.substring(key.indexOf('_') + 1));
-//                ProductCategory category = new ProductCategory(categoryId, value);
-//                categories.add(category);
-//            } else if (key.startsWith("productName_")) {
-//                String[] parts = key.split("_");
-//                Double productId = Double.valueOf(parts[1]);
-//                Double categoryId = Double.valueOf(parts[2]);
-//                Product product = new Product(productId, value, categoryId);
-//                products.add(product);
-//            }
-//        });
-//
-//        // Associer les produits à leurs catégories
-//        categories.forEach(category -> {
-//            category.setProducts(new ArrayList<>());
-//            products.forEach(product -> {
-//                if (product.getId_category().equals(category.getId())) {
-//                    category.getProducts().add(product);
-//                }
-//            });
-//        });
-//        return categories;
-//    }
-//}

@@ -95,5 +95,35 @@ public class DatabaseManager {
         System.out.println("Shopkeeper Profils created successfully.");
     }
 
+    public void insertProductCategoryData(Double id, String categoryName, String bddname ) throws SQLException {
+        Connection connection = establishConnection();
+        Statement statement = connection.createStatement();
+
+        String useDatabaseSQL = "USE " + bddname;
+        statement.executeUpdate(useDatabaseSQL);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO productcategory (id, CategoryName) VALUES (?, ?)");
+        preparedStatement.setDouble(1, id); // siret
+        preparedStatement.setString(2, categoryName); // firstName
+        preparedStatement.executeUpdate();
+        System.out.println("Category "+ categoryName +" created successfully.");
+    }
+
+    public void insertProductData(Double id, String productName, Double id_category, String bddname ) throws SQLException {
+        Connection connection = establishConnection();
+        Statement statement = connection.createStatement();
+
+        String useDatabaseSQL = "USE " + bddname;
+        statement.executeUpdate(useDatabaseSQL);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO product (id, productName, id_category) VALUES (?, ?, ?)");
+        preparedStatement.setDouble(1, id); // siret
+        preparedStatement.setString(2, productName);
+        preparedStatement.setDouble(3, id_category);// firstName
+        preparedStatement.executeUpdate();
+        System.out.println("Product "+ productName +" created successfully.");
+    }
 
 }
