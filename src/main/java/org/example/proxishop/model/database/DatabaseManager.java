@@ -1,5 +1,7 @@
 package org.example.proxishop.model.database;
 
+import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
+
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +12,7 @@ public class DatabaseManager {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
-    public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, List shopkeeper) {
+    public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, Shopkeeper shopkeeper) {
         try {
             validateParameters(databaseName, classes);
             Connection connection = establishConnection();
@@ -80,15 +82,15 @@ public class DatabaseManager {
         return sqlStatements;
     }
 
-    private void insertShopkeeperData(Connection connection, List shopkeeper) throws SQLException {
+    private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
-        preparedStatement.setDouble(1, (Double) shopkeeper.get(0)); // siret
-        preparedStatement.setString(2, (String) shopkeeper.get(1)); // firstName
-        preparedStatement.setString(3, (String) shopkeeper.get(2)); // lastName
-        preparedStatement.setString(4, (String) shopkeeper.get(3)); // email
-        preparedStatement.setString(5, (String) shopkeeper.get(4)); // adress
-        preparedStatement.setString(6, (String) shopkeeper.get(5)); // profilePicture
+        preparedStatement.setDouble(1, shopkeeper.getSiret()); // siret
+        preparedStatement.setString(2, shopkeeper.getFirstName()); // firstName
+        preparedStatement.setString(3, shopkeeper.getLastName()); // lastName
+        preparedStatement.setString(4, shopkeeper.getEmail()); // email
+        preparedStatement.setString(5, shopkeeper.getAdress()); // adress
+        preparedStatement.setString(6, shopkeeper.getProfilePicture()); // profilePicture
         preparedStatement.executeUpdate();
         System.out.println("Shopkeeper Profils created successfully.");
     }

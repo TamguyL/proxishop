@@ -54,7 +54,7 @@ public class Controllertest {
         DatabaseManager db = new DatabaseManager();
         List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
                 Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
-        List shopkeeper = Arrays.asList(siret, firstName, lastName, email, adress, profilePicture);
+        Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
         return "newbdd";
     }
