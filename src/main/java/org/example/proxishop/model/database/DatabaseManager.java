@@ -12,6 +12,7 @@ public class DatabaseManager {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
+    // Fonction maitre pour la création de la base de données et des differents tables
     public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, Shopkeeper shopkeeper) {
         try {
             validateParameters(databaseName, classes);
@@ -25,6 +26,7 @@ public class DatabaseManager {
         }
     }
 
+    // Pour éviter l'injection SQL
     private void validateParameters(String databaseName, List<Class<?>> classes) {
         if (databaseName == null || databaseName.trim().isEmpty() || classes == null || classes.isEmpty()) {
             throw new IllegalArgumentException("Database name and classes must not be null or empty.");
@@ -34,10 +36,12 @@ public class DatabaseManager {
         }
     }
 
+    // Pour établir la connection à la base de données
     private Connection establishConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    // Création de la base de données et appel de la fonction pour créé les tables
     private void createDatabaseAndTables(Connection connection, String databaseName, List<Class<?>> classes) throws SQLException {
         Statement statement = connection.createStatement();
 
@@ -55,6 +59,7 @@ public class DatabaseManager {
         System.out.println("All Tables created successfully.");
     }
 
+    // Création des tables
     private static List<String> generateCreateTableSQL(List<Class<?>> classes) {
         List<String> sqlStatements = new ArrayList<>();
         for (Class<?> clazz : classes) {
@@ -82,6 +87,7 @@ public class DatabaseManager {
         return sqlStatements;
     }
 
+    // Ajout des données du Shopkeeper dans la bdd de son site
     private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
@@ -95,35 +101,40 @@ public class DatabaseManager {
         System.out.println("Shopkeeper Profils created successfully.");
     }
 
-    public void insertProductCategoryData(Double id, String categoryName, String bddname ) throws SQLException {
-        Connection connection = establishConnection();
-        Statement statement = connection.createStatement();
+    // Ajout des Categories produits dans la Bdd Shopkeeper
+    public void insertProductCategoryData(Double id, String categoryName, String bddname) throws SQLException {
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO productcategory (id, CategoryName) VALUES (?, ?)")) {
 
-        String useDatabaseSQL = "USE " + bddname;
-        statement.executeUpdate(useDatabaseSQL);
+            statement.executeUpdate("USE " + bddname);
 
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO productcategory (id, CategoryName) VALUES (?, ?)");
-        preparedStatement.setDouble(1, id); // siret
-        preparedStatement.setString(2, categoryName); // firstName
-        preparedStatement.executeUpdate();
-        System.out.println("Category "+ categoryName +" created successfully.");
+            preparedStatement.setDouble(1, id);
+            preparedStatement.setString(2, categoryName);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Category " + categoryName + " created successfully.");
+        }
     }
 
+    // Ajout des Produits dans la Bdd Shopkeeper
     public void insertProductData(Double id, String productName, Double id_category, String bddname ) throws SQLException {
-        Connection connection = establishConnection();
-        Statement statement = connection.createStatement();
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO product (id, productName, id_category) VALUES (?, ?, ?)")) {
 
-        String useDatabaseSQL = "USE " + bddname;
-        statement.executeUpdate(useDatabaseSQL);
+            statement.executeUpdate("USE " + bddname);
 
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO product (id, productName, id_category) VALUES (?, ?, ?)");
-        preparedStatement.setDouble(1, id); // siret
-        preparedStatement.setString(2, productName);
-        preparedStatement.setDouble(3, id_category);// firstName
-        preparedStatement.executeUpdate();
-        System.out.println("Product "+ productName +" created successfully.");
+            preparedStatement.setDouble(1, id);
+            preparedStatement.setString(2, productName);
+            preparedStatement.setDouble(3, id_category);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Product "+ productName +" created successfully.");
+        }
     }
+
 
 }
