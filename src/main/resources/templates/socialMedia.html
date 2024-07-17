@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire Réseaux Sociaux</title>
+</head>
+<body>
+
+    <form method="POST" action="/socialMedia">
+        <input type="hidden" name="bddname" th:value="${bddname}" />
+        <img src="https://cdn-icons-png.flaticon.com/128/14417/14417460.png" alt="X Logo"><br>
+        <label for="x">Nom d'utilisateur X:</label>
+        <input type="text" id="x" name="x">
+        <br>
+        <img src="https://cdn-icons-png.flaticon.com/128/3955/3955024.png" alt="Instagram Logo"><br>
+        <label for="instagram">Nom d'utilisateur Instagram:</label>
+        <input type="text" id="instagram" name="instagram">
+        <br>
+        <img src="https://cdn-icons-png.flaticon.com/128/4494/4494475.png" alt="Facebook Logo"><br>
+        <label for="facebook">Nom d'utilisateur Facebook:</label>
+        <input type="text" id="facebook" name="facebook">
+        <br>
+        <img src="https://cdn-icons-png.flaticon.com/128/3669/3669950.png" alt="TikTok Logo"><br>
+        <label for="tiktok">Nom d'utilisateur TikTok:</label>
+        <input type="text" id="tiktok" name="tiktok">
+        <br>
+        <img src="https://cdn-icons-png.flaticon.com/128/3670/3670051.png" alt="WhatsApp Logo"><br>
+        <label for="whatsapp">Numéro WhatsApp:</label>
+        <input type="text" id="whatsapp" name="whatsapp">
+        <br><br>
+        <button type="submit">Envoyer</button>
+    </form>
+
+</script>
+</body>
+</html>

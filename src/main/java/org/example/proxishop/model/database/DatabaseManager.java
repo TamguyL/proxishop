@@ -136,9 +136,27 @@ public class DatabaseManager {
             preparedStatement.setDouble(7, id_category);
             preparedStatement.executeUpdate();
 
-            System.out.println("Product "+ productName +" created successfully.");
+            System.out.println("Product " + productName + " created successfully.");
         }
     }
 
+    public void insertSocialMedia(String bddname, String x, String instagram, String facebook, String tiktok, String whatsapp) throws SQLException {
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO socialmedia (x, insta, fb, tiktok, whatsapp) VALUES (?, ?, ?, ?, ?)")) {
 
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setString(1, x);
+            preparedStatement.setString(2, instagram);
+            preparedStatement.setString(3, facebook);
+            preparedStatement.setString(4, tiktok);
+            preparedStatement.setString(5, whatsapp);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Social Media created successfully.");
+        }
+    }
 }
+

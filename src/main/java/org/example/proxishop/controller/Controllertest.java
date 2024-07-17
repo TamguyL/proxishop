@@ -63,8 +63,9 @@ public class Controllertest {
         return "categories";
     }
 
+    // Première sauvegarde des categories et des produits sur la bdd du shopkeeper
     @PostMapping("/categories")
-    public String handleSubmit(@RequestParam Map<String, String> allParams) throws SQLException {
+    public String handleSubmit(@RequestParam Map<String, String> allParams, Model model) throws SQLException {
         String bddname = allParams.get("bddname");
         Map<Double, String> categories = new HashMap<>();
         List<Product> products = new ArrayList<>();
@@ -115,7 +116,21 @@ public class Controllertest {
             DatabaseManager db = new DatabaseManager();
             db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_category(), bddname);
         }
+        model.addAttribute("bddname", bddname);
+        return "socialMedia";
+    }
 
+    // Première sauvegarde les reseaux sociaux sur la bdd du shopkeeper
+    @PostMapping("/socialMedia")
+    public String socialMedia(@RequestParam String bddname, @RequestParam String x, @RequestParam String instagram,
+                              @RequestParam String facebook, @RequestParam String tiktok, @RequestParam String whatsapp,
+                              Model model) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        db.insertSocialMedia(bddname, x, instagram, facebook, tiktok, whatsapp);
+        model.addAttribute("bddname", bddname);
         return "index";
     }
-    }
+
+
+
+}
