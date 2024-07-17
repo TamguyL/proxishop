@@ -68,6 +68,7 @@ public class Controllertest {
         String bddname = allParams.get("bddname");
         Map<Double, String> categories = new HashMap<>();
         List<Product> products = new ArrayList<>();
+        Product currentProduct = null;
 
         for (Map.Entry<String, String> entry : allParams.entrySet()) {
             String key = entry.getKey();
@@ -85,28 +86,36 @@ public class Controllertest {
                         String productPart = parts[1].replace(".products[", "").split("\\.")[0];
                         double productId = Double.parseDouble(productPart);
 
+                        // verifier la fin de la key pour enregistrer la value dans le bon Set
                         if (key.contains(".name")) {
-                            products.add(new Product(productId, value, categoryId));
+                            currentProduct = new Product (productId, value, categoryId);
+                            products.add(currentProduct);
+                        } else if (key.contains(".description") && currentProduct != null) {
+                            currentProduct.setDescription(value);
+                        } else if (key.contains(".image") && currentProduct != null) {
+                            currentProduct.setImage(value);
+                        } else if (key.contains(".stock") && currentProduct != null) {
+                            currentProduct.setStock(Double.parseDouble(value));
+                        } else if (key.contains(".price") && currentProduct != null) {
+                            currentProduct.setPrice(Double.parseDouble(value));
                         }
+
                     }
                 }
             }
         }
 
         // Enregistre les catégories et produits dans la bdd du shopkeeper
-        System.out.println("Catégories:");
         for (Map.Entry<Double, String> category : categories.entrySet()) {
             DatabaseManager db = new DatabaseManager();
             db.insertProductCategoryData(category.getKey(), category.getValue(), bddname);
         }
 
-        System.out.println("Produits:");
         for (Product product : products) {
             DatabaseManager db = new DatabaseManager();
-            db.insertProductData(product.getId(), product.getProductName(), product.getId_category(), bddname);
+            db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_category(), bddname);
         }
 
-        // Retourne une vue ou redirige selon votre logique
         return "index";
     }
     }

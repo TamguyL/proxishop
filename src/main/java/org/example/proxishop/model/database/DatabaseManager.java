@@ -119,17 +119,21 @@ public class DatabaseManager {
     }
 
     // Ajout des Produits dans la Bdd Shopkeeper
-    public void insertProductData(Double id, String productName, Double id_category, String bddname ) throws SQLException {
+    public void insertProductData(Double id, String productName, String description, Double stock, String image, Double price, Double id_category, String bddname) throws SQLException {
         try (Connection connection = establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO product (id, productName, id_category) VALUES (?, ?, ?)")) {
+                     "INSERT INTO product (id, productName, description, stock, image, price, id_category) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
 
             statement.executeUpdate("USE " + bddname);
 
             preparedStatement.setDouble(1, id);
             preparedStatement.setString(2, productName);
-            preparedStatement.setDouble(3, id_category);
+            preparedStatement.setString(3, description);
+            preparedStatement.setDouble(4, stock);
+            preparedStatement.setString(5, image);
+            preparedStatement.setDouble(6, price);
+            preparedStatement.setDouble(7, id_category);
             preparedStatement.executeUpdate();
 
             System.out.println("Product "+ productName +" created successfully.");

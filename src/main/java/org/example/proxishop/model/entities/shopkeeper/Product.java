@@ -22,29 +22,16 @@ public class Product {
 
     public Product() {}
 
-    public Product(Double id, String productName, String description, Double stock, String image, Double price, Double category) {
-        this.id = id;
-        this.productName = productName;
-        this.description = description;
-        this.stock = stock;
-        this.image = image;
-        this.price = price;
-        this.id_category = category;
-    }
-
-    public Product(String productName, String description, Double stock, String image, Double price, Double category) {
-        this.productName = productName;
-        this.description = description;
-        this.stock = stock;
-        this.image = image;
-        this.price = price;
-        this.id_category = category;
-    }
-
     public Product(Double id, String productName, Double category) {
         this.id = id;
         this.productName = productName;
         this.id_category = category;
+        this.stock = (double) 0;
+        this.description = null;
+        this.image = null;
+        this.price = (double) 0;
     }
+
+
 
 }
