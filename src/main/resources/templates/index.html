@@ -49,8 +49,6 @@
                         event.preventDefault();
                         const formData = new FormData(this);
                         const bddname = formData.get('bddname');
-                        localStorage.setItem('bddname', bddname);
-                        console.log("bdd: " + bddname)
                         fetch('/newbdd', {
                             method: 'POST',
                             body: formData
@@ -58,14 +56,23 @@
                             .then(response => response.text())
                             .then(data => {
                                 document.getElementById('popup').innerHTML = data;
+                                document.getElementById("bddname").value = bddname;
                             });
-                    });
+                        });
+                });
+        }
+
+        function openCategories() {
+            fetch('/popup-content')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('popup').innerHTML = data;
+
+                    // Ajoutez un gestionnaire d'événements pour la soumission du formulaire
                     document.getElementById('socialMedia').addEventListener('submit', function(event) {
                         event.preventDefault();
                         const formData = new FormData(this);
                         const bddname = formData.get('bddname');
-                        localStorage.setItem('bddname', bddname);
-                        console.log(bddname)
                         fetch('/socialMedia', {
                             method: 'POST',
                             body: formData
@@ -73,6 +80,7 @@
                             .then(response => response.text())
                             .then(data => {
                                 document.getElementById('popup').innerHTML = data;
+                                document.getElementById("bddname").value = bddname;
                             });
                     });
                 });

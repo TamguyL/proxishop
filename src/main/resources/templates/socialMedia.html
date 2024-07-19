@@ -7,7 +7,7 @@
 <body>
 
     <form id="socialMedia" method="POST" action="/socialMedia">
-        <input type="hidden" name="bddname" id="bddname" value=$localStorage.getItem('bddname')/>
+        <input type="hidden" name="bddname" id="bddname" value=""/>
         <img src="https://cdn-icons-png.flaticon.com/128/14417/14417460.png" alt="X Logo"><br>
         <label for="x">Nom d'utilisateur X:</label>
         <input type="text" id="x" name="x">
@@ -28,7 +28,7 @@
         <label for="whatsapp">Numéro WhatsApp:</label>
         <input type="text" id="whatsapp" name="whatsapp">
         <br><br>
-        <button type="submit">Envoyer</button>
+        <button onclick="openCategories()">Envoyer</button>
     </form>
 
 <!--    <script>-->
