@@ -1,17 +1,151 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Index</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+        }
+        .popup {
+            position: fixed;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            display: none;
+            border-radius: 20px;
+        }
+        .popup.active {
+            display: block;
+        }
+    </style>
+    <script>
+        function openPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            fetch('/popup-content')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('popup').innerHTML = data;
+                    document.getElementById('popup').classList.add('active');
+
+                    // Ajoutez un gestionnaire d'événements pour la soumission du formulaire
+                    document.getElementById('newbdd').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(this);
+                        const bddname = formData.get('bddname');
+                        localStorage.setItem('bddname', bddname);
+                        console.log("bdd: " + bddname)
+                        fetch('/newbdd', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                document.getElementById('popup').innerHTML = data;
+                            });
+                    });
+                    document.getElementById('socialMedia').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const formData = new FormData(this);
+                        const bddname = formData.get('bddname');
+                        localStorage.setItem('bddname', bddname);
+                        console.log(bddname)
+                        fetch('/socialMedia', {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                document.getElementById('popup').innerHTML = data;
+                            });
+                    });
+                });
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').innerHTML = '';
+            document.getElementById('popup').classList.remove('active');
+        }
+
+        let categoryIdCounter = 2;
+        let productIdCounter = 1;
+
+        function addCategoryField() {
+            const categoriesDiv = document.getElementById('categories');
+
+            const newCategoryDiv = document.createElement('div');
+            newCategoryDiv.classList.add('category');
+            newCategoryDiv.setAttribute('data-category-id', categoryIdCounter);
+
+            newCategoryDiv.innerHTML = `
+                <label for="categoryName_${categoryIdCounter}">Nom de la catégorie:</label>
+                <input type="text" id="categoryName_${categoryIdCounter}" name="categories[${categoryIdCounter}].name" required>
+                <button type="button" onclick="addProductField(${categoryIdCounter})">Ajouter un produit</button>
+                <div id="products_${categoryIdCounter}"></div>
+            `;
+
+            categoriesDiv.appendChild(newCategoryDiv);
+            categoryIdCounter++;
+        }
+
+        function addProductField(categoryId) {
+            const productsDiv = document.getElementById(`products_${categoryId}`);
+
+            const newProductDiv = document.createElement('div');
+            newProductDiv.classList.add('product');
+            newProductDiv.setAttribute('data-product-id', productIdCounter);
+
+            newProductDiv.innerHTML = `
+                <label for="productName_${productIdCounter}">Nom du produit:</label>
+                <input type="text" id="productName_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].name" required>
+                <br>
+                <label for="description_${productIdCounter}">Description du produit:</label>
+                <textarea maxlength="254" id="description_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].description" rows="5" cols="51" required> </textarea>
+                <br>
+                <label for="image_${productIdCounter}">Image du produit:</label>
+                <input type="text" id="image_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].image" required>
+                <br>
+                <label for="price_${productIdCounter}">Prix en euros :</label>
+                <input type="number" id="price_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].price" min="0.1" step="0.1" required>
+                <br>
+                <label for="stock_${productIdCounter}">Stock du produit:</label>
+                <input type="number" id="stock_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].stock" min="1" step="1" required>
+                <input type="hidden" name="categories[${categoryId}].products[${productIdCounter}].categoryId" value="${categoryId}">
+            `;
+
+            productsDiv.appendChild(newProductDiv);
+            productIdCounter++;
+        }
+    </script>
 </head>
 <body>
 <h1>Index</h1>
-<a href="/shopkeeper"><button>Shopkeeper</button></a>
-<br><br>
-<a href="/proxishop"><button>ProxiShop</button></a>
-<br><br>
-<a href="/newbdd"><button>NewBdd</button></a>
-<br><br>
+    <a href="/shopkeeper"><button>Shopkeeper</button></a>
+    <br><br>
+    <a href="/proxishop"><button>ProxiShop</button></a>
+    <br><br>
+    <a href="/newbdd"><button>NewBdd</button></a>
+    <br><br>
+    <button onclick="openPopup()">Open Popup</button>
+    <div id="overlay" class="overlay" onclick="closePopup()"></div>
+    <div id="popup" class="popup"></div>
 
 </body>
 </html>

@@ -60,6 +60,11 @@ public class Controllertest {
         Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
         model.addAttribute("bddname", bddname);
+        return "redirect:/socialMedia";
+    }
+
+    @GetMapping("/categories")
+    public String categories() {
         return "categories";
     }
 
@@ -117,6 +122,11 @@ public class Controllertest {
             db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_category(), bddname);
         }
         model.addAttribute("bddname", bddname);
+        return "index";
+    }
+
+    @GetMapping("/socialMedia")
+    public String socialMedia() {
         return "socialMedia";
     }
 
@@ -128,9 +138,12 @@ public class Controllertest {
         DatabaseManager db = new DatabaseManager();
         db.insertSocialMedia(bddname, x, instagram, facebook, tiktok, whatsapp);
         model.addAttribute("bddname", bddname);
-        return "index";
+        return "redirect:/categories";
     }
 
-
+    @GetMapping("/popup-content")
+    public String popup() {
+        return "newbdd";
+    }
 
 }

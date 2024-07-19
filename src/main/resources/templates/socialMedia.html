@@ -6,8 +6,8 @@
 </head>
 <body>
 
-    <form method="POST" action="/socialMedia">
-        <input type="hidden" name="bddname" th:value="${bddname}" />
+    <form id="socialMedia" method="POST" action="/socialMedia">
+        <input type="hidden" name="bddname" id="bddname" value=$localStorage.getItem('bddname')/>
         <img src="https://cdn-icons-png.flaticon.com/128/14417/14417460.png" alt="X Logo"><br>
         <label for="x">Nom d'utilisateur X:</label>
         <input type="text" id="x" name="x">
@@ -31,6 +31,9 @@
         <button type="submit">Envoyer</button>
     </form>
 
-</script>
+<!--    <script>-->
+<!--        // Récupérez l'email stocké dans le localStorage et affichez-le-->
+<!--        document.getElementById('bddname').value = localStorage.getItem('bddname');-->
+<!--    </script>-->
 </body>
 </html>
