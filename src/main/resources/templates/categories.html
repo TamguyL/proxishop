@@ -27,62 +27,62 @@
 </form>
 
 <script>
-    // let categoryIdCounter = 2;
-    // let productIdCounter = 1;
-    //
-    // function addCategoryField() {
-    //     const categoriesDiv = document.getElementById('categories');
-    //
-    //     const newCategoryDiv = document.createElement('div');
-    //     newCategoryDiv.classList.add('category');
-    //     newCategoryDiv.setAttribute('data-category-id', categoryIdCounter);
-    //
-    //     newCategoryDiv.innerHTML = `
-    //             <label for="categoryName_${categoryIdCounter}">Nom de la catégorie:</label>
-    //             <input type="text" id="categoryName_${categoryIdCounter}" name="categories[${categoryIdCounter}].name" required>
-    //             <button type="button" onclick="addProductField(${categoryIdCounter})">Ajouter un produit</button>
-    //             <div id="products_${categoryIdCounter}"></div>
-    //         `;
-    //
-    //     categoriesDiv.appendChild(newCategoryDiv);
-    //     categoryIdCounter++;
-    // }
-    //
-    // function addProductField(categoryId) {
-    //     const productsDiv = document.getElementById(`products_${categoryId}`);
-    //
-    //     const newProductDiv = document.createElement('div');
-    //     newProductDiv.classList.add('product');
-    //     newProductDiv.setAttribute('data-product-id', productIdCounter);
-    //
-    //     newProductDiv.innerHTML = `
-    //             <label for="productName_${productIdCounter}">Nom du produit:</label>
-    //             <input type="text" id="productName_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].name" required>
-    //             <br>
-    //             <label for="description_${productIdCounter}">Description du produit:</label>
-    //             <textarea maxlength="254" id="description_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].description" rows="5" cols="51" required> </textarea>
-    //             <br>
-    //             <label for="image_${productIdCounter}">Image du produit:</label>
-    //             <input type="text" id="image_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].image" required>
-    //             <br>
-    //             <label for="price_${productIdCounter}">Prix en euros :</label>
-    //             <input type="number" id="price_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].price" min="0.1" step="0.1" required>
-    //             <br>
-    //             <label for="stock_${productIdCounter}">Stock du produit:</label>
-    //             <input type="number" id="stock_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].stock" min="1" step="1" required>
-    //             <input type="hidden" name="categories[${categoryId}].products[${productIdCounter}].categoryId" value="${categoryId}">
-    //         `;
-    //
-    //     productsDiv.appendChild(newProductDiv);
-    //     productIdCounter++;
-    // }
+    let categoryIdCounter = 2;
+    let productIdCounter = 1;
+
+    function addCategoryField() {
+        const categoriesDiv = document.getElementById('categories');
+
+        const newCategoryDiv = document.createElement('div');
+        newCategoryDiv.classList.add('category');
+        newCategoryDiv.setAttribute('data-category-id', categoryIdCounter);
+
+        newCategoryDiv.innerHTML = `
+                <label for="categoryName_${categoryIdCounter}">Nom de la catégorie:</label>
+                <input type="text" id="categoryName_${categoryIdCounter}" name="categories[${categoryIdCounter}].name" required>
+                <button type="button" onclick="addProductField(${categoryIdCounter})">Ajouter un produit</button>
+                <div id="products_${categoryIdCounter}"></div>
+            `;
+
+        categoriesDiv.appendChild(newCategoryDiv);
+        categoryIdCounter++;
+    }
+
+    function addProductField(categoryId) {
+        const productsDiv = document.getElementById(`products_${categoryId}`);
+
+        const newProductDiv = document.createElement('div');
+        newProductDiv.classList.add('product');
+        newProductDiv.setAttribute('data-product-id', productIdCounter);
+
+        newProductDiv.innerHTML = `
+                <label for="productName_${productIdCounter}">Nom du produit:</label>
+                <input type="text" id="productName_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].name" required>
+                <br>
+                <label for="description_${productIdCounter}">Description du produit:</label>
+                <textarea maxlength="254" id="description_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].description" rows="5" cols="51" required> </textarea>
+                <br>
+                <label for="image_${productIdCounter}">Image du produit:</label>
+                <input type="text" id="image_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].image" required>
+                <br>
+                <label for="price_${productIdCounter}">Prix en euros :</label>
+                <input type="number" id="price_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].price" min="0.1" step="0.1" required>
+                <br>
+                <label for="stock_${productIdCounter}">Stock du produit:</label>
+                <input type="number" id="stock_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].stock" min="1" step="1" required>
+                <input type="hidden" name="categories[${categoryId}].products[${productIdCounter}].categoryId" value="${categoryId}">
+            `;
+
+        productsDiv.appendChild(newProductDiv);
+        productIdCounter++;
+    }
 
 
-    // // Récupérez l'email stocké dans le localStorage et affichez-le
-    // const storedBddname = localStorage.getItem('bddname');
-    // if (storedBddname) {
-    //     document.getElementById('bddname').textContent = storedBddname;
-    // }
+    // Récupérez l'email stocké dans le localStorage et affichez-le
+    const storedBddname = localStorage.getItem('bddname');
+    if (storedBddname) {
+        document.getElementById('bddname').textContent = storedBddname;
+    }
 
 </script>
 </body>
