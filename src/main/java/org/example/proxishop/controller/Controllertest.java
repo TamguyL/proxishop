@@ -1,11 +1,7 @@
 package org.example.proxishop.controller;
 
 import org.example.proxishop.model.database.DatabaseManager;
-import org.example.proxishop.model.entities.shopkeeper.Customize;
-import org.example.proxishop.model.entities.shopkeeper.Product;
-import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
-import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
-import org.example.proxishop.model.entities.shopkeeper.SocialMedia;
+import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.model.entities.customer.Cartline;
 import org.example.proxishop.model.entities.customer.Customer;
 import org.example.proxishop.model.entities.customer.Orders;
@@ -81,7 +77,7 @@ public class Controllertest {
         dataService.saveDataProxi(bddname, firm_name, siret, firstName, lastName, email, adress, option);
         DatabaseManager db = new DatabaseManager();
         List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
-                Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class);
+                Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
         Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
         model.addAttribute("bddname", bddname);
@@ -89,10 +85,14 @@ public class Controllertest {
     }
 
     // Première sauvegarde des categories et des produits sur la bdd du shopkeeper
+
+    @GetMapping("/categories")
+    public String categories(){return "categories";}
     @PostMapping("/categories")
     public String handleSubmit(@RequestParam Map<String, String> allParams, Model model) throws SQLException {
         String bddname = allParams.get("bddname");
         Map<Double, String> categories = new HashMap<>();
+        Map<Double, String> subcategories = new HashMap<>();
         List<Product> products = new ArrayList<>();
         Product currentProduct = null;
 
@@ -139,7 +139,7 @@ public class Controllertest {
 
         for (Product product : products) {
             DatabaseManager db = new DatabaseManager();
-            db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_category(), bddname);
+            db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_subCategory(), bddname);
         }
         model.addAttribute("bddname", bddname);
         return "socialMedia";
@@ -156,6 +156,17 @@ public class Controllertest {
         return "index";
     }
 
+    @GetMapping("/catalogue")
+    public String showCatalogue(@RequestParam String bddname, Model model){
+        DatabaseManager databaseManager = new DatabaseManager();
+        try {
+            List<String> categoryNamesList = databaseManager.getAllCategories(bddname);
+            model.addAttribute("categoryNamesList", categoryNamesList);
+        } catch (SQLException e) {
+            e.printStackTrace();
 
+        }
+        return "catalogue";
+    }
 
 }

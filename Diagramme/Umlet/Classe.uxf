@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1110</x>
+      <y>160</y>
+      <w>350</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Client
+--
+- id: Double
+- nom : Text
+- prenom : Text
+- mail : Text
+- FK : id_panier : Double
+
+--
+- consultProduits()
+- filtrerProduits()
+- ajoutPanier() (reservation produit Delai[15min])
+- paiement()
+- receptionCommande()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>150</y>
+      <w>210</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>Commerçant
+--
+- id: Double
+- siret : Double
+- nom : Text
+- prenom : Text
+- motDePasse : Bcrypt&lt;Text&gt;
+- nomEntreprise : Text
+- adresse : Text
+- mail : Text
+- photo : image
+- FK : id_reseaux :
+
+--
+- connection()
+- afficherListeCommande()
+- progressionCommande()
+- commandeLivrée()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLObject</id>
+    <coordinates>
+      <x>360</x>
+      <y>70</y>
+      <w>1200</w>
+      <h>870</h>
+    </coordinates>
+    <panel_attributes>Site Commerçant
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLObject</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>310</w>
+      <h>710</h>
+    </coordinates>
+    <panel_attributes>ProxiShop
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>60</y>
+      <w>210</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Commercants
+--
+- id: Double
+- siret : Double
+- nom : Text
+- prenom : Text
+- mail : Text
+- nomSite : Text
+- nomEntreprise : Text
+- adresse : Text
+- id_offre : Double
+
+--
+- personnaliserSite()
+- creeCategories()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1300</x>
+      <y>490</y>
+      <w>210</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>LignePanier
+--
+- id_produit : Double
+- quantitéProduit : Double
+- id_panier : Double
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1120</x>
+      <y>670</y>
+      <w>330</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>Commande
+--
+- id: Double
+- prixFinal : Double
+- produit : List&lt;LignePanier&gt;
+- etiquette : Text (code barre)
+- FK : id_client : Double
+ 
+--
+- transmissionCommande()
+- progressionCommande() (Override)
+- alerteMail() (Date retrait / contact commerçant)
+- impressionEtiquette()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>400</x>
+      <y>640</y>
+      <w>280</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Produit
+--
+- id: Double
+- nomProduit : Text
+- description : Text
+- stock : Double
+- prix : Double
+- photo : image
+- FK : id_categorie : Double
+
+--
+- ajoutProduit()
+- modifProduit()
+- suppressionProduit()
+- detailProduit()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>410</x>
+      <y>460</y>
+      <w>280</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>CategorieProduit
+--
+- id: Double
+- nomCategorie : Text
+- produits : List&lt;ProduitParCategorie&gt;
+
+--
+- afficheListProduits()
+- detailProduit() (Override)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>700</x>
+      <y>200</y>
+      <w>210</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>Personalisation
+--
+- id: Double
+- template : 
+- logo : svg (non obligatoire)
+- descriptionEntreprise
+
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1030</x>
+      <y>430</y>
+      <w>230</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Panier
+--
+- id : Double
+- prixTotal : Double
+- FK : id_client : Double
+- LignePaniers : List&lt;LignePanier&gt;
+
+--
+- creaPanier()
+- sommePrixProduit()
+- validerPanier()
+- validerPaiement()
+- modifPanier()
+- supprimerPanier()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>100</x>
+      <y>330</y>
+      <w>210</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Offre
+--
+- id: Double
+- nomOffre : Text
+- PrixHT : Double
+
+--
+- personnaliserSite()
+- creeCategories()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>700</x>
+      <y>460</y>
+      <w>210</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Reseau
+--
+- id: Double
+- x : Text
+- insta : Text
+- fb : Text
+- tiktok : Text
+- whatsapp : Text
+
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLObject</id>
+    <coordinates>
+      <x>970</x>
+      <y>110</y>
+      <w>580</w>
+      <h>780</h>
+    </coordinates>
+    <panel_attributes>Costumer
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLObject</id>
+    <coordinates>
+      <x>390</x>
+      <y>120</y>
+      <w>580</w>
+      <h>780</h>
+    </coordinates>
+    <panel_attributes>Shopkeeper
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

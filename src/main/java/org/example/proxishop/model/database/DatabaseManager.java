@@ -12,6 +12,7 @@ public class DatabaseManager {
     private static final String USER = "root";
     private static final String PASSWORD = "";
 
+
     // Fonction maitre pour la création de la base de données et des differents tables
     public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, Shopkeeper shopkeeper) {
         try {
@@ -119,11 +120,11 @@ public class DatabaseManager {
     }
 
     // Ajout des Produits dans la Bdd Shopkeeper
-    public void insertProductData(Double id, String productName, String description, Double stock, String image, Double price, Double id_category, String bddname) throws SQLException {
+    public void insertProductData(Double id, String productName, String description, Double stock, String image, Double price, Double id_subCategory, String bddname) throws SQLException {
         try (Connection connection = establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO product (id, productName, description, stock, image, price, id_category) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                     "INSERT INTO product (id, productName, description, stock, image, price, id_subCategory) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
 
             statement.executeUpdate("USE " + bddname);
 
@@ -133,7 +134,7 @@ public class DatabaseManager {
             preparedStatement.setDouble(4, stock);
             preparedStatement.setString(5, image);
             preparedStatement.setDouble(6, price);
-            preparedStatement.setDouble(7, id_category);
+            preparedStatement.setDouble(7, id_subCategory);
             preparedStatement.executeUpdate();
 
             System.out.println("Product " + productName + " created successfully.");
@@ -158,5 +159,28 @@ public class DatabaseManager {
             System.out.println("Social Media created successfully.");
         }
     }
+
+    public List<String> getAllCategories(String bddname) throws SQLException {
+        List<String>categoryNamesList = new ArrayList<>();
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+        "SELECT categoryName FROM productcategory")){
+
+            statement.execute("USE " + bddname);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String categoryName = resultSet.getString("categoryName");
+                categoryNamesList.add(categoryName);
+            }
+            System.out.println("category list displayed");
+
+        }
+        return categoryNamesList;
+    }
+
+
+
 }
 

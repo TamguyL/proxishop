@@ -13,13 +13,19 @@
 <body>
 <h1>Ajouter des Catégories et Produits</h1>
 <form id="categoryForm" method="POST" action="/categories">
-    <input type="hidden" name="bddname" th:value="${bddname}" />
+    <input type="hidden" name="bddname" value="test" />
     <div id="categories">
         <div class="category" data-category-id="1">
             <label for="categoryName_1">Nom de la catégorie:</label>
             <input type="text" id="categoryName_1" name="categories[1].name" required>
+            <button type="button" onclick="addSubCategoryField(1)">Ajouter une sous categories</button>
+            <br>
+            <label for="subcategoryName_1">Nom de la sous catégorie:</label>
+            <input type="text" id="subcategoryName_1" name="subcategories[1].name" required>
             <button type="button" onclick="addProductField(1)">Ajouter un produit</button>
             <div id="products_1"></div>
+            <div id="subcategory_1"></div>
+
         </div>
     </div>
     <button type="button" onclick="addCategoryField()">Ajouter une catégorie</button>
@@ -28,6 +34,7 @@
 
 <script>
     let categoryIdCounter = 2;
+    let subcategoryIdCounter = 2;
     let productIdCounter = 1;
 
     function addCategoryField() {
@@ -38,40 +45,64 @@
         newCategoryDiv.setAttribute('data-category-id', categoryIdCounter);
 
         newCategoryDiv.innerHTML = `
-                <label for="categoryName_${categoryIdCounter}">Nom de la catégorie:</label>
-                <input type="text" id="categoryName_${categoryIdCounter}" name="categories[${categoryIdCounter}].name" required>
-                <button type="button" onclick="addProductField(${categoryIdCounter})">Ajouter un produit</button>
-                <div id="products_${categoryIdCounter}"></div>
-            `;
+        <label for="categoryName_${categoryIdCounter}">Nom de la catégorie:</label>
+        <input type="text" id="categoryName_${categoryIdCounter}" name="categories[${categoryIdCounter}].name" required>
+        <button type="button" onclick="addSubCategoryField(${subcategoryIdCounter})">Ajouter une sous catégorie</button>
+        <br>
+        <label for="subcategoryName_${subcategoryIdCounter}">Nom de la sous catégorie:</label>
+        <input type="text" id="subcategoryName_${subcategoryIdCounter}" name="subcategories[${subcategoryIdCounter}].name" required>
+        <button type="button" onclick="addProductField(${productIdCounter})">Ajouter un produit</button>
+        <div id="products_${productIdCounter}"></div>
+        <div id="subcategory_${subcategoryIdCounter}"></div>
+    `;
 
         categoriesDiv.appendChild(newCategoryDiv);
         categoryIdCounter++;
+        subcategoryIdCounter++;
     }
 
-    function addProductField(categoryId) {
-        const productsDiv = document.getElementById(`products_${categoryId}`);
+    function addSubCategoryField(subcategoryId) {
+        const subcategoriesDiv = document.getElementById(`subcategory_${subcategoryId}`);
+
+        const newSubCategoryDiv = document.createElement('div');
+        newSubCategoryDiv.classList.add('subcategory');
+        newSubCategoryDiv.setAttribute('data-subcategory-id', subcategoryId);
+
+        newSubCategoryDiv.innerHTML = `
+        <label for="subCategoryName_${subcategoryIdCounter}">Nom de la sous catégorie:</label>
+        <input type="text" id="subCategoryName_${subcategoryIdCounter}" name="subCategories[${subcategoryIdCounter}].name" required>
+        <button type="button" onclick="addProductField(${productIdCounter})">Ajouter un produit</button>
+        <div id="products_${productIdCounter}"></div>
+    `;
+
+        subcategoriesDiv.appendChild(newSubCategoryDiv);
+        subcategoryIdCounter++;
+    }
+
+    function addProductField(productId) {
+        const productsDiv = document.getElementById(`products_${productId}`);
 
         const newProductDiv = document.createElement('div');
         newProductDiv.classList.add('product');
         newProductDiv.setAttribute('data-product-id', productIdCounter);
 
         newProductDiv.innerHTML = `
-                <label for="productName_${productIdCounter}">Nom du produit:</label>
-                <input type="text" id="productName_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].name" required>
-                <br>
-                <label for="description_${productIdCounter}">Description du produit:</label>
-                <textarea maxlength="254" id="description_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].description" rows="5" cols="51" required> </textarea>
-                <br>
-                <label for="image_${productIdCounter}">Image du produit:</label>
-                <input type="text" id="image_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].image" required>
-                <br>
-                <label for="price_${productIdCounter}">Prix en euros :</label>
-                <input type="number" id="price_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].price" min="0.1" step="0.1" required>
-                <br>
-                <label for="stock_${productIdCounter}">Stock du produit:</label>
-                <input type="number" id="stock_${productIdCounter}" name="categories[${categoryId}].products[${productIdCounter}].stock" min="1" step="1" required>
-                <input type="hidden" name="categories[${categoryId}].products[${productIdCounter}].categoryId" value="${categoryId}">
-            `;
+        <label for="productName_${productIdCounter}">Nom du produit:</label>
+        <input type="text" id="productName_${productIdCounter}" name="categories[${categoryIdCounter}].products[${productIdCounter}].name" required>
+        <br>
+        <label for="description_${productIdCounter}">Description du produit:</label>
+        <textarea maxlength="254" id="description_${productIdCounter}" name="categories[${categoryIdCounter}].products[${productIdCounter}].description" rows="5" cols="51" required></textarea>
+        <br>
+        <label for="image_${productIdCounter}">Image du produit:</label>
+        <input type="text" id="image_${productIdCounter}" name="categories[${categoryIdCounter}].products[${productIdCounter}].image" required>
+        <br>
+        <label for="price_${productIdCounter}">Prix en euros :</label>
+        <input type="number" id="price_${productIdCounter}" name="categories[${categoryIdCounter}].products[${productIdCounter}].price" min="0.1" step="0.1" required>
+        <br>
+        <label for="stock_${productIdCounter}">Stock du produit:</label>
+        <input type="number" id="stock_${productIdCounter}" name="categories[${categoryIdCounter}].products[${productIdCounter}].stock" min="1" step="1" required>
+        <input type="hidden" name="categories[${categoryIdCounter}].products[${productIdCounter}].categoryId" value="${categoryIdCounter}">
+    `;
 
         productsDiv.appendChild(newProductDiv);
         productIdCounter++;

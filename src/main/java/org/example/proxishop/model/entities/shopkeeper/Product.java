@@ -17,15 +17,15 @@ public class Product {
     private Double stock;
     private String image;
     private Double price;
-    private Double id_category;
+    private Double id_subCategory;
 
 
     public Product() {}
 
-    public Product(Double id, String productName, Double category) {
+    public Product(Double id, String productName, Double subCategory) {
         this.id = id;
         this.productName = productName;
-        this.id_category = category;
+        this.id_subCategory = subCategory;
         this.stock = (double) 0;
         this.description = null;
         this.image = null;
