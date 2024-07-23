@@ -1,11 +1,83 @@
+
 <!DOCTYPE html>
 <html lang="fr" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:insert="header">
     <meta charset="UTF-8">
     <title>ProxiShop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>ProxiShop</h1>
-<p>test</p>
+
+<div class="flex_container">
+        <div id="template_choice1" class="template_choice">
+
+              <a href="/template_choice1"> <img src="/images/téléchargement.png" alt="insérer ici une demo de la 1ere template_client"></a>
+
+        </div>
+
+        <div id="template_choice2" class="template_choice">
+                <a href="/template_choice2"><img src="/images/téléchargement.png" alt="insérer ici une demo de la 2eme template_client"></a>
+        </div>
+
+        <div id="template_choice3" class="template_choice">
+                <a href="/template_choice3"><img src="/images/téléchargement.png" alt="insérer ici une demo de la 3eme template_client"></a>
+        </div>
+
+
+</div>
+
+<div class="text_container">
+<p class="text1">Selectionnez l'un des designs mis à votre disposition ci-dessus et apportez-y vos propres touches uniques en adaptant chaque élément à <span class="bold">votre</span> style et à <span class="bold">votre</span> vision commerciale </p>
+
+</div>
+
+
+
+<div class="flex_container">
+
+        <div id="offer_b" class="offer_choice">
+            <h2>Basique - 1,99€</h2>
+            <p class="text"><ul>
+                    <li>1 à 3 catégories de Produits</li>
+                    <li>1 à 3 sous catégories par Produit</li>
+                    <li>Assistance sous 48h* </li>
+            </ul></P>
+        </div>
+
+        <div id="offer_m" class="offer_choice">
+            <h2>Medium - 4,99€</h2>
+            <p class="text"><ul>
+                <li>1 à 10 catégories de Produits</li>
+                <li>1 à 10 sous catégories par Produit</li>
+                <li>Assistance sous 24h* </li>
+            </ul></P>
+        </div>
+
+        <div id="offer_u" class="offer_choice">
+            <h2>Ultimate - 8,99€</h2>
+            <p class="text"><ul>
+                <li>1 à 20 catégories de Produits</li>
+                <li>1 à 20 sous catégories par Produit</li>
+                <li>Assistance sous 2h* </span></li>
+            </ul></P>
+        </div>
+</div>
+<div class="text_container">
+Notre objectif? Vous faciliter la vie!<br>Créez votre site d'e-commerce local avec simplicité et rapidité grâce à l'une de nos offres flexibles qui saura s'adapter à vos besoins!<br>
+</div>
+<br>
+<div id="plus">
+    <span class="tiny_text"> *Assistance par mail ou téléphone durant les horaires d'ouvertures hors jours fériés et fermetures exceptionnelles.</span>
+</div>
+    <br>
+
 </body>
+<footer th:insert="footer">
+</footer>
 </html>

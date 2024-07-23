@@ -34,10 +34,35 @@ public class Controllertest {
         return "proxishop";
     }
 
+    @GetMapping("/template_choice1")
+    public String template_choice1() {
+        return "template_choice1";
+    }
+
+
+    @GetMapping("/template_choice2")
+    public String template_choice2() {
+        return "template_choice2";
+    }
     @GetMapping("/shopkeeper")
     public String shopkeeper() {
         return "shopkeeper";
     }
+
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";
+    }
+
+    @GetMapping("/mentions")
+    public String mentions() {
+        return "mentions";
+    }
+    @GetMapping("/cookies")
+    public String cookies() {
+        return "cookies";
+    }
+
 
     /**
      * Création de la base de donner du nouveau site créé par le shopkeeper.
