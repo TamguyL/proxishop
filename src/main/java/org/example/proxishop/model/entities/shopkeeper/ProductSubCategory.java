@@ -22,4 +22,10 @@ public class ProductSubCategory {
 
 
     public ProductSubCategory() {};
+
+    public ProductSubCategory(double id, String subCategoryName, double categoryId) {
+        this.id = id;
+        this.SubCategoryName = subCategoryName;
+        this.id_category = categoryId;
+    }
 }

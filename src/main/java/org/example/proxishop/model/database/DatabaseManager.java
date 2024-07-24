@@ -119,6 +119,23 @@ public class DatabaseManager {
         }
     }
 
+    public void insertSubProductCategoryData(Double id, String SubCategoryName,Double id_category, String bddname) throws SQLException {
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO productsubcategory (id, SubCategoryName, id_category) VALUES (?, ?, ?)")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setDouble(1, id);
+            preparedStatement.setString(2, SubCategoryName);
+            preparedStatement.setDouble(3, id_category);
+            preparedStatement.executeUpdate();
+
+            System.out.println("SubCategory " + SubCategoryName + " created successfully.");
+        }
+    }
+
     // Ajout des Produits dans la Bdd Shopkeeper
     public void insertProductData(Double id, String productName, String description, Double stock, String image, Double price, Double id_subCategory, String bddname) throws SQLException {
         try (Connection connection = establishConnection();

@@ -92,29 +92,34 @@ public class Controllertest {
     public String handleSubmit(@RequestParam Map<String, String> allParams, Model model) throws SQLException {
         String bddname = allParams.get("bddname");
         Map<Double, String> categories = new HashMap<>();
-        Map<Double, String> subcategories = new HashMap<>();
+        List<ProductSubCategory> subcategories = new ArrayList<>();
         List<Product> products = new ArrayList<>();
         Product currentProduct = null;
+        ProductSubCategory currentProductSubCategory = null;
 
         for (Map.Entry<String, String> entry : allParams.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            if (key.startsWith("categories[")) {
+            if (key.startsWith("subcategories[")) {
                 String[] parts = key.split("\\]");
                 if (parts.length >= 2) {
-                    String categoryPart = parts[0].replace("categories[", "");
+                    String subcategoryPart = parts[0].replace("subcategories[", "");
+                    double subcategoryId = Double.parseDouble(subcategoryPart);
+                    String categoryPart = parts[1].replace(".categories[", "").split("\\]")[0];
+                    System.out.println(categoryPart);
                     double categoryId = Double.parseDouble(categoryPart);
 
                     if (key.contains(".name") && !key.contains(".products")) {
-                        categories.put(categoryId, value);
+                        currentProductSubCategory = new ProductSubCategory(subcategoryId, value, categoryId);
+                        subcategories.add(currentProductSubCategory);
                     } else if (key.contains(".products[")) {
-                        String productPart = parts[1].replace(".products[", "").split("\\.")[0];
+                        String productPart = parts[2].replace(".products[", "").split("\\.")[0];
                         double productId = Double.parseDouble(productPart);
 
                         // verifier la fin de la key pour enregistrer la value dans le bon Set
                         if (key.contains(".name")) {
-                            currentProduct = new Product (productId, value, categoryId);
+                            currentProduct = new Product (productId, value, subcategoryId);
                             products.add(currentProduct);
                         } else if (key.contains(".description") && currentProduct != null) {
                             currentProduct.setDescription(value);
@@ -128,6 +133,15 @@ public class Controllertest {
 
                     }
                 }
+            } else if (key.startsWith("categories[")) {
+                String[] parts = key.split("\\]");
+                if (parts.length >= 2) {
+                    String categoryPart = parts[0].replace("categories[", "");
+                    double categoryId = Double.parseDouble(categoryPart);
+                    if (key.contains(".name") && !key.contains(".subCategories")) {
+                        categories.put(categoryId, value);
+                    }
+                }
             }
         }
 
@@ -135,6 +149,11 @@ public class Controllertest {
         for (Map.Entry<Double, String> category : categories.entrySet()) {
             DatabaseManager db = new DatabaseManager();
             db.insertProductCategoryData(category.getKey(), category.getValue(), bddname);
+        }
+
+        for (ProductSubCategory subcategory : subcategories) {
+            DatabaseManager db = new DatabaseManager();
+            db.insertSubProductCategoryData(subcategory.getId(), subcategory.getSubCategoryName(), subcategory.getId_category(), bddname);
         }
 
         for (Product product : products) {
