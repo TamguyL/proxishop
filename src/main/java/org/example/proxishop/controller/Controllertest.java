@@ -49,6 +49,13 @@ public class Controllertest {
         return "shopkeeper";
     }
 
+/**    URL à changer quand nous saurons exactement comment on veut faire le menu de gestion du commercant **/
+
+    @GetMapping("/shopkeeper/orderlist")
+    public String orderlist(){
+        return "orderlist";
+    }
+
     @GetMapping("/contact")
     public String contact() {
         return "contact";

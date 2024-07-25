@@ -158,5 +158,14 @@ public class DatabaseManager {
             System.out.println("Social Media created successfully.");
         }
     }
+
+    public void getOrder(String orderNumber, String tags, double finalPrice) throws SQLException {
+        try (Connection connection = establishConnection();
+        Statement statement = connection.createStatement();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM orders WHERE orderNumber = ?")){
+            preparedStatement.setString(1, orderNumber);
+        }
+
+    }
 }
 

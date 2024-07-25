@@ -12,12 +12,14 @@ public class Orders {
     private Double id;
     private String tags;
     private Double finalPrice;
+    private String orderNumber;
 
 
-    public Orders(Double id, Double finalPrice, String tags) {
+    public Orders(Double id, Double finalPrice, String tags, String orderNumber) {
         this.id = id;
         this.finalPrice = finalPrice;
         this.tags = tags;
+        this.orderNumber = orderNumber;
     }
 
     public Orders(Double finalPrice, String tags) {
