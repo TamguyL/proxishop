@@ -1,5 +1,6 @@
 package org.example.proxishop.model.database;
 
+import org.example.proxishop.model.entities.customer.Orders;
 import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
 
 import java.lang.reflect.Field;
@@ -159,11 +160,22 @@ public class DatabaseManager {
         }
     }
 
-    public void getOrder(String orderNumber, String tags, double finalPrice) throws SQLException {
+    public List <Orders> getOrderlist(String bddname) throws SQLException {
+        List<Orders> orderList= new ArrayList<>();
         try (Connection connection = establishConnection();
         Statement statement = connection.createStatement();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM orders WHERE orderNumber = ?")){
-            preparedStatement.setString(1, orderNumber);
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT tags, finalPrice, orderNumber FROM orders")){
+            statement.executeUpdate("USE " + bddname);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            for (int i = 1; resultSet.next(); i++) {
+                String tag = resultSet.getString("tags");
+                double fprice = resultSet.getDouble("finalPrice");
+                String onumber = resultSet.getString("orderNumber");
+                orderList.add(new Orders(tag, fprice, onumber));
+                System.out.println(orderList.get());
+
+            }
+            return orderList;
         }
 
     }

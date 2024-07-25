@@ -49,13 +49,6 @@ public class Controllertest {
         return "shopkeeper";
     }
 
-/**    URL à changer quand nous saurons exactement comment on veut faire le menu de gestion du commercant **/
-
-    @GetMapping("/shopkeeper/orderlist")
-    public String orderlist(){
-        return "orderlist";
-    }
-
     @GetMapping("/contact")
     public String contact() {
         return "contact";
@@ -163,6 +156,18 @@ public class Controllertest {
         return "index";
     }
 
+    /**    URL à changer quand nous saurons exactement comment on veut faire le menu de gestion du commercant **/
 
+    @GetMapping("/shopkeeper/orderlist")
+    public String orderlist(Model model) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        List<Orders> orderList = db.getOrderlist("truc2");
+
+//        System.out.println(orderList.get(0).getTags()+ " " +orderList.get(0).getOrderNumber());
+//        model.addAttribute("orderNumber",orderNumber);
+//        model.addAttribute("tags",tags);
+//        model.addAttribute("finalPrice",finalPrice);
+        return "orderlist";
+    }
 
 }

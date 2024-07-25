@@ -21,12 +21,17 @@ public class Orders {
         this.tags = tags;
         this.orderNumber = orderNumber;
     }
+    public Orders(String tags, Double finalPrice, String orderNumber) {
+        this.tags = tags;
+        this.finalPrice = finalPrice;
+        this.orderNumber = orderNumber;
+    }
 
     public Orders(Double finalPrice, String tags) {
         this.finalPrice = finalPrice;
         this.tags = tags;
     }
 
-    public Orders() {};
+    public Orders(String tag, double fprice, String onumber) {};
 }
 
