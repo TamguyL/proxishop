@@ -162,6 +162,9 @@ public class Controllertest {
     public String orderlist(Model model) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         List<Orders> orderList = db.getOrderlist("truc2");
+        for (Orders orders: orderList){
+            System.out.println(orders.getTags());
+        }
 
 //        System.out.println(orderList.get(0).getTags()+ " " +orderList.get(0).getOrderNumber());
 //        model.addAttribute("orderNumber",orderNumber);

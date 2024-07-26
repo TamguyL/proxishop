@@ -172,7 +172,7 @@ public class DatabaseManager {
                 double fprice = resultSet.getDouble("finalPrice");
                 String onumber = resultSet.getString("orderNumber");
                 orderList.add(new Orders(tag, fprice, onumber));
-                System.out.println(orderList.get());
+//                System.out.println(orderList.get());
 
             }
             return orderList;

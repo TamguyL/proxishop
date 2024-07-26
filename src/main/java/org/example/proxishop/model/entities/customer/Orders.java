@@ -32,6 +32,6 @@ public class Orders {
         this.tags = tags;
     }
 
-    public Orders(String tag, double fprice, String onumber) {};
+//    public Orders(String tag, double fprice, String onumber) {};
 }
 
