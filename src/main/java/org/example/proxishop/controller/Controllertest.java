@@ -166,10 +166,7 @@ public class Controllertest {
             System.out.println(orders.getTags());
         }
 
-//        System.out.println(orderList.get(0).getTags()+ " " +orderList.get(0).getOrderNumber());
-//        model.addAttribute("orderNumber",orderNumber);
-//        model.addAttribute("tags",tags);
-//        model.addAttribute("finalPrice",finalPrice);
+        model.addAttribute("orderList",orderList);
         return "orderlist";
     }
 
