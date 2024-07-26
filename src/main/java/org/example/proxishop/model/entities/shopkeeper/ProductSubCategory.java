@@ -20,6 +20,11 @@ public class ProductSubCategory {
         SubCategoryName = subCategoryName;
     }
 
+    public ProductSubCategory(String subCategoryName,Double id_category) {
+        this.id_category = id_category;
+        this.SubCategoryName = subCategoryName;
+    }
+
 
     public ProductSubCategory() {};
 

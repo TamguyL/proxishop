@@ -1,11 +1,15 @@
 package org.example.proxishop.model.database;
 
+import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
+import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
 
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class DatabaseManager {
     private static final String URL = "jdbc:mysql://localhost:3306/";
@@ -103,36 +107,56 @@ public class DatabaseManager {
     }
 
     // Ajout des Categories produits dans la Bdd Shopkeeper
-    public void insertProductCategoryData(Double id, String categoryName, String bddname) throws SQLException {
+    public void insertCategoryAndSubCategory(String categoryName, String subcategoryName1, String subcategoryName2, String subcategoryName3, String subcategoryName4, String subcategoryName5, String bddname) throws SQLException {
         try (Connection connection = establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO productcategory (id, CategoryName) VALUES (?, ?)")) {
+                     "INSERT INTO productcategory (CategoryName) VALUES (?)")) {
 
             statement.executeUpdate("USE " + bddname);
-
-            preparedStatement.setDouble(1, id);
-            preparedStatement.setString(2, categoryName);
+            preparedStatement.setString(1, categoryName);
             preparedStatement.executeUpdate();
-
             System.out.println("Category " + categoryName + " created successfully.");
+            double idrecup = getIdcategory(categoryName, bddname);
+            System.out.println(idrecup);
+            List<String> productSubCategory = new ArrayList<>();
+            productSubCategory.add(subcategoryName1);
+            Stream.of(subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5)
+                    .filter(name -> !name.isEmpty())
+                    .forEach(productSubCategory::add);
+            insertSubProductCategoryData(productSubCategory, idrecup, bddname);
         }
     }
-
-    public void insertSubProductCategoryData(Double id, String SubCategoryName,Double id_category, String bddname) throws SQLException {
-        try (Connection connection = establishConnection();
-             Statement statement = connection.createStatement();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO productsubcategory (id, SubCategoryName, id_category) VALUES (?, ?, ?)")) {
-
+    private double getIdcategory(String categoryName, String bddname) throws SQLException {
+        try ( Connection connection = establishConnection();
+              Statement statement = connection.createStatement();
+              PreparedStatement preparedStatement = connection.prepareStatement(
+                      "SELECT id FROM productcategory WHERE CategoryName = (?)")) {
             statement.executeUpdate("USE " + bddname);
+            preparedStatement.setString(1, categoryName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble("id");
+                } else {
+                    throw new SQLException("Category not found: " + categoryName);
+                }
+            }
+        }
+    }
+    private void insertSubProductCategoryData(List<String> productSubCategory, Double id_category, String bddname) throws SQLException {
+        for (String SubCategory : productSubCategory) {
+            try (Connection connection = establishConnection();
+                 Statement statement = connection.createStatement();
+                 PreparedStatement preparedStatement = connection.prepareStatement(
+                         "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
 
-            preparedStatement.setDouble(1, id);
-            preparedStatement.setString(2, SubCategoryName);
-            preparedStatement.setDouble(3, id_category);
-            preparedStatement.executeUpdate();
+                statement.executeUpdate("USE " + bddname);
+                preparedStatement.setString(1, SubCategory);
+                preparedStatement.setDouble(2, id_category);
+                preparedStatement.executeUpdate();
 
-            System.out.println("SubCategory " + SubCategoryName + " created successfully.");
+                System.out.println("SubCategory " + SubCategory + " created successfully.");
+            }
         }
     }
 
@@ -177,19 +201,21 @@ public class DatabaseManager {
         }
     }
 
-    public List<String> getAllCategories(String bddname) throws SQLException {
-        List<String>categoryNamesList = new ArrayList<>();
+    public List<ProductCategory> getAllCategories(String bddname) throws SQLException {
+        List<ProductCategory>categoryNamesList = new ArrayList<>();
         try (Connection connection = establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
-        "SELECT categoryName FROM productcategory")){
+        "SELECT * FROM productcategory")){
 
             statement.execute("USE " + bddname);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()) {
+            for(int i = 1; resultSet.next(); i++) {
                 String categoryName = resultSet.getString("categoryName");
-                categoryNamesList.add(categoryName);
+                double categoryId = resultSet.getDouble("id");
+                categoryNamesList.add(new ProductCategory(categoryId, categoryName));
+
             }
             System.out.println("category list displayed");
 
@@ -197,7 +223,26 @@ public class DatabaseManager {
         return categoryNamesList;
     }
 
+    public List<ProductSubCategory> getAllSubCategories(String bddname) throws SQLException {
+        List<ProductSubCategory> subCategoryNamesList = new ArrayList<>();
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT * FROM productsubcategory")){
 
+            statement.execute("USE " + bddname);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            for(int i = 1; resultSet.next(); i++) {
+                String SubcategoryName = resultSet.getString("SubcategoryName");
+                double subcatid = resultSet.getDouble("id_category");
+                subCategoryNamesList.add(new ProductSubCategory(SubcategoryName, subcatid));
+            }
+            System.out.println("category list displayed");
+
+        }
+        return subCategoryNamesList;
+    }
 
 }
 

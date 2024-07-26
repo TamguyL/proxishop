@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.swing.text.html.FormSubmitEvent;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -89,79 +90,24 @@ public class Controllertest {
     @GetMapping("/categories")
     public String categories(){return "categories";}
     @PostMapping("/categories")
-    public String handleSubmit(@RequestParam Map<String, String> allParams, Model model) throws SQLException {
-        String bddname = allParams.get("bddname");
-        Map<Double, String> categories = new HashMap<>();
-        List<ProductSubCategory> subcategories = new ArrayList<>();
-        List<Product> products = new ArrayList<>();
-        Product currentProduct = null;
-        ProductSubCategory currentProductSubCategory = null;
+    public String handleSubmit(
+            @RequestParam("action") String action,
+            @RequestParam("bddname") String bddname,
+            @RequestParam("categories1") String categoryName,
+            @RequestParam("subcategories1") String subcategoryName1,
+            @RequestParam("subcategories2") String subcategoryName2,
+            @RequestParam("subcategories3") String subcategoryName3,
+            @RequestParam("subcategories4") String subcategoryName4,
+            @RequestParam("subcategories5") String subcategoryName5) throws SQLException {
 
-        for (Map.Entry<String, String> entry : allParams.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            if (key.startsWith("subcategories[")) {
-                String[] parts = key.split("\\]");
-                if (parts.length >= 2) {
-                    String subcategoryPart = parts[0].replace("subcategories[", "");
-                    double subcategoryId = Double.parseDouble(subcategoryPart);
-                    String categoryPart = parts[1].replace(".categories[", "").split("\\]")[0];
-                    System.out.println(categoryPart);
-                    double categoryId = Double.parseDouble(categoryPart);
-
-                    if (key.contains(".name") && !key.contains(".products")) {
-                        currentProductSubCategory = new ProductSubCategory(subcategoryId, value, categoryId);
-                        subcategories.add(currentProductSubCategory);
-                    } else if (key.contains(".products[")) {
-                        String productPart = parts[2].replace(".products[", "").split("\\.")[0];
-                        double productId = Double.parseDouble(productPart);
-
-                        // verifier la fin de la key pour enregistrer la value dans le bon Set
-                        if (key.contains(".name")) {
-                            currentProduct = new Product (productId, value, subcategoryId);
-                            products.add(currentProduct);
-                        } else if (key.contains(".description") && currentProduct != null) {
-                            currentProduct.setDescription(value);
-                        } else if (key.contains(".image") && currentProduct != null) {
-                            currentProduct.setImage(value);
-                        } else if (key.contains(".stock") && currentProduct != null) {
-                            currentProduct.setStock(Double.parseDouble(value));
-                        } else if (key.contains(".price") && currentProduct != null) {
-                            currentProduct.setPrice(Double.parseDouble(value));
-                        }
-
-                    }
-                }
-            } else if (key.startsWith("categories[")) {
-                String[] parts = key.split("\\]");
-                if (parts.length >= 2) {
-                    String categoryPart = parts[0].replace("categories[", "");
-                    double categoryId = Double.parseDouble(categoryPart);
-                    if (key.contains(".name") && !key.contains(".subCategories")) {
-                        categories.put(categoryId, value);
-                    }
-                }
-            }
+        DatabaseManager db = new DatabaseManager();
+        db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
+        if ("ajoutcateg".equals(action)) {
+            return "categories";
+        } else if ("addProduct".equals(action)) {
+            return "addProduct";
         }
-
-        // Enregistre les catégories et produits dans la bdd du shopkeeper
-        for (Map.Entry<Double, String> category : categories.entrySet()) {
-            DatabaseManager db = new DatabaseManager();
-            db.insertProductCategoryData(category.getKey(), category.getValue(), bddname);
-        }
-
-        for (ProductSubCategory subcategory : subcategories) {
-            DatabaseManager db = new DatabaseManager();
-            db.insertSubProductCategoryData(subcategory.getId(), subcategory.getSubCategoryName(), subcategory.getId_category(), bddname);
-        }
-
-        for (Product product : products) {
-            DatabaseManager db = new DatabaseManager();
-            db.insertProductData(product.getId(), product.getProductName(),product.getDescription(), product.getStock(), product.getImage(), product.getPrice(), product.getId_subCategory(), bddname);
-        }
-        model.addAttribute("bddname", bddname);
-        return "socialMedia";
+        return "error";
     }
 
     // Première sauvegarde les reseaux sociaux sur la bdd du shopkeeper
@@ -179,8 +125,10 @@ public class Controllertest {
     public String showCatalogue(@RequestParam String bddname, Model model){
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            List<String> categoryNamesList = databaseManager.getAllCategories(bddname);
+            List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
             model.addAttribute("categoryNamesList", categoryNamesList);
+            List<ProductSubCategory> subCategoryList = databaseManager.getAllSubCategories(bddname);
+            model.addAttribute("subCategoryList", subCategoryList);
         } catch (SQLException e) {
             e.printStackTrace();
 
