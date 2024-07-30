@@ -27,6 +27,11 @@ public class Controllertest {
         return "proxishop";
     }
 
+    @GetMapping("/template-client")
+    public String client() {
+        return "client";
+    }
+
     @GetMapping("/shopkeeper")
     public String shopkeeper() {
         return "shopkeeper";

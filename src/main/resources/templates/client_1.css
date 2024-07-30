@@ -1,0 +1,81 @@
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #333;
+    background-color: #ccebcb;
+}
+header{
+    background-color: #005000;
+    color: #ecffeb;
+    padding: 20px;
+}
+h2{
+    color: #27332a;
+}
+section{
+    padding: 30px;
+    margin: 200px;
+    background-color: #ffffff5e;
+    box-shadow: 0 0 10px #005000;
+}
+.container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+.titre{
+    font-size: 32px;
+    margin: 0 200px;
+}
+.panier{
+    font-size: 22px;
+    margin: 0 200px;
+}
+.infoPerso{
+    position:relative;
+    left:820px;
+    top:75px;
+    font-size: 25px;
+}
+.infoReseau{
+    position:relative;
+    left:100px;
+    top:500px;
+    font-size: 25px;
+}
+.reseau{
+    position:relative;
+    top:200px;
+    left:-170px;
+}
+#slider{
+        position: relative;
+        width: 600;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+}
+#gauche,#droite{
+    cursor: pointer;
+    position: absolute;
+    font-size: 100px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
+}
+#gauche{
+    left: 0;
+}
+#droite{
+    right: 0;
+}
+#visage{
+    border-radius: 50%;
+    position:relative;
+    left: 150px;
+    top: -75px;
+}
+#map{
+    position:relative;
+    left: 680px;
+}
