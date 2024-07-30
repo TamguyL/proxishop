@@ -22,14 +22,14 @@ public class Product {
 
     public Product() {}
 
-    public Product(Double id, String productName, Double subCategory) {
-        this.id = id;
+    public Product( String productName,String description, Double stock, String image, Double price, Double id_subCategory) {
+
         this.productName = productName;
-        this.id_subCategory = subCategory;
-        this.stock = (double) 0;
-        this.description = null;
-        this.image = null;
-        this.price = (double) 0;
+        this.id_subCategory = id_subCategory;
+        this.stock = stock;
+        this.description = description;
+        this.image = image;
+        this.price = price;
     }
 
 

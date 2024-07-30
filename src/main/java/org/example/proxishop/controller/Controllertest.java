@@ -105,7 +105,7 @@ public class Controllertest {
         if ("ajoutcateg".equals(action)) {
             return "categories";
         } else if ("addProduct".equals(action)) {
-            return "addProduct";
+            return "redirect:/product";
         }
         return "error";
     }
@@ -135,5 +135,36 @@ public class Controllertest {
         }
         return "catalogue";
     }
+
+    @GetMapping("/products")
+    public String creaProd(@RequestParam String bddname, Model model){
+        DatabaseManager databaseManager = new DatabaseManager();
+        try{
+            List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
+            model.addAttribute("categoryNamesList", categoryNamesList);
+            List<ProductSubCategory> subCategoryList = databaseManager.getAllSubCategories(bddname);
+            model.addAttribute("subCategoryList", subCategoryList);
+            List<Product> productList = databaseManager.getAllProducts(bddname);
+            model.addAttribute("productList", productList);
+            model.addAttribute("bddname", bddname);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return "products";
+    }
+
+    @PostMapping("/addProducts")
+    public String addProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
+                              @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
+                              Model model) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        db.insertNewProduct(subCategoryid, bddname, productName, description, price, stock, image);
+        model.addAttribute("bddname", bddname);
+        return "redirect:/products?bddname="+bddname;
+    }
+
+
 
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Titre</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <select id="categorySelect" onchange="onCategorySelect(this.value)">
+        <option value="">Sélectionnez une catégorie</option>
+        <option th:each="categoryName : ${categoryNamesList}"
+                th:value="${categoryName.getId()}"
+                th:text="${categoryName.getCategoryName()}">
+        </option>
+    </select>
+    <div id="Select"></div>
+    <div id="productsList"></div>
+
+
+<script th:inline="javascript">
+
+    var subcategoryList = [[${subCategoryList}]]
+    var productList = [[${productList}]]
+    var bddname = [[${bddname}]]
+    function onCategorySelect(categoryId) {
+        if (categoryId) {
+            onClickCateg(categoryId);
+        }
+    }
+
+    function onClickCateg(categoryId) {
+        document.getElementById("productsList").innerHTML = "";
+        console.log("Catégorie sélectionnée avec ID: " + categoryId);
+
+        const select = document.getElementById("Select");
+
+        select.innerHTML = `<select id="subcategorySelect" onChange="onSubCategorySelect(this.value)">
+        <option value="">Sélectionnez une sous-catégorie</option></select>`
+
+        var idcategory = parseInt(categoryId)
+        const selectElement = document.getElementById("subcategorySelect");
+
+        subcategoryList.forEach(function (subcategory){
+            console.log(subcategory.id_category);
+
+            if (subcategory.id_category === idcategory) {
+                console.log(subcategory);
+                selectElement.innerHTML += `<option value="${subcategory.id}">${subcategory.subCategoryName}</option>`;
+            }
+
+        });
+    }
+
+    function onSubCategorySelect(subCategoryId) {
+        if (subCategoryId) {
+            onClickSubCateg(subCategoryId);
+        }
+    }
+
+    function onClickSubCateg(subCategoryId) {
+        console.log("sous-catégorie sélectionnée avec ID: " + subCategoryId);
+
+        const element = document.getElementById("productsList");
+
+        element.innerHTML = `<ul id="productList"></ul>`
+
+        var idSubCategory = parseInt(subCategoryId)
+        const selectElement = document.getElementById("productList");
+
+        productList.forEach(function (productList){
+            if (productList.id_subCategory === idSubCategory) {
+                selectElement.innerHTML += `<li>${productList.productName}</li> <button>Modifier</button> <button>Supprimer</button>`;
+            }
+        });
+        element.innerHTML += `<div id="addProduct"></div>`
+        addProduct(subCategoryId);
+    }
+
+    function addProduct(subCategoryId){
+        const element = document.getElementById("addProduct");
+        element.innerHTML = `<form action="/addProducts" method="post" >
+            <input type="hidden" name="subCategoryid" value="${subCategoryId}">
+            <input type="hidden" name="bddname" value="${bddname}">
+            <label for="productName">Nom du produit :</label>
+            <input type="text" id="productName" name="productName" >
+            <br>
+            <label for="description">Description du produit :</label>
+            <textarea id="description" name="description" rows="5" cols="50"></textarea>
+            <br>
+            <label for="price">Prix :</label>
+            <input type="number" id="price" name="price">
+            <br>
+            <label for="stock">Stock :</label>
+            <input type="number" id="stock" name="stock">
+            <br>
+            <label for="image">Image :</label>
+            <input type="text" id="image" name="image">
+            <br>
+            <button type="submit">Ajouter un produit</button>
+        </form>`
+    }
+
+</script>
+
+
+</body>
+</html>
