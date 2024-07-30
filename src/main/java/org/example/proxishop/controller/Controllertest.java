@@ -14,10 +14,7 @@ import org.example.proxishop.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -162,12 +159,16 @@ public class Controllertest {
     public String orderlist(Model model) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         List<Orders> orderList = db.getOrderlist("truc2");
-        for (Orders orders: orderList){
-            System.out.println(orders.getTags());
-        }
-
-        model.addAttribute("orderList",orderList);
+        model.addAttribute("orderList", orderList);
         return "orderlist";
     }
 
+    @PostMapping("/updateOrder")
+    public String updateOrder(@ModelAttribute("orderList") List<Orders> orderList) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        for (Orders order : orderList) {
+            db.updateOrderState(order.getId(), order.getState());
+        }
+        return "redirect:/shopkeeper/orderlist";
+    }
 }

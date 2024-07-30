@@ -6,21 +6,30 @@
 </head>
 <body>
 <h1>Liste des commandes</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Tags</th>
-        <th>Numéro de Commande</th>
-        <th>Prix Final</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="order : ${orderList}">
-        <td style="text-align: center" th:text="${order.tags}"></td>
-        <td style="text-align: center" th:text="${order.orderNumber}"></td>
-        <td style="text-align: center" th:text="${order.finalPrice}"></td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/updateOrder}" method="post">
+    <table>
+        <thead>
+        <tr>
+            <th>Tags</th>
+            <th>Numéro de Commande</th>
+            <th>Montant total</th>
+            <th>État</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, orderStat : ${orderList}">
+            <td style="text-align: center" th:text="${order.tags}"></td>
+            <td style="text-align: center" th:text="${order.orderNumber}"></td>
+            <td style="text-align: center" th:text="${order.finalPrice}"></td>
+            <td>
+                <select th:field="*{orderList}">
+                    <option th:each="orderStat : ${orderList}" th:value="${orderStat.state}" th:text="${orderStat.state}"></option>
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="submit">Mettre à jour</button>
+</form>
 </body>
 </html>

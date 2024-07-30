@@ -164,20 +164,29 @@ public class DatabaseManager {
         List<Orders> orderList= new ArrayList<>();
         try (Connection connection = establishConnection();
         Statement statement = connection.createStatement();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT tags, finalPrice, orderNumber FROM orders")){
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT tags, finalPrice, orderNumber, state FROM orders")){
             statement.executeUpdate("USE " + bddname);
             ResultSet resultSet = preparedStatement.executeQuery();
             for (int i = 1; resultSet.next(); i++) {
                 String tag = resultSet.getString("tags");
                 double fprice = resultSet.getDouble("finalPrice");
                 String onumber = resultSet.getString("orderNumber");
-                orderList.add(new Orders(tag, fprice, onumber));
-//                System.out.println(orderList.get());
-
+                String ostate = resultSet.getString("state");
+                orderList.add(new Orders(tag, fprice, onumber, ostate));
             }
             return orderList;
         }
 
+    }
+
+    public void updateOrderState(Double id, String state) throws SQLException {
+        String sql = "UPDATE orders SET state = ? WHERE id = ?";
+        try (Connection connection = establishConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, state);
+            preparedStatement.setDouble(2, id);
+            preparedStatement.executeUpdate();
+        }
     }
 }
 
