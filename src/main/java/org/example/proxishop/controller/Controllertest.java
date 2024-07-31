@@ -98,14 +98,16 @@ public class Controllertest {
             @RequestParam("subcategories2") String subcategoryName2,
             @RequestParam("subcategories3") String subcategoryName3,
             @RequestParam("subcategories4") String subcategoryName4,
-            @RequestParam("subcategories5") String subcategoryName5) throws SQLException {
+            @RequestParam("subcategories5") String subcategoryName5,
+            Model model) throws SQLException {
 
         DatabaseManager db = new DatabaseManager();
         db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
+        model.addAttribute("bddname", bddname);
         if ("ajoutcateg".equals(action)) {
             return "categories";
         } else if ("addProduct".equals(action)) {
-            return "redirect:/product";
+            return "redirect:/products";
         }
         return "error";
     }
@@ -161,6 +163,25 @@ public class Controllertest {
                               Model model) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         db.insertNewProduct(subCategoryid, bddname, productName, description, price, stock, image);
+        model.addAttribute("bddname", bddname);
+        return "redirect:/products?bddname="+bddname;
+    }
+
+    @PostMapping("/updateProducts")
+    public String updateProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
+                              @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
+                              @RequestParam int id_product, Model model) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        db.updateProduct(id_product, subCategoryid, bddname, productName, description, price, stock, image);
+        model.addAttribute("bddname", bddname);
+        return "redirect:/products?bddname="+bddname;
+    }
+
+    @PostMapping("/deleteProducts")
+    public String deleteProducts(@RequestParam String bddname, @RequestParam String productName, @RequestParam int id_product,
+                                 Model model) throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        db.deleteProduct(id_product, bddname, productName);
         model.addAttribute("bddname", bddname);
         return "redirect:/products?bddname="+bddname;
     }

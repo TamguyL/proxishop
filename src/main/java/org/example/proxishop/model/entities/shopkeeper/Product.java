@@ -33,5 +33,13 @@ public class Product {
     }
 
 
-
+    public Product(double id, String productName, String description, double stock, String image, double price, double id_subCategory) {
+        this.id = id;
+        this.productName = productName;
+        this.id_subCategory = id_subCategory;
+        this.stock = stock;
+        this.description = description;
+        this.image = image;
+        this.price = price;
+    }
 }

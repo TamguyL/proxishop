@@ -224,6 +224,50 @@ public class DatabaseManager {
         }
     }
 
+    public void  updateProduct(int productid, double subCategoryid, String bddname, String productName, String description, double price, double stock, String image) throws SQLException {
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE product SET productName = ?, description = ?, stock = ?, image = ?, price = ?, id_subCategory = ? WHERE id = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setString(1, productName);
+            preparedStatement.setString(2, description);
+            preparedStatement.setDouble(3, stock);
+            preparedStatement.setString(4, image);
+            preparedStatement.setDouble(5, price);
+            preparedStatement.setDouble(6, subCategoryid);
+            preparedStatement.setInt(7, productid);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("Product : " + productName + " update successfully.");
+            } else {
+                System.out.println(" !! Product : " + productName + " Update failed.");
+            }
+        }
+    }
+
+    public void  deleteProduct(int productid, String bddname, String productName) throws SQLException {
+        try (Connection connection = establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "DELETE FROM product WHERE id = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setInt(1, productid);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("Product : " + productName + " delete successfully.");
+            } else {
+                System.out.println(" !! Product : " + productName + " Delete failed.");
+            }
+        }
+    }
+
 
     public List<ProductCategory> getAllCategories(String bddname) throws SQLException {
         List<ProductCategory> categoryNamesList = new ArrayList<>();
@@ -263,7 +307,7 @@ public class DatabaseManager {
                 double catid = resultSet.getDouble("id_category");
                 subCategoryNamesList.add(new ProductSubCategory(id, SubCategoryName, catid));
             }
-            System.out.println("category list displayed");
+            System.out.println("Subcategory list displayed");
 
         }
         return subCategoryNamesList;
@@ -281,15 +325,16 @@ public class DatabaseManager {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             for (int i = 1; resultSet.next(); i++) {
+                double id = resultSet.getDouble("id");
                 String productName = resultSet.getString("productName");
                 double subcatid = resultSet.getDouble("id_subCategory");
                 double price = resultSet.getDouble("price");
                 String description = resultSet.getString("description");
                 double stockProd = resultSet.getDouble("stock");
                 String imageProd = resultSet.getString("image");
-                productNamesList.add(new Product(productName,description,stockProd,imageProd,price,subcatid));
+                productNamesList.add(new Product(id, productName,description,stockProd,imageProd,price,subcatid));
             }
-            System.out.println("category list displayed");
+            System.out.println("Product list displayed");
 
         }
         return productNamesList;

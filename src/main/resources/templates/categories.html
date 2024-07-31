@@ -13,7 +13,7 @@
 <body>
 <h1>Ajouter des Catégories</h1>
 <form id="categoryForm" method="POST" action="/categories">
-    <input type="hidden" name="bddname" value="somesite" />
+    <input type="hidden" name="bddname" th:value="${bddname}" />
     <div id="categories">
         <div class="category" data-category-id="1">
 

@@ -78,20 +78,58 @@
 
         productList.forEach(function (productList){
             if (productList.id_subCategory === idSubCategory) {
-                selectElement.innerHTML += `<li>${productList.productName}</li> <button>Modifier</button> <button>Supprimer</button>`;
+                selectElement.innerHTML += `<li>${productList.productName}</li> <button class="modifierButton" data-product-id="${productList.id}">Modifier</button> <button class="supprimerButton" data-product-id="${productList.id}">Supprimer</button>`;
             }
         });
         element.innerHTML += `<div id="addProduct"></div>`
         addProduct(subCategoryId);
+        let modifierButton = document.getElementsByClassName('modifierButton')
+        let supprimerButton = document.getElementsByClassName('supprimerButton')
+
+        Array.from(modifierButton).forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                // Attention product.id et productId ne sont pas du même type ne pas utiliser le ===
+                const product = productList.find(product => product.id == productId);
+                document.getElementById('formAdd').action = "/updateProducts";
+                document.getElementById('id_product').value = product.id;
+                document.getElementById('productName').value = product.productName;
+                document.getElementById('description').value = product.description;
+                document.getElementById('price').value = product.price;
+                document.getElementById('stock').value = product.stock;
+                document.getElementById('image').value = product.image;
+                document.getElementById('submit').innerText = "Modifier le produit";
+            });
+        });
+
+        // Ajouter un écouteur d'événements pour chaque bouton "Supprimer"
+        Array.from(supprimerButton).forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                // Attention product.id et productId ne sont pas du même type ne pas utiliser le ===
+                const product = productList.find(product => product.id == productId);
+                document.getElementById('formAdd').action = "/deleteProducts";
+                document.getElementById('id_product').value = product.id;
+                document.getElementById('productName').value = product.productName;
+                document.getElementById('description').value = product.description;
+                document.getElementById('price').value = product.price;
+                document.getElementById('stock').value = product.stock;
+                document.getElementById('image').value = product.image;
+                document.getElementById('submit').innerText = "Supprimer le produit";
+            });
+        });
+
     }
+
+
 
     function addProduct(subCategoryId){
         const element = document.getElementById("addProduct");
-        element.innerHTML = `<form action="/addProducts" method="post" >
+        element.innerHTML = `<form id="formAdd" action="/addProducts" method="post" >
             <input type="hidden" name="subCategoryid" value="${subCategoryId}">
             <input type="hidden" name="bddname" value="${bddname}">
             <label for="productName">Nom du produit :</label>
-            <input type="text" id="productName" name="productName" >
+            <input type="text" id="productName" name="productName">
             <br>
             <label for="description">Description du produit :</label>
             <textarea id="description" name="description" rows="5" cols="50"></textarea>
@@ -105,7 +143,8 @@
             <label for="image">Image :</label>
             <input type="text" id="image" name="image">
             <br>
-            <button type="submit">Ajouter un produit</button>
+            <button id="submit" type="submit">Ajouter un produit</button>
+            <input type="hidden" id="id_product" name="id_product" value="">
         </form>`
     }
 
