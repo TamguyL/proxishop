@@ -1,5 +1,5 @@
 //Slider
-const slide = ["image1.jpg", "image2.jpg", "image3.jpg",];
+const slide = ["img/image1.jpg", "img/image2.jpg", "img/image3.jpg",];
 let numero = 0;
 function changement(sens) {
 numero = numero + sens;
@@ -13,16 +13,16 @@ setInterval("changement(1)", 3000);
 
 //Map
 document.addEventListener("DOMContentLoaded", function() {
-    var map = L.map('map').setView([48.41374, -4.50125], 13);
+    let map = L.map('map').setView([48.41374, -4.50125], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
-    var geocoder = L.Control.Geocoder.nominatim();
-    var marker;
+    let geocoder = L.Control.Geocoder.nominatim();
+    let marker;
   function addMarkerToAddress(address) {
       geocoder.geocode(address, function(results) {
           if (results.length > 0) {
-              var latlng = results[0].center;
+              let latlng = results[0].center;
           L.marker(latlng).addTo(map)
               .bindPopup('Voici mon commerce au : ' + address)
               .openPopup();
@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       });
   }
-  addMarkerToAddress('cité pablo picasso');
-    var searchControl = L.Control.geocoder({
+  addMarkerToAddress('4 rue Duliscouët');
+({
       position: 'topright',
       placeholder: 'Rechercher une adresse...',
       defaultMarkGeocode: false
     }).on('markgeocode', function(e) {
-      var bbox = e.geocode.bbox;
-      var poly = L.polygon([
+      let bbox = e.geocode.bbox;
+      let poly = L.polygon([
         bbox.getSouthEast(),
         bbox.getNorthEast(),
         bbox.getNorthWest(),

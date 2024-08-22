@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Template 1</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <link rel="stylesheet" href="client.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="client.js"></script>
+    <title>Template 1</title>
 </head>
 <body>
     <header>
@@ -22,7 +25,7 @@
             <h2>Voici les catégories</h2>
             <p>Ce menu pourra être déroulé</p>
             <div id="slider">
-                <img src="image1.jpg" height="500px" width="500px"  id="slide">
+                <img src="img/image1.jpg" height="500px" width="500px"  id="slide" alt="Catégories">
                 <div id="gauche" onclick="changement(-1)"><a class="g" id="p" >&#10094;</a></div>
                 <div id="droite" onclick="changement(1)"><a class="d" id="n" >&#10095;</a></div>
             </div>
@@ -31,23 +34,27 @@
             <p class="infoPerso">Le commercant saisit ici ses informations.</p>
             <p class="infoReseau">Suivez-moi sur mes réseaux!</p>
             <div id="infos">
-                <img src="visage.png" height="200px" width="200px" id="visage">
-                <a href="https://www.tiktok.com" target="_blank"><img src="logos/tiktok.png" height="100px" width="100px" class="reseau"></a>
-                <a href="https://www.facebook.com" target="_blank"><img src="logos/facebook.png" height="100px" width="100px" class="reseau"></a>
-                <a href="https://www.twitter.com" target="_blank"><img src="logos/twitter.png" height="100px" width="100px" class="reseau"></a>
-                <a href="https://www.whatsapp.com" target="_blank"><img src="logos/whatsapp.png" height="100px" width="100px" class="reseau"></a>
-                <a href="https://www.instagram.com" target="_blank"><img src="logos/instagram.png" height="100px" width="100px" class="reseau"></a>
+                <img src="img/visage.png" height="200px" width="200px" id="visage" alt="Bertrand, épicier du coin">
+                <a href="https://www.tiktok.com" target="_blank"><img src="img/tiktok.png" height="100px" width="100px" class="reseau" alt="Tik Tok"></a>
+                <a href="https://www.facebook.com" target="_blank"><img src="img/facebook.png" height="100px" width="100px" class="reseau" alt="Facebook"></a>
+                <a href="https://www.twitter.com" target="_blank"><img src="img/twitter.png" height="100px" width="100px" class="reseau" alt="Twitter"></a>
+                <a href="https://www.whatsapp.com" target="_blank"><img src="img/whatsapp.png" height="100px" width="100px" class="reseau" alt="WhatsApp"></a>
+                <a href="https://www.instagram.com" target="_blank"><img src="img/instagram.png" height="100px" width="100px" class="reseau" alt="Instagram"></a>
             </div>
             <div id="map" style="width: 750px; height: 500px;"></div>
         </section>
-        <section id="mention">
-            <p><a href="mention.html">Mentions légales</a></p>
-            <p>Contacts</p>
-        </section>
-        <section id="pub">
-            <h2></h2>
-            <p>Ce site a été crée par ProxiShop, plus d'info sur : www.proxishop.fr</p>
-        </section>
+        <footer>
+            <div id="footer">
+            <div class="flex_container">
+                <p class="footer_flex"><a href="/mentions.html">Mentions légales</a></p>
+                <p class="footer_flex"><a href="/cookies.html">Gestion des cookies</a></p>
+                <p class="footer_flex"><a href="/contact.html">Contactez-nous</a></p>
+            </div>
+            </div>
+        </footer>
+        <div id="pub">
+            <p class="footer_flex"><a href="https://www.proxishop.fr">Ce site a été crée par ProxiShop, plus d'info sur : www.proxishop.fr</a></p>
+        </div>
     </main>
 </body>
 </html>

@@ -1,13 +1,37 @@
 body{
-    font-family: Arial, sans-serif;
+    font-family: 'Lobster Two', sans-serif;
+    height: 100%;
     margin: 0;
+    padding: 0;
     color: #333;
     background-color: #ccebcb;
+    display:flex;
+    flex-direction:column;
 }
 header{
     background-color: #005000;
     color: #ecffeb;
     padding: 20px;
+}
+.flex_container{
+    display:flex;
+    justify-content:center;
+    margin-bottom:1%;
+    margin-top:1%;
+}
+#pub{
+        display:flex;
+        justify-content:center;
+        margin-bottom:1%;
+        margin-top:1%;
+}
+main{
+    flex:1;
+}
+#main_title{
+    font-family: 'Lobster Two', sans-serif;
+    font-size:35px;
+
 }
 h2{
     color: #27332a;
@@ -23,6 +47,32 @@ section{
     justify-content: space-between;
     width: 100%;
     align-items: center;
+}
+h3{
+    font-family: 'Lobster Two', sans-serif;
+    font-size:23px;
+    font-weight:400;
+}
+.text_container{
+    text-align:center;
+    font-style:italic;
+    font-weight:500;
+    margin-bottom:1vw;
+    font-family: 'Quicksand', sans-serif;
+    font-size:20px;
+
+}
+.contact_container{
+    margin:2%;
+    text-align:center;
+    font-family: 'Lobster Two', sans-serif;
+    font-size:24px;
+    min-height: 60vh;
+}
+
+.template_choice{
+    margin:2%;
+    font-family: 'Lobster Two', sans-serif;
 }
 .titre{
     font-size: 32px;
@@ -51,7 +101,7 @@ section{
 }
 #slider{
         position: relative;
-        width: 600;
+        width: 600px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -78,4 +128,66 @@ section{
 #map{
     position:relative;
     left: 680px;
+}
+h2{
+    font-family: 'Lobster Two', sans-serif;
+}
+
+.offer_choice{
+    margin:1vh 1vw 2vh 1vw;
+    font-family: 'Quicksand', sans-serif;
+    font-size:18px;
+    font-style:oblique;
+}
+
+.tiny_text{
+
+    font-family:'Quicksand', sans-serif;
+    font-size:12px;
+    font-style:italic;
+}
+
+.offer_choice{
+    padding:1%;
+    border:solid black 2px;
+    border-radius:1vw;
+}
+
+.bold{
+    font-weight:1000;
+    font-style:inherit;
+}
+
+p.footer_flex{
+    margin-left: 1vw;
+    margin-right:1vw;
+    font-family: 'Quicksand', sans-serif;
+
+}
+
+p.text{
+    font-family: 'Quicksand', sans-serif;
+
+}
+
+a{
+    text-decoration:none;
+}
+
+#mentions_container{
+    display:flex;
+    text-align:center;
+    margin-bottom:1%;
+    margin-top:1%;
+
+
+}
+
+#plus{
+    display:flex;
+    justify-content: center;
+}
+
+.mentions{
+    margin:0vw 1vw 0vw 1vw;
 }
