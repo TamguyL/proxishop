@@ -1,11 +1,7 @@
 package org.example.proxishop.controller;
 
 import org.example.proxishop.model.database.DatabaseManager;
-import org.example.proxishop.model.entities.shopkeeper.Customize;
-import org.example.proxishop.model.entities.shopkeeper.Product;
-import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
-import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
-import org.example.proxishop.model.entities.shopkeeper.SocialMedia;
+import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.model.entities.customer.Cartline;
 import org.example.proxishop.model.entities.customer.Customer;
 import org.example.proxishop.model.entities.customer.Orders;
@@ -164,11 +160,9 @@ public class Controllertest {
     }
 
     @PostMapping("/updateOrder")
-    public String updateOrder(@ModelAttribute("orderList") List<Orders> orderList) throws SQLException {
+    public String updateOrder(@PathVariable Double id) throws SQLException {
         DatabaseManager db = new DatabaseManager();
-        for (Orders order : orderList) {
-            db.updateOrderState(order.getId(), order.getState());
-        }
+        db.updateOrderState(id,"fini");
         return "redirect:/shopkeeper/orderlist";
     }
 }
