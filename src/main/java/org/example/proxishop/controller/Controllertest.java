@@ -10,10 +10,8 @@ import org.example.proxishop.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.text.html.FormSubmitEvent;
 import java.sql.SQLException;
@@ -99,7 +97,8 @@ public class Controllertest {
             @RequestParam("subcategories3") String subcategoryName3,
             @RequestParam("subcategories4") String subcategoryName4,
             @RequestParam("subcategories5") String subcategoryName5,
-            Model model) throws SQLException {
+            Model model,
+            RedirectAttributes redirectAttributes) throws SQLException {
 
         DatabaseManager db = new DatabaseManager();
         db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
@@ -107,6 +106,7 @@ public class Controllertest {
         if ("ajoutcateg".equals(action)) {
             return "categories";
         } else if ("addProduct".equals(action)) {
+            redirectAttributes.addFlashAttribute("bddname", bddname);
             return "redirect:/products";
         }
         return "error";
@@ -139,7 +139,7 @@ public class Controllertest {
     }
 
     @GetMapping("/products")
-    public String creaProd(@RequestParam String bddname, Model model){
+    public String creaProd(@ModelAttribute("bddname") String bddname, Model model){
         DatabaseManager databaseManager = new DatabaseManager();
         try{
             List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
