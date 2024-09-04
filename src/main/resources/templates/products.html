@@ -91,7 +91,7 @@
                 const productId = this.getAttribute('data-product-id');
                 // Attention product.id et productId ne sont pas du même type ne pas utiliser le ===
                 const product = productList.find(product => product.id == productId);
-                document.getElementById('formAdd').action = "/updateProducts";
+                document.getElementById('formAdd').action = "/products/updateProducts";
                 document.getElementById('id_product').value = product.id;
                 document.getElementById('productName').value = product.productName;
                 document.getElementById('description').value = product.description;
@@ -108,7 +108,7 @@
                 const productId = this.getAttribute('data-product-id');
                 // Attention product.id et productId ne sont pas du même type ne pas utiliser le ===
                 const product = productList.find(product => product.id == productId);
-                document.getElementById('formAdd').action = "/deleteProducts";
+                document.getElementById('formAdd').action = "/products/deleteProducts";
                 document.getElementById('id_product').value = product.id;
                 document.getElementById('productName').value = product.productName;
                 document.getElementById('description').value = product.description;
@@ -125,7 +125,7 @@
 
     function addProduct(subCategoryId){
         const element = document.getElementById("addProduct");
-        element.innerHTML = `<form id="formAdd" action="/addProducts" method="post" >
+        element.innerHTML = `<form id="formAdd" action="/products/addProducts" method="post" >
             <input type="hidden" name="subCategoryid" value="${subCategoryId}">
             <input type="hidden" name="bddname" value="${bddname}">
             <label for="productName">Nom du produit :</label>
