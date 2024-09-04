@@ -1,0 +1,8 @@
+org.example.proxishop
+org.example.proxishop.controller
+org.example.proxishop.model.database
+org.example.proxishop.model.entities.customer
+org.example.proxishop.model.entities.proxi
+org.example.proxishop.model.entities.shopkeeper
+org.example.proxishop.repository
+org.example.proxishop.service
