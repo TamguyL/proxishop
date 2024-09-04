@@ -8,13 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/shopkeeper")
+@SessionAttributes("bddname")
 public class ShopkeeperController {
+
+    // Initialisation de l'attribut de session
+    @ModelAttribute("bddname")
+    public String setUpbddname() {
+        return ""; // Initialisez avec une valeur par défaut ou null
+    }
+
+    // Méthode pour nettoyer la session
+    @GetMapping("/clearSession")
+    public String clearSession(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "redirect:/index";
+    }
 
     @Autowired
     private DataService dataService;

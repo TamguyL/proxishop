@@ -15,38 +15,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div id="categories">
 
-    <ul>
-        <li th:each="categoryName : ${categoryNamesList}">
-            <button class="clickable" th:attr="onclick=|onClickCateg(${categoryName.getId()})|" th:text="${categoryName.getCategoryName()}"></button>
-            <div th:id="'subCategories_' + ${categoryName.getId()}"></div>
-        </li>
-    </ul>
+<h2>Gestion des Catégories et Sous-Catégories</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Catégorie</th>
+        <th>Sous-Catégories</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categoryNamesList}" >
+        <td>
+            <p th:text="${category.categoryName}"></p>
+            <form th:action="@{/categories/update}" method="post" style="display:inline;">
+                <input type="hidden" name="bddname" th:value="${bddname}">
+                <input type="hidden" name="categoryId" th:value="${category.id}">
+                <input type="text" name="newCategoryName" required> <br/>
+                <button type="submit">Modifier</button>
+            </form>
+            <form th:action="@{/categories/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="bddname" th:value="${bddname}">
+                <input type="hidden" name="categoryId" th:value="${category.id}">
+                <button type="submit">Supprimer</button>
 
-</div>
-
-<script th:inline="javascript">
-
-        var subCategoryList = [[${subCategoryList}]];
-        console.log(subCategoryList[0].id_category);
-
-        function onClickCateg(id_category) {
-
-
-            subCategoryList.forEach(function (subCategory) {
-                if (subCategory.id_category === id_category) {
-                    var subCategoriesDiv = document.getElementById("subCategories_" + id_category);
-                    subCategoriesDiv.innerHTML = " ";
-                    var subCategoryElement = document.createElement("div");
-                    subCategoryElement.textContent = subCategory.subCategoryName;
-                    subCategoriesDiv.appendChild(subCategoryElement);
-                }
-            });
-
-    }
-</script>
-
+        </td>
+        <td>
+            <ul>
+                <li th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}">
+                    <span th:text="${subCategory.subCategoryName}"></span>
+                    <form th:action="@{/subcategories/update}" method="post" style="display:inline;">
+                        <input type="hidden" name="bddname" th:value="${bddname}">
+                        <input type="hidden" name="subCategoryId" th:value="${subCategory.id}">
+                        <input type="text" name="newSubCategoryName" required>
+                        <button type="submit">Modifier</button>
+                    </form>
+                    <form th:action="@{/subcategories/delete}" method="post" style="display:inline;">
+                        <input type="hidden" name="bddname" th:value="${bddname}">
+                        <input type="hidden" name="subCategoryId" th:value="${subCategory.id}">
+                        <button type="submit">Supprimer</button>
+                    </form>
+                </li>
+            </ul>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
@@ -13,7 +14,21 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
+@SessionAttributes("bddname")
 public class CategoryController {
+
+    // Initialisation de l'attribut de session
+    @ModelAttribute("bddname")
+    public String setUpbddname() {
+        return ""; // Initialisez avec une valeur par défaut ou null
+    }
+
+    // Méthode pour nettoyer la session
+    @GetMapping("/clearSession")
+    public String clearSession(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "redirect:/index";
+    }
 
     /**
      * Affiche la page de gestion des catégories.
@@ -72,7 +87,7 @@ public class CategoryController {
      * @param model   Le modèle Spring MVC.
      */
     @GetMapping("/catalogue")
-    public String showCatalogue(@RequestParam String bddname, Model model) {
+    public String showCatalogue(@ModelAttribute("bddname") String bddname, Model model) {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
@@ -84,4 +99,5 @@ public class CategoryController {
         }
         return "catalogue";
     }
+
 }

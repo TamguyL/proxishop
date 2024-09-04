@@ -13,8 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-
+    <a href="/categories/catalogue"><button th:text="${bddname}">Gestion Catégories</button></a>
     <select id="categorySelect" onchange="onCategorySelect(this.value)">
         <option value="">Sélectionnez une catégorie</option>
         <option th:each="categoryName : ${categoryNamesList}"

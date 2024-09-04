@@ -7,13 +7,29 @@ import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Controller
 @RequestMapping("/products")
+@SessionAttributes("bddname")
 public class ProductController {
+
+    // Initialisation de l'attribut de session
+    @ModelAttribute("bddname")
+    public String setUpbddname() {
+        return ""; // Initialisez avec une valeur par défaut ou null
+    }
+
+    // Méthode pour nettoyer la session
+    @GetMapping("/clearSession")
+    public String clearSession(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
+        return "redirect:/index";
+    }
 
     /**
      * Affiche la page de création de produits.
@@ -55,11 +71,12 @@ public class ProductController {
     @PostMapping("/addProducts")
     public String addProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
                               @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
-                              Model model) throws SQLException {
+                              Model model, RedirectAttributes redirectAttributes) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         db.insertNewProduct(subCategoryid, bddname, productName, description, price, stock, image);
         model.addAttribute("bddname", bddname);
-        return "redirect:/products?bddname=" + bddname;
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/products";
     }
 
     /**
@@ -80,11 +97,12 @@ public class ProductController {
     @PostMapping("/updateProducts")
     public String updateProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
                                  @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
-                                 @RequestParam int id_product, Model model) throws SQLException {
+                                 @RequestParam int id_product, Model model, RedirectAttributes redirectAttributes) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         db.updateProduct(id_product, subCategoryid, bddname, productName, description, price, stock, image);
         model.addAttribute("bddname", bddname);
-        return "redirect:/products?bddname=" + bddname;
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/products";
     }
 
     /**
@@ -99,10 +117,11 @@ public class ProductController {
      */
     @PostMapping("/deleteProducts")
     public String deleteProducts(@RequestParam String bddname, @RequestParam String productName, @RequestParam int id_product,
-                                 Model model) throws SQLException {
+                                 Model model, RedirectAttributes redirectAttributes) throws SQLException {
         DatabaseManager db = new DatabaseManager();
         db.deleteProduct(id_product, bddname, productName);
         model.addAttribute("bddname", bddname);
-        return "redirect:/products?bddname=" + bddname;
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/products";
     }
 }

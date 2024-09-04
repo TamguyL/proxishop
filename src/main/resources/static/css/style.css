@@ -118,3 +118,8 @@ a{
 .mentions{
     margin:0vw 1vw 0vw 1vw;
 }
+
+td {
+    border: 2px solid black;
+    text-align:center;
+}
