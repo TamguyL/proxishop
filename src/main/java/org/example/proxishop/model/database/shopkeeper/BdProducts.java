@@ -29,9 +29,9 @@ public class BdProducts {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             for (int i = 1; resultSet.next(); i++) {
-                double id = resultSet.getDouble("id");
+                int id = resultSet.getInt("id");
                 String productName = resultSet.getString("productName");
-                double subcatid = resultSet.getDouble("id_subCategory");
+                int subcatid = resultSet.getInt("id_subCategory");
                 double price = resultSet.getDouble("price");
                 String description = resultSet.getString("description");
                 double stockProd = resultSet.getDouble("stock");
@@ -56,7 +56,7 @@ public class BdProducts {
      * @param image         the image of the product
      * @throws SQLException if a database access error occurs
      */
-    public void  insertNewProduct(double subCategoryid, String bddname, String productName, String description, double price, double stock, String image) throws SQLException {
+    public void  insertNewProduct(int subCategoryid, String bddname, String productName, String description, double price, double stock, String image) throws SQLException {
         try (Connection connection = BdConnection.establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -89,7 +89,7 @@ public class BdProducts {
      * @param image          the image of the product
      * @throws SQLException if a database access error occurs
      */
-    public void  updateProduct(int productid, double subCategoryid, String bddname, String productName, String description, double price, double stock, String image) throws SQLException {
+    public void  updateProduct(int productid, int subCategoryid, String bddname, String productName, String description, double price, double stock, String image) throws SQLException {
         try (Connection connection = BdConnection.establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(

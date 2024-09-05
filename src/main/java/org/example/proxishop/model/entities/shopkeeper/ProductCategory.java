@@ -11,11 +11,11 @@ import java.util.List;
 public class ProductCategory{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String CategoryName;
 
 
-    public ProductCategory(Double id, String categoryName) {
+    public ProductCategory(int id, String categoryName) {
         this.id = id;
         CategoryName = categoryName;
     }

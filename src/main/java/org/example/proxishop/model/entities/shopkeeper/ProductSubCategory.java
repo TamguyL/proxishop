@@ -11,16 +11,16 @@ import lombok.Setter;
 public class ProductSubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String SubCategoryName;
-    private Double id_category;
+    private int id_category;
 
-    public ProductSubCategory(Double id, String subCategoryName) {
+    public ProductSubCategory(int id, String subCategoryName) {
         this.id = id;
         SubCategoryName = subCategoryName;
     }
 
-    public ProductSubCategory(String subCategoryName,Double id_category) {
+    public ProductSubCategory(String subCategoryName,int id_category) {
         this.id_category = id_category;
         this.SubCategoryName = subCategoryName;
     }
@@ -28,7 +28,7 @@ public class ProductSubCategory {
 
     public ProductSubCategory() {};
 
-    public ProductSubCategory(double id, String subCategoryName, double categoryId) {
+    public ProductSubCategory(int id, String subCategoryName, int categoryId) {
         this.id = id;
         this.SubCategoryName = subCategoryName;
         this.id_category = categoryId;

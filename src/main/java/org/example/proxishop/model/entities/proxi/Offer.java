@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String OfferName;
     private Double VATFreePrice;
 
@@ -23,7 +23,7 @@ public class Offer {
         this.VATFreePrice = VATFreePrice;
     }
 
-    public Offer(Double id, String offerName, Double VATFreePrice) {
+    public Offer(int id, String offerName, Double VATFreePrice) {
         this.id = id;
         OfferName = offerName;
         this.VATFreePrice = VATFreePrice;

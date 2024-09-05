@@ -9,13 +9,13 @@ import lombok.Setter;
 public class Customize {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private Double template;
     private String logo;
     private String businessDescription;
 
 
-    public Customize(Double id, Double template, String logo, String businessDescription) {
+    public Customize(int id, Double template, String logo, String businessDescription) {
         this.id = id;
         this.template = template;
         this.logo = logo;

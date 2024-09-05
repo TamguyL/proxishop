@@ -21,7 +21,7 @@ public class DataService {
         shopkeepers.setEmail(email);
         shopkeepers.setAdress(adress);
         shopkeepers.setWebSiteName(bddname);
-        shopkeepers.setId_offer(Double.parseDouble(option));
+        shopkeepers.setId_offer(Integer.parseInt(option));
 
         shopkeepersRepositoryProxi.save(shopkeepers);
     }

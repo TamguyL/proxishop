@@ -11,18 +11,18 @@ import java.util.List;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String productName;
     private String description;
     private Double stock;
     private String image;
     private Double price;
-    private Double id_subCategory;
+    private int id_subCategory;
 
 
     public Product() {}
 
-    public Product( String productName,String description, Double stock, String image, Double price, Double id_subCategory) {
+    public Product( String productName,String description, Double stock, String image, Double price, int id_subCategory) {
 
         this.productName = productName;
         this.id_subCategory = id_subCategory;
@@ -33,7 +33,7 @@ public class Product {
     }
 
 
-    public Product(double id, String productName, String description, double stock, String image, double price, double id_subCategory) {
+    public Product(int id, String productName, String description, Double stock, String image, Double price, int id_subCategory) {
         this.id = id;
         this.productName = productName;
         this.id_subCategory = id_subCategory;

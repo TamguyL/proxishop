@@ -9,12 +9,12 @@ import lombok.Setter;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String tags;
     private Double finalPrice;
 
 
-    public Orders(Double id, Double finalPrice, String tags) {
+    public Orders(int id, Double finalPrice, String tags) {
         this.id = id;
         this.finalPrice = finalPrice;
         this.tags = tags;

@@ -32,7 +32,7 @@ public class BdCategories {
 
             for (int i = 1; resultSet.next(); i++) {
                 String categoryName = resultSet.getString("categoryName");
-                double categoryId = resultSet.getDouble("id");
+                int categoryId = resultSet.getInt("id");
                 categoryNamesList.add(new ProductCategory(categoryId, categoryName));
             }
             System.out.println("category list displayed");
@@ -58,9 +58,9 @@ public class BdCategories {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             for (int i = 1; resultSet.next(); i++) {
-                double id = resultSet.getDouble("id");
+                int id = resultSet.getInt("id");
                 String SubCategoryName = resultSet.getString("SubCategoryName");
-                double catid = resultSet.getDouble("id_category");
+                int catid = resultSet.getInt("id_category");
                 subCategoryNamesList.add(new ProductSubCategory(id, SubCategoryName, catid));
             }
             System.out.println("Subcategory list displayed");
@@ -91,7 +91,7 @@ public class BdCategories {
             preparedStatement.setString(1, categoryName);
             preparedStatement.executeUpdate();
             System.out.println("Category " + categoryName + " created successfully.");
-            double idrecup = getIdcategory(categoryName, bddname);
+            int idrecup = getIdcategory(categoryName, bddname);
             System.out.println(idrecup);
             List<String> productSubCategory = new ArrayList<>();
             productSubCategory.add(subcategoryName1);
@@ -110,7 +110,7 @@ public class BdCategories {
      * @return the ID of the category
      * @throws SQLException if a database access error occurs
      */
-    private double getIdcategory(String categoryName, String bddname) throws SQLException {
+    private int getIdcategory(String categoryName, String bddname) throws SQLException {
         try (Connection connection = BdConnection.establishConnection();
              Statement statement = connection.createStatement();
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -119,7 +119,7 @@ public class BdCategories {
             preparedStatement.setString(1, categoryName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return resultSet.getDouble("id");
+                    return resultSet.getInt("id");
                 } else {
                     throw new SQLException("Category not found: " + categoryName);
                 }
@@ -135,7 +135,7 @@ public class BdCategories {
      * @param bddname            the name of the database
      * @throws SQLException if a database access error occurs
      */
-    private void insertSubProductCategoryData(List<String> productSubCategory, Double id_category, String bddname) throws SQLException {
+    private void insertSubProductCategoryData(List<String> productSubCategory, int id_category, String bddname) throws SQLException {
         for (String SubCategory : productSubCategory) {
             try (Connection connection = BdConnection.establishConnection();
                  Statement statement = connection.createStatement();

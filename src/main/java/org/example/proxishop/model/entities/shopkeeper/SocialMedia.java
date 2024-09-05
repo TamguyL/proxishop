@@ -9,14 +9,14 @@ import lombok.Setter;
 public class SocialMedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String x;
     private String insta;
     private String fb;
     private String tiktok;
     private String whatsapp;
 
-    public SocialMedia(Double id, String x, String insta, String fb, String tiktok, String whatsapp) {
+    public SocialMedia(int id, String x, String insta, String fb, String tiktok, String whatsapp) {
         this.id = id;
         this.x = x;
         this.insta = insta;

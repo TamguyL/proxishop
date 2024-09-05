@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 public class Shopkeeper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private Double siret;
     private String firstName;
     private String lastName;
@@ -44,7 +44,7 @@ public class Shopkeeper {
         this.profilePicture = profilePicture;
     }
 
-    public Shopkeeper(Double id, Double siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
+    public Shopkeeper(int id, Double siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
         this.id = id;
         this.siret = siret;
         this.firstName = firstName;

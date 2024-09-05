@@ -9,15 +9,15 @@ import lombok.Setter;
 public class Cartline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id_product;
+    private int id_product;
     private Double productQuantity;
-    private Double id_shoppingCart;
+    private int id_shoppingCart;
 
 
-    public Cartline(Double product, Double productQuantity, Double shoppingCart) {
-        this.id_product = product;
+    public Cartline(int id_product, Double productQuantity, int id_shoppingCart) {
+        this.id_product = id_product;
         this.productQuantity = productQuantity;
-        this.id_shoppingCart = shoppingCart;
+        this.id_shoppingCart = id_shoppingCart;
     }
 
     public Cartline() {};

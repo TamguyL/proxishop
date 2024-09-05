@@ -8,12 +8,12 @@ import lombok.Setter;
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private Double totalPrice;
     private Double id_customer;
 
 
-    public ShoppingCart(Double id, Double totalPrice, Double id_customer) {
+    public ShoppingCart(int id, Double totalPrice, Double id_customer) {
         this.id = id;
         this.totalPrice = totalPrice;
         this.id_customer = id_customer;
