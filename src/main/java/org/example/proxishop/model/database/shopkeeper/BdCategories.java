@@ -152,5 +152,71 @@ public class BdCategories {
         }
     }
 
+    /**
+     * Updates category data in the database.
+     *
+     * @param bddname       Le nom de la base de données.
+     * @param categoryName   Le nom de le category.
+     * @param id_category    L'ID du produit à mettre à jour.
+     * @throws SQLException if a database access error occurs
+     */
+    public void  updateCategory(int id_category, String bddname, String categoryName) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE productcategory SET CategoryName = ? WHERE id = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setString(1, categoryName);
+            preparedStatement.setInt(2, id_category);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("Category : " + categoryName + " update successfully.");
+            } else {
+                System.out.println(" !! Category : " + categoryName + " Update failed.");
+            }
+        }
+    }
+
+    /**
+     * Deletes a product from the database.
+     *
+     * @param id_category  the ID of the product
+     * @param bddname     the name of the database
+     * @throws SQLException if a database access error occurs
+     */
+    public void  deleteCategory(int id_category, String bddname) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement deleteCategoryStatement = connection.prepareStatement(
+                     "DELETE FROM productcategory WHERE id = ?");
+             PreparedStatement deleteSubCategoriesStatement = connection.prepareStatement(
+                     "DELETE FROM productsubcategory WHERE id_category = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            // Supprimer la catégorie
+            deleteCategoryStatement.setInt(1, id_category);
+            int deletedCategories = deleteCategoryStatement.executeUpdate();
+
+            if (deletedCategories > 0) {
+                System.out.println("Category with id " + id_category + " deleted successfully.");
+            } else {
+                System.out.println("No category found with id " + id_category + ".");
+            }
+
+            // Supprimer les sous-catégories associées
+            deleteSubCategoriesStatement.setInt(1, id_category);
+            int deletedSubCategories = deleteSubCategoriesStatement.executeUpdate();
+
+            if (deletedSubCategories > 0) {
+                System.out.println("Subcategories with id_category " + id_category + " deleted successfully.");
+            } else {
+                System.out.println("No subcategories found with id_category " + id_category + ".");
+            }
+        }
+    }
 
 }

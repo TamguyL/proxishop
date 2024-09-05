@@ -1,6 +1,7 @@
 package org.example.proxishop.controller;
 
 import org.example.proxishop.model.database.shopkeeper.BdCategories;
+import org.example.proxishop.model.database.shopkeeper.BdProducts;
 import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
 import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 import org.springframework.stereotype.Controller;
@@ -98,6 +99,45 @@ public class CategoryController {
             e.printStackTrace();
         }
         return "gestionCategories";
+    }
+
+    /**
+     * Met à jour la categories existante dans la base de données.
+     *
+     * @param bddname       Le nom de la base de données.
+     * @param categoryName   Le nom de le category.
+     * @param id_category    L'ID du produit à mettre à jour.
+     * @param model         Le modèle Spring MVC.
+     * @return La redirection vers la page des categories.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/updateCategory")
+    public String updateCategory(@RequestParam String bddname, @RequestParam String categoryName,
+                                 @RequestParam int id_category, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        BdCategories db = new BdCategories();
+        db.updateCategory(id_category, bddname, categoryName);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
+    }
+
+    /**
+     * Supprime un produit de la base de données.
+     *
+     * @param bddname     Le nom de la base de données.
+     * @param id_category  L'ID du produit à supprimer.
+     * @param model       Le modèle Spring MVC.
+     * @return La redirection vers la page des produits.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/deleteCategory")
+    public String deleteCategory(@RequestParam String bddname, @RequestParam int id_category,
+                                 Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        BdCategories db = new BdCategories();
+        db.deleteCategory(id_category, bddname);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
     }
 
 }

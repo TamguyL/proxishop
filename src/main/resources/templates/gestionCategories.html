@@ -28,17 +28,17 @@
     <tr th:each="category : ${categoryNamesList}" >
         <td>
             <p th:text="${category.categoryName}"></p>
-            <form th:action="@{/categories/update}" method="post" style="display:inline;">
+            <form th:action="@{/categories/updateCategory}" method="post" style="display:inline;">
                 <input type="hidden" name="bddname" th:value="${bddname}">
-                <input type="hidden" name="categoryId" th:value="${category.id}">
-                <input type="text" name="newCategoryName" required> <br/>
+                <input type="hidden" name="id_category" th:value="${category.id}">
+                <input type="text" name="categoryName" required> <br/>
                 <button type="submit">Modifier</button>
             </form>
-            <form th:action="@{/categories/delete}" method="post" style="display:inline;">
+            <form th:action="@{/categories/deleteCategory}" method="post" style="display:inline;">
                 <input type="hidden" name="bddname" th:value="${bddname}">
-                <input type="hidden" name="categoryId" th:value="${category.id}">
+                <input type="hidden" name="id_category" th:value="${category.id}">
                 <button type="submit">Supprimer</button>
-
+            </form>
         </td>
         <td>
             <ul>
