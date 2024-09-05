@@ -1,6 +1,8 @@
 package org.example.proxishop.controller;
 
+import org.example.proxishop.model.database.costumer.BdOrder;
 import org.example.proxishop.model.database.shopkeeper.BdCreation;
+import org.example.proxishop.model.database.shopkeeper.BdProducts;
 import org.example.proxishop.model.entities.customer.*;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.DataService;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,4 +88,58 @@ public class ShopkeeperController {
         model.addAttribute("bddname", bddname);
         return "categories";
     }
+//------------------------------------------------------------------------------------------
+//    @GetMapping("/orderlist")
+//    public String orderlist(Model model) throws SQLException {
+//        BdOrder db = new BdOrder();
+//        List<Orders> orderList = db.getOrderlist("test");
+//        model.addAttribute("orderList", orderList);
+//        return "orderlist";
+//    }
+
+//    @PostMapping("/updateOrder")
+//    public String updateOrder(@PathVariable Double id) throws SQLException {
+//        BdOrder db = new BdOrder();
+//        db.updateOrderState(id,"prête");
+//        return "redirect:/shopkeeper/orderlist";
+//    }
+//-----------------------------------------------------------------------------------------------
+    /**
+     * Met à jour l'état d'une commande dans la base de données.
+     *
+     * @param id            L'ID de la commande
+     * @param bddname       Le nom de la base de données.
+     * @param model         Le modèle Spring MVC.
+     * @return              La redirection vers la page des orders.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/updateOrder")
+    public String updateOrder(@RequestParam double id, @RequestParam String bddname, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        BdOrder db = new BdOrder();
+
+        db.updateOrderState(id,"prête","test");
+        model.addAttribute("bddname", bddname);
+
+        // Ajoute l'attribut temporaire pour la prochaine requête GET
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+
+        // Redirige vers la page des orders
+        return "redirect:/shopkeeper/orderlist";
+    }
+
+
+    @GetMapping("/orderlist")
+    public String showOrderList(@ModelAttribute("bddname") String bddname,Model model) throws SQLException{
+
+        // Utilisez bddname comme nécessaire
+        model.addAttribute("bddname", bddname);
+
+        // Récupérez la liste des orders et affichez-la
+        BdOrder db = new BdOrder();
+        List<Orders> orderList = db.getOrderlist("test");
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("bddname", bddname);
+        return "orderlist"; // Nom de la vue Thymeleaf ou JSP
+    }
+
 }

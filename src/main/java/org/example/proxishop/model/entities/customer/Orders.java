@@ -16,7 +16,7 @@ public class Orders {
     private String state;
 
 
-    public Orders(Double id, Double finalPrice, String tags, String orderNumber, String state) {
+    public Orders(Double id, String tags, Double finalPrice, String orderNumber, String state) {
         this.id = id;
         this.finalPrice = finalPrice;
         this.tags = tags;

@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>Liste des commandes</h1>
-<form th:action="@{/updateOrder}" method="post">
     <table>
         <thead>
         <tr>
@@ -14,6 +13,7 @@
             <th>Numéro de Commande</th>
             <th>Montant total</th>
             <th>État</th>
+            <th>id</th>
         </tr>
         </thead>
         <tbody>
@@ -22,8 +22,11 @@
             <td style="text-align: center" th:text="${order.orderNumber}"></td>
             <td style="text-align: center" th:text="${order.finalPrice}"></td>
             <td style="text-align: center" th:text="${order.state}"></td>
+            <td style="text-align: center" th:text="${order.id}"></td>
             <td>
-                <form th:action="@{/updateOrder/{id}(id=${order.id})}" method="post">
+                <form action="/shopkeeper/updateOrder" method="post">
+                    <input th:value="${order.id}" type="hidden" name="id">
+                    <input th:value="${bddname}" type="hidden" name="bddname">
                     <button type="submit">Finir la commande</button>
                 </form>
             </td>
@@ -32,6 +35,5 @@
         </tr>
         </tbody>
     </table>
-</form>
 </body>
 </html>
