@@ -1,6 +1,6 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.model.database.DatabaseManager;
+import org.example.proxishop.model.database.shopkeeper.BdSocialMedia;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ public class SocialMediaController {
     public String socialMedia(@RequestParam String bddname, @RequestParam String x, @RequestParam String instagram,
                               @RequestParam String facebook, @RequestParam String tiktok, @RequestParam String whatsapp,
                               Model model) throws SQLException {
-        DatabaseManager db = new DatabaseManager();
+        BdSocialMedia db = new BdSocialMedia();
         db.insertSocialMedia(bddname, x, instagram, facebook, tiktok, whatsapp);
         model.addAttribute("bddname", bddname);
         return "index";

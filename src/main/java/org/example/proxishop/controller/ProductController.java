@@ -1,6 +1,7 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.model.database.DatabaseManager;
+import org.example.proxishop.model.database.shopkeeper.BdCategories;
+import org.example.proxishop.model.database.shopkeeper.BdProducts;
 import org.example.proxishop.model.entities.shopkeeper.Product;
 import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
 import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
@@ -39,13 +40,14 @@ public class ProductController {
      */
     @GetMapping
     public String creaProd(@ModelAttribute("bddname") String bddname, Model model) {
-        DatabaseManager databaseManager = new DatabaseManager();
+        BdCategories db = new BdCategories();
+        BdProducts dbp = new BdProducts();
         try {
-            List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
+            List<ProductCategory> categoryNamesList = db.getAllCategories(bddname);
             model.addAttribute("categoryNamesList", categoryNamesList);
-            List<ProductSubCategory> subCategoryList = databaseManager.getAllSubCategories(bddname);
+            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(bddname);
             model.addAttribute("subCategoryList", subCategoryList);
-            List<Product> productList = databaseManager.getAllProducts(bddname);
+            List<Product> productList = dbp.getAllProducts(bddname);
             model.addAttribute("productList", productList);
             model.addAttribute("bddname", bddname);
         } catch (SQLException e) {
@@ -72,7 +74,7 @@ public class ProductController {
     public String addProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
                               @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
                               Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        DatabaseManager db = new DatabaseManager();
+        BdProducts db = new BdProducts();
         db.insertNewProduct(subCategoryid, bddname, productName, description, price, stock, image);
         model.addAttribute("bddname", bddname);
         redirectAttributes.addFlashAttribute("bddname", bddname);
@@ -98,7 +100,7 @@ public class ProductController {
     public String updateProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
                                  @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
                                  @RequestParam int id_product, Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        DatabaseManager db = new DatabaseManager();
+        BdProducts db = new BdProducts();
         db.updateProduct(id_product, subCategoryid, bddname, productName, description, price, stock, image);
         model.addAttribute("bddname", bddname);
         redirectAttributes.addFlashAttribute("bddname", bddname);
@@ -118,7 +120,7 @@ public class ProductController {
     @PostMapping("/deleteProducts")
     public String deleteProducts(@RequestParam String bddname, @RequestParam String productName, @RequestParam int id_product,
                                  Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        DatabaseManager db = new DatabaseManager();
+        BdProducts db = new BdProducts();
         db.deleteProduct(id_product, bddname, productName);
         model.addAttribute("bddname", bddname);
         redirectAttributes.addFlashAttribute("bddname", bddname);

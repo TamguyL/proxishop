@@ -1,6 +1,6 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.model.database.DatabaseManager;
+import org.example.proxishop.model.database.shopkeeper.BdCategories;
 import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
 import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 import org.springframework.stereotype.Controller;
@@ -68,7 +68,7 @@ public class CategoryController {
             Model model,
             RedirectAttributes redirectAttributes) throws SQLException {
 
-        DatabaseManager db = new DatabaseManager();
+        BdCategories db = new BdCategories();
         db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
         model.addAttribute("bddname", bddname);
         if ("ajoutcateg".equals(action)) {
@@ -86,18 +86,18 @@ public class CategoryController {
      * @param bddname Le nom de la base de données.
      * @param model   Le modèle Spring MVC.
      */
-    @GetMapping("/catalogue")
+    @GetMapping("/gestionCategories")
     public String showCatalogue(@ModelAttribute("bddname") String bddname, Model model) {
-        DatabaseManager databaseManager = new DatabaseManager();
+        BdCategories db = new BdCategories();
         try {
-            List<ProductCategory> categoryNamesList = databaseManager.getAllCategories(bddname);
+            List<ProductCategory> categoryNamesList = db.getAllCategories(bddname);
             model.addAttribute("categoryNamesList", categoryNamesList);
-            List<ProductSubCategory> subCategoryList = databaseManager.getAllSubCategories(bddname);
+            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(bddname);
             model.addAttribute("subCategoryList", subCategoryList);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "catalogue";
+        return "gestionCategories";
     }
 
 }

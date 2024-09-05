@@ -1,6 +1,6 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.model.database.DatabaseManager;
+import org.example.proxishop.model.database.shopkeeper.BdCreation;
 import org.example.proxishop.model.entities.customer.*;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.DataService;
@@ -76,7 +76,7 @@ public class ShopkeeperController {
                          @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option,
                          Model model) {
         dataService.saveDataProxi(bddname, firm_name, siret, firstName, lastName, email, adress, option);
-        DatabaseManager db = new DatabaseManager();
+        BdCreation db = new BdCreation();
         List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
                 Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
         Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
