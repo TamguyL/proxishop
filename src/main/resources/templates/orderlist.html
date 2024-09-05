@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des commandes</title>
+</head>
+<body>
+<h1>Liste des commandes</h1>
+<form th:action="@{/updateOrder}" method="post">
+    <table>
+        <thead>
+        <tr>
+            <th>Tags</th>
+            <th>Numéro de Commande</th>
+            <th>Montant total</th>
+            <th>État</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, orderStat : ${orderList}">
+            <td style="text-align: center" th:text="${order.tags}"></td>
+            <td style="text-align: center" th:text="${order.orderNumber}"></td>
+            <td style="text-align: center" th:text="${order.finalPrice}"></td>
+            <td style="text-align: center" th:text="${order.state}"></td>
+            <td>
+                <form th:action="@{/updateOrder/{id}(id=${order.id})}" method="post">
+                    <button type="submit">Finir la commande</button>
+                </form>
+            </td>
+
+
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+</html>
