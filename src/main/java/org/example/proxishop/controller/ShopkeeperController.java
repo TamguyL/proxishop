@@ -82,6 +82,6 @@ public class ShopkeeperController {
         Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
         db.createDatabaseAndTables(bddname, classes, shopkeeper);
         model.addAttribute("bddname", bddname);
-        return "categories";
+        return "redirect:/categories/gestionCategories";
     }
 }

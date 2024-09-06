@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:insert="header">
+<head th:insert="~{header}">
 
     <meta charset="UTF-8">
     <title>Catalogue</title>
@@ -44,23 +44,41 @@
             <ul>
                 <li th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}">
                     <span th:text="${subCategory.subCategoryName}"></span>
-                    <form th:action="@{/subcategories/update}" method="post" style="display:inline;">
+                    <form th:action="@{/categories/updateSubCategory}" method="post" style="display:inline;">
                         <input type="hidden" name="bddname" th:value="${bddname}">
-                        <input type="hidden" name="subCategoryId" th:value="${subCategory.id}">
-                        <input type="text" name="newSubCategoryName" required>
+                        <input type="hidden" name="id_subCategory" th:value="${subCategory.id}">
+                        <input type="text" name="SubCategoryName" required>
                         <button type="submit">Modifier</button>
                     </form>
-                    <form th:action="@{/subcategories/delete}" method="post" style="display:inline;">
+                    <form th:action="@{/categories/deleteSubCategory}" method="post" style="display:inline;">
                         <input type="hidden" name="bddname" th:value="${bddname}">
-                        <input type="hidden" name="subCategoryId" th:value="${subCategory.id}">
+                        <input type="hidden" name="id_subCategory" th:value="${subCategory.id}">
                         <button type="submit">Supprimer</button>
                     </form>
                 </li>
             </ul>
+            <hr>
+            <form id="subCategoryForm" method="POST" action="/categories/addSubCategory" style="display:inline;">
+                <input type="hidden" name="bddname" th:value="${bddname}">
+                <input type="hidden" name="id_category" th:value="${category.id}">
+                <label for="subCategoryName">Nom d'une nouvelle sous catégorie:</label>
+                <input type="text" id="subCategoryName" name="subCategoryName" required>
+                <button type="submit">Ajouter une sous catégorie</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form id="categoryForm" method="POST" action="/categories/addCategory" style="display:inline;">
+                <input type="hidden" name="bddname" th:value="${bddname}">
+                <label for="categoryName">Nom d'une nouvelle catégorie:</label>
+                <input type="text" id="categoryName" name="categories" required>
+                <button type="submit">Ajouter une catégorie</button>
+            </form>
         </td>
     </tr>
     </tbody>
 </table>
-
+<a href="/products"><button>Gestion des Produits</button></a>
 </body>
 </html>

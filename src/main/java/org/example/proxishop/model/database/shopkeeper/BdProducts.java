@@ -69,7 +69,7 @@ public class BdProducts {
             preparedStatement.setDouble(3, stock);
             preparedStatement.setString(4, image);
             preparedStatement.setDouble(5, price);
-            preparedStatement.setDouble(6, subCategoryid);
+            preparedStatement.setInt(6, subCategoryid);
             preparedStatement.executeUpdate();
 
             System.out.println("Product " + productName + " created successfully.");
@@ -102,7 +102,7 @@ public class BdProducts {
             preparedStatement.setDouble(3, stock);
             preparedStatement.setString(4, image);
             preparedStatement.setDouble(5, price);
-            preparedStatement.setDouble(6, subCategoryid);
+            preparedStatement.setInt(6, subCategoryid);
             preparedStatement.setInt(7, productid);
             int updated = preparedStatement.executeUpdate();
 

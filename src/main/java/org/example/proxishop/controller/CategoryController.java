@@ -102,11 +102,33 @@ public class CategoryController {
     }
 
     /**
+     * Gère la soumission des catégories et sous-catégories.
+     *
+     * @param bddname              Le nom de la base de données.
+     * @param categoryName         Le nom de la catégorie.
+     * @param model                Le modèle Spring MVC.
+     * @return Le nom de la vue à afficher après la soumission.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/addCategory")
+    public String addCategory(
+            @RequestParam("bddname") String bddname,
+            @RequestParam("categories") String categoryName,
+            Model model, RedirectAttributes redirectAttributes) throws SQLException {
+
+        BdCategories db = new BdCategories();
+        db.insertCategory(categoryName, bddname);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
+    }
+
+    /**
      * Met à jour la categories existante dans la base de données.
      *
      * @param bddname       Le nom de la base de données.
      * @param categoryName   Le nom de le category.
-     * @param id_category    L'ID du produit à mettre à jour.
+     * @param id_category    L'ID de la categorie à mettre à jour.
      * @param model         Le modèle Spring MVC.
      * @return La redirection vers la page des categories.
      * @throws SQLException Si une erreur SQL se produit.
@@ -125,7 +147,7 @@ public class CategoryController {
      * Supprime un produit de la base de données.
      *
      * @param bddname     Le nom de la base de données.
-     * @param id_category  L'ID du produit à supprimer.
+     * @param id_category  L'ID de la categorie à supprimer.
      * @param model       Le modèle Spring MVC.
      * @return La redirection vers la page des produits.
      * @throws SQLException Si une erreur SQL se produit.
@@ -135,6 +157,69 @@ public class CategoryController {
                                  Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdCategories db = new BdCategories();
         db.deleteCategory(id_category, bddname);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
+    }
+
+    /**
+     * Gère la soumission des catégories et sous-catégories.
+     *
+     * @param bddname              Le nom de la base de données.
+     * @param subCategoryName         Le nom de la catégorie.
+     * @param id_category  L'ID de la categorie à supprimer.
+     * @param model                Le modèle Spring MVC.
+     * @return Le nom de la vue à afficher après la soumission.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/addSubCategory")
+    public String addSubCategory(
+            @RequestParam("bddname") String bddname,
+            @RequestParam("subCategoryName") String subCategoryName,
+            @RequestParam("id_category") int id_category,
+            Model model, RedirectAttributes redirectAttributes) throws SQLException {
+
+        BdCategories db = new BdCategories();
+        db.insertSubCategory(id_category, subCategoryName, bddname);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
+    }
+
+    /**
+     * Met à jour la categories existante dans la base de données.
+     *
+     * @param bddname       Le nom de la base de données.
+     * @param SubCategoryName   Le nom de le sous category.
+     * @param id_subCategory    L'ID de la sous categorie à mettre à jour.
+     * @param model         Le modèle Spring MVC.
+     * @return La redirection vers la page des categories.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/updateSubCategory")
+    public String updateSubCategory(@RequestParam String bddname, @RequestParam String SubCategoryName,
+                                 @RequestParam int id_subCategory, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        BdCategories db = new BdCategories();
+        db.updateSubCategory(id_subCategory, bddname, SubCategoryName);
+        model.addAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("bddname", bddname);
+        return "redirect:/categories/gestionCategories";
+    }
+
+    /**
+     * Supprime un produit de la base de données.
+     *
+     * @param bddname     Le nom de la base de données.
+     * @param id_subCategory  L'ID de la sous categorie à supprimer.
+     * @param model       Le modèle Spring MVC.
+     * @return La redirection vers la page des produits.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/deleteSubCategory")
+    public String deleteSubCategory(@RequestParam String bddname, @RequestParam int id_subCategory,
+                                 Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        BdCategories db = new BdCategories();
+        db.deleteSubCategory(id_subCategory, bddname);
         model.addAttribute("bddname", bddname);
         redirectAttributes.addFlashAttribute("bddname", bddname);
         return "redirect:/categories/gestionCategories";

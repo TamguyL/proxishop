@@ -76,6 +76,8 @@ public class BdCreation {
                     sql.append("DOUBLE");
                 } else if (field.getType().equals(String.class)) {
                     sql.append("VARCHAR(255)");
+                } else if (field.getType().equals(int.class)) {
+                    sql.append("INT");
                 } else {
                     throw new IllegalArgumentException("Type non supporté: " + field.getType());
                 }

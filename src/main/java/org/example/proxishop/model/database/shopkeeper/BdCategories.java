@@ -144,7 +144,7 @@ public class BdCategories {
 
                 statement.executeUpdate("USE " + bddname);
                 preparedStatement.setString(1, SubCategory);
-                preparedStatement.setDouble(2, id_category);
+                preparedStatement.setInt(2, id_category);
                 preparedStatement.executeUpdate();
 
                 System.out.println("SubCategory " + SubCategory + " created successfully.");
@@ -176,6 +176,30 @@ public class BdCategories {
                 System.out.println("Category : " + categoryName + " update successfully.");
             } else {
                 System.out.println(" !! Category : " + categoryName + " Update failed.");
+            }
+        }
+    }
+
+    /**
+     * Inserts category and subcategories into the database.
+     *
+     * @param categoryName     the name of the category
+     * @param bddname          the name of the database
+     * @throws SQLException if a database access error occurs
+     */
+    public void insertCategory(String categoryName, String bddname) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO productcategory (CategoryName) VALUES (?)")) {
+
+            statement.executeUpdate("USE " + bddname);
+            preparedStatement.setString(1, categoryName);
+            int updated = preparedStatement.executeUpdate();
+            if (updated > 0) {
+                System.out.println("Category : " + categoryName + " created successfully.");
+            } else {
+                System.out.println(" !! Category : " + categoryName + " created failed.");
             }
         }
     }
@@ -215,6 +239,86 @@ public class BdCategories {
                 System.out.println("Subcategories with id_category " + id_category + " deleted successfully.");
             } else {
                 System.out.println("No subcategories found with id_category " + id_category + ".");
+            }
+        }
+    }
+
+    /**
+     * Inserts category and subcategories into the database.
+     *
+     * @param id_category       Id de la categorie
+     * @param subCategoryName     the name of the category
+     * @param bddname          the name of the database
+     * @throws SQLException if a database access error occurs
+     */
+    public void insertSubCategory(int id_category, String subCategoryName, String bddname) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
+
+            statement.executeUpdate("USE " + bddname);
+            preparedStatement.setString(1, subCategoryName);
+            preparedStatement.setInt(2, id_category);
+            int updated = preparedStatement.executeUpdate();
+            if (updated > 0) {
+                System.out.println("SubCategory : " + subCategoryName + " created successfully.");
+            } else {
+                System.out.println(" !! SubCategory : " + subCategoryName + " created failed.");
+            }
+        }
+    }
+
+    /**
+     * Updates category data in the database.
+     *
+     * @param bddname       Le nom de la base de données.
+     * @param SubCategoryName   Le nom de le category.
+     * @param id_subCategory    L'ID de le sous category à mettre à jour.
+     * @throws SQLException if a database access error occurs
+     */
+    public void  updateSubCategory(int id_subCategory, String bddname, String SubCategoryName) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "UPDATE productsubcategory SET SubCategoryName = ? WHERE id = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            preparedStatement.setString(1, SubCategoryName);
+            preparedStatement.setInt(2, id_subCategory);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("Category : " + SubCategoryName + " update successfully.");
+            } else {
+                System.out.println(" !! Category : " + SubCategoryName + " Update failed.");
+            }
+        }
+    }
+
+    /**
+     * Deletes a product from the database.
+     *
+     * @param bddname       Le nom de la base de données.
+     * @param id_subCategory    L'ID de le sous category à mettre à jour.
+     * @throws SQLException if a database access error occurs
+     */
+    public void  deleteSubCategory(int id_subCategory, String bddname) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection();
+             Statement statement = connection.createStatement();
+             PreparedStatement deleteSubCategoriesStatement = connection.prepareStatement(
+                     "DELETE FROM productsubcategory WHERE id = ?")) {
+
+            statement.executeUpdate("USE " + bddname);
+
+            deleteSubCategoriesStatement.setInt(1, id_subCategory);
+            int deletedSubCategories = deleteSubCategoriesStatement.executeUpdate();
+
+            if (deletedSubCategories > 0) {
+                System.out.println("Subcategories with id_category " + id_subCategory + " deleted successfully.");
+            } else {
+                System.out.println("No subcategories found with id_category " + id_subCategory + ".");
             }
         }
     }
