@@ -2,7 +2,6 @@ package org.example.proxishop.model.database.shopkeeper;
 
 import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
 
-
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,9 +22,9 @@ public class BdCreation {
     public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, Shopkeeper shopkeeper) {
         try {
             BdConnection.validateParameters(databaseName, classes);
-            Connection connection = BdConnection.establishConnection();
+            Connection connection = BdConnection.establishConnection(databaseName);
             addBdAndTable(connection, databaseName, classes);
-            insertShopkeeperData(connection, shopkeeper);
+            insertShopkeeperData(connection, shopkeeper, databaseName);
         } catch (SQLException e) {
             System.err.println("SQL error occurred: " + e.getMessage());
         } catch (IllegalArgumentException e) {
@@ -47,9 +46,6 @@ public class BdCreation {
         String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + databaseName;
         statement.executeUpdate(createDatabaseSQL);
         System.out.println("Database " + databaseName + " created successfully.");
-
-        String useDatabaseSQL = "USE " + databaseName;
-        statement.executeUpdate(useDatabaseSQL);
 
         List<String> createTableSQLs = generateCreateTableSQL(classes);
         for (String createTableSQL : createTableSQLs) {
@@ -94,13 +90,14 @@ public class BdCreation {
     /**
      * Inserts shopkeeper data into the database.
      *
-     * @param connection the database connection
-     * @param shopkeeper the shopkeeper object to insert data for
+     * @param connection   the database connection
+     * @param shopkeeper   the shopkeeper object to insert data for
+     * @param databaseName the name of the database
      * @throws SQLException if a database access error occurs
      */
-    private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper) throws SQLException {
+    private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper, String databaseName) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
+                "INSERT INTO " + databaseName + ".shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
         preparedStatement.setDouble(1, shopkeeper.getSiret()); // siret
         preparedStatement.setString(2, shopkeeper.getFirstName()); // firstName
         preparedStatement.setString(3, shopkeeper.getLastName()); // lastName
@@ -110,5 +107,4 @@ public class BdCreation {
         preparedStatement.executeUpdate();
         System.out.println("Shopkeeper Profils created successfully.");
     }
-
 }

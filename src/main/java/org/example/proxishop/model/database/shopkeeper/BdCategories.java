@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Manages the insertion, update, and deletion of Categories ans sub-categories in the database.
+ * Manages the insertion, update, and deletion of Categories and sub-categories in the database.
  */
 public class BdCategories {
 
@@ -22,20 +22,18 @@ public class BdCategories {
      */
     public List<ProductCategory> getAllCategories(String bddname) throws SQLException {
         List<ProductCategory> categoryNamesList = new ArrayList<>();
-        try (Connection connection = BdConnection.establishConnection();
+        String query = "SELECT * FROM productcategory";
+        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+        try (Connection connection = BdConnection.establishConnection(bddname);
              Statement statement = connection.createStatement();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM productcategory")) {
+             ResultSet resultSet = statement.executeQuery(query)) {
 
-            statement.execute("USE " + bddname);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            for (int i = 1; resultSet.next(); i++) {
+            while (resultSet.next()) {
                 String categoryName = resultSet.getString("categoryName");
                 double categoryId = resultSet.getDouble("id");
                 categoryNamesList.add(new ProductCategory(categoryId, categoryName));
             }
-            System.out.println("category list displayed");
+            System.out.println("Category list displayed");
         }
         return categoryNamesList;
     }
@@ -49,15 +47,13 @@ public class BdCategories {
      */
     public List<ProductSubCategory> getAllSubCategories(String bddname) throws SQLException {
         List<ProductSubCategory> subCategoryNamesList = new ArrayList<>();
-        try (Connection connection = BdConnection.establishConnection();
+        String query = "SELECT * FROM productsubcategory";
+        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+        try (Connection connection = BdConnection.establishConnection(bddname);
              Statement statement = connection.createStatement();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT * FROM productsubcategory")) {
+             ResultSet resultSet = statement.executeQuery(query)) {
 
-            statement.execute("USE " + bddname);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            for (int i = 1; resultSet.next(); i++) {
+            while (resultSet.next()) {
                 double id = resultSet.getDouble("id");
                 String SubCategoryName = resultSet.getString("SubCategoryName");
                 double catid = resultSet.getDouble("id_category");
@@ -67,7 +63,6 @@ public class BdCategories {
         }
         return subCategoryNamesList;
     }
-
 
     /**
      * Inserts category and subcategories into the database.
@@ -82,12 +77,10 @@ public class BdCategories {
      * @throws SQLException if a database access error occurs
      */
     public void insertCategoryAndSubCategory(String categoryName, String subcategoryName1, String subcategoryName2, String subcategoryName3, String subcategoryName4, String subcategoryName5, String bddname) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection();
-             Statement statement = connection.createStatement();
+        try (Connection connection = BdConnection.establishConnection(bddname);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO productcategory (CategoryName) VALUES (?)")) {
 
-            statement.executeUpdate("USE " + bddname);
             preparedStatement.setString(1, categoryName);
             preparedStatement.executeUpdate();
             System.out.println("Category " + categoryName + " created successfully.");
@@ -111,11 +104,9 @@ public class BdCategories {
      * @throws SQLException if a database access error occurs
      */
     private double getIdcategory(String categoryName, String bddname) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection();
-             Statement statement = connection.createStatement();
+        try (Connection connection = BdConnection.establishConnection(bddname);
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT id FROM productcategory WHERE CategoryName = (?)")) {
-            statement.executeUpdate("USE " + bddname);
+                     "SELECT id FROM productcategory WHERE CategoryName = ?")) {
             preparedStatement.setString(1, categoryName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -137,12 +128,10 @@ public class BdCategories {
      */
     private void insertSubProductCategoryData(List<String> productSubCategory, Double id_category, String bddname) throws SQLException {
         for (String SubCategory : productSubCategory) {
-            try (Connection connection = BdConnection.establishConnection();
-                 Statement statement = connection.createStatement();
+            try (Connection connection = BdConnection.establishConnection(bddname);
                  PreparedStatement preparedStatement = connection.prepareStatement(
                          "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
 
-                statement.executeUpdate("USE " + bddname);
                 preparedStatement.setString(1, SubCategory);
                 preparedStatement.setDouble(2, id_category);
                 preparedStatement.executeUpdate();
@@ -151,6 +140,4 @@ public class BdCategories {
             }
         }
     }
-
-
 }

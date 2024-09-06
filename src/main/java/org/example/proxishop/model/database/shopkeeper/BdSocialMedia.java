@@ -3,13 +3,11 @@ package org.example.proxishop.model.database.shopkeeper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Manages the insertion, update, and deletion of Social Media in the database.
  */
 public class BdSocialMedia {
-
 
     /**
      * Inserts social media data into the database.
@@ -23,12 +21,9 @@ public class BdSocialMedia {
      * @throws SQLException if a database access error occurs
      */
     public void insertSocialMedia(String bddname, String x, String instagram, String facebook, String tiktok, String whatsapp) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection();
-             Statement statement = connection.createStatement();
+        try (Connection connection = BdConnection.establishConnection(bddname);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO socialmedia (x, insta, fb, tiktok, whatsapp) VALUES (?, ?, ?, ?, ?)")) {
-
-            statement.executeUpdate("USE " + bddname);
 
             preparedStatement.setString(1, x);
             preparedStatement.setString(2, instagram);

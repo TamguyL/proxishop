@@ -16,13 +16,13 @@ public class BdConnection {
     /**
      * Establishes a connection to the database.
      *
+     * @param databaseName the name of the database
      * @return a Connection object
      * @throws SQLException if a database access error occurs
      */
-    public static Connection establishConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection establishConnection(String databaseName) throws SQLException {
+        return DriverManager.getConnection(URL + databaseName, USER, PASSWORD);
     }
-
 
     /**
      * Validates the input parameters to avoid SQL injection.

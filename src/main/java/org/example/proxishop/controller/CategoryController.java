@@ -68,6 +68,7 @@ public class CategoryController {
             Model model,
             RedirectAttributes redirectAttributes) throws SQLException {
 
+        System.out.println("Database name: " + bddname); // Ajouter un log pour vérifier le nom de la base de données
         BdCategories db = new BdCategories();
         db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
         model.addAttribute("bddname", bddname);
@@ -88,6 +89,7 @@ public class CategoryController {
      */
     @GetMapping("/gestionCategories")
     public String showCatalogue(@ModelAttribute("bddname") String bddname, Model model) {
+        System.out.println("Database name: " + bddname); // Ajouter un log pour vérifier le nom de la base de données
         BdCategories db = new BdCategories();
         try {
             List<ProductCategory> categoryNamesList = db.getAllCategories(bddname);
@@ -99,5 +101,4 @@ public class CategoryController {
         }
         return "gestionCategories";
     }
-
 }
