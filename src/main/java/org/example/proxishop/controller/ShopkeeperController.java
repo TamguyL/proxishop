@@ -1,5 +1,4 @@
 package org.example.proxishop.controller;
-
 import org.example.proxishop.model.database.costumer.BdOrder;
 import org.example.proxishop.model.database.shopkeeper.BdCreation;
 import org.example.proxishop.model.entities.customer.*;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +27,8 @@ public class ShopkeeperController {
     // Initialisation de l'attribut de session
     @ModelAttribute("bddname")
     public String setUpbddname() {
-
-        return "";      // Initialisez avec une valeur par défaut ou null
+        return ""; // Initialisez avec une valeur par défaut ou null
     }
-
 
     // Méthode pour nettoyer la session
     @GetMapping("/clearSession")
@@ -38,17 +37,14 @@ public class ShopkeeperController {
         return "redirect:/index";
     }
 
-
     @Autowired
     private ProxiShopService proxiShopService;
 
     @Autowired
     ShopkeeperService shopkeeperService;
 
-
     /**
      * Affiche la page du commerçant.
-     *
      */
     @GetMapping
     public String shopkeeper() {
@@ -57,7 +53,6 @@ public class ShopkeeperController {
 
     /**
      * Affiche la page de création d'une nouvelle base de données.
-     *
      */
     @GetMapping("/newbdd")
     public String newbdd() {
@@ -133,7 +128,6 @@ public class ShopkeeperController {
         return "redirect:/shopkeeper/orderlist";
     }
 
-
     @GetMapping("/orderlist")
     public String showOrderList(@ModelAttribute("bddname") String bddname,Model model) throws SQLException{
 
@@ -150,13 +144,11 @@ public class ShopkeeperController {
 
     /**
      * Affiche la page de connexion
-     *
      */
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
     }
-
 
     /**
      * Gère la connexion des commerçants.
