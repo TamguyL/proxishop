@@ -2,6 +2,10 @@ package org.example.proxishop.model.database.shopkeeper;
 
 import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BdCreation {
+
+    private static final Logger logger = LoggerFactory.getLogger(BdCreation.class);
 
     /**
      * Creates the database and tables based on the provided classes.
@@ -26,12 +32,11 @@ public class BdCreation {
             addBdAndTable(connection, databaseName, classes);
             insertShopkeeperData(connection, shopkeeper, databaseName);
         } catch (SQLException e) {
-            System.err.println("SQL error occurred: " + e.getMessage());
+            logger.error("SQL error occurred: " + e.getMessage(), e);
         } catch (IllegalArgumentException e) {
-            System.err.println("Invalid input: " + e.getMessage());
+            logger.error("Invalid input: " + e.getMessage(), e);
         }
     }
-
     /**
      * Creates the database and tables.
      *
@@ -44,14 +49,19 @@ public class BdCreation {
         Statement statement = connection.createStatement();
 
         String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + databaseName;
+        logger.debug("Executing SQL: " + createDatabaseSQL);
         statement.executeUpdate(createDatabaseSQL);
-        System.out.println("Database " + databaseName + " created successfully.");
+        logger.info("Database " + databaseName + " created successfully.");
+
+        // Use the newly created database
+        statement.execute("USE " + databaseName);
 
         List<String> createTableSQLs = generateCreateTableSQL(classes);
         for (String createTableSQL : createTableSQLs) {
+            logger.debug("Executing SQL: " + createTableSQL);
             statement.executeUpdate(createTableSQL);
         }
-        System.out.println("All Tables created successfully.");
+        logger.info("All Tables created successfully.");
     }
 
     /**
