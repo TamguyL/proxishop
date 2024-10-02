@@ -105,6 +105,6 @@ public class BdCreation {
         preparedStatement.setString(5, shopkeeper.getAdress()); // adress
         preparedStatement.setString(6, shopkeeper.getProfilePicture()); // profilePicture
         preparedStatement.executeUpdate();
-        System.out.println("Shopkeeper Profils created successfully.");
+        System.out.println("Shopkeeper Profile created successfully.");
     }
 }

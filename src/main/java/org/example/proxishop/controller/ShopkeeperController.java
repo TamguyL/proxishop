@@ -149,6 +149,16 @@ public class ShopkeeperController {
     }
 
     /**
+     * Affiche la de création de compte
+     *
+     */
+    @GetMapping("/accountCreation")
+    public String showAccountCreationForm() {
+        return "accountCreation";
+    }
+
+
+    /**
      * Affiche la page de connexion
      *
      */
