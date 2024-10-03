@@ -11,41 +11,44 @@ import lombok.Setter;
 public class Shopkeepers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private Double siret;
     private String firstName;
     private String lastName;
     private String email;
-    private String webSiteName;
+    private String websiteName;
     private String firmName;
     private String adress;
-    private Double id_offer;
-
+    private int id_offer;
+    private String password;
+    private String profilePicture;
 
     public Shopkeepers() {
     }
 
-    public Shopkeepers(Double siret, String firstName, String lastName, String email, String webSiteName, String firmName, String adress, Double id_offer) {
+    public Shopkeepers(String firstName, String lastName, String firmName, String adress, Double siret, String email, String password, String profilePicture) {
         this.siret = siret;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.webSiteName = webSiteName;
         this.firmName = firmName;
         this.adress = adress;
-        this.id_offer = id_offer;
+        this.password = password;
+        this.profilePicture = profilePicture;
+
     }
 
-    public Shopkeepers(Double id, Double siret, String firstName, String lastName, String email, String webSiteName, String firmName, String adress, Double id_offer) {
+    public Shopkeepers(int id, Double siret, String firstName, String lastName, String email, String websiteName, String firmName, String adress, int id_offer, String profilePicture) {
         this.id = id;
         this.siret = siret;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.webSiteName = webSiteName;
+        this.websiteName = websiteName;
         this.firmName = firmName;
         this.adress = adress;
         this.id_offer = id_offer;
+        this.profilePicture = profilePicture;
     }
 
 }

@@ -1,7 +1,7 @@
 package org.example.proxishop.Security;
 
-import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
-import org.example.proxishop.service.ShopkeeperService;
+import org.example.proxishop.model.entities.proxi.Shopkeepers;
+import org.example.proxishop.service.ProxiShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,15 +19,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Autowired
-    private ShopkeeperService shopkeeperService;
+    private ProxiShopService proxiShopService;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            Shopkeeper shopkeeper = shopkeeperService.findByEmail(username);
-            if (shopkeeper != null) {
-                return User.withUsername(shopkeeper.getEmail())
-                        .password(shopkeeper.getPassword())
+            Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
+            if (shopkeepers != null) {
+                return User.withUsername(shopkeepers.getEmail())
+                        .password(shopkeepers.getPassword())
                         .roles("USER")
                         .build();
             } else {
@@ -45,10 +45,11 @@ public class SecurityConfig {
                                 .requestMatchers("/shopkeeper/dashboard").authenticated()
                                 .requestMatchers("/shopkeeper/categories").authenticated()
                                 .requestMatchers("/shopkeeper/orders").authenticated()
+                                .requestMatchers("/shopkeeper/accountCreation").permitAll() //autorise la création d'un nouveau compte sur proxishop
                                 .requestMatchers("/shopkeeper/newbdd").permitAll() // Autoriser la création de base de données
                                 .anyRequest().permitAll()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/shopkeeper/newbdd")) // Désactiver CSRF pour /shopkeeper/newbdd
+
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/shopkeeper/login")

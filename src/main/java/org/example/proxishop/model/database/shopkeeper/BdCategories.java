@@ -16,15 +16,15 @@ public class BdCategories {
     /**
      * Retrieves all categories from the database.
      *
-     * @param bddname the name of the database
+     * @param website_name the name of the database
      * @return a list of ProductCategory objects
      * @throws SQLException if a database access error occurs
      */
-    public List<ProductCategory> getAllCategories(String bddname) throws SQLException {
+    public List<ProductCategory> getAllCategories(String website_name) throws SQLException {
         List<ProductCategory> categoryNamesList = new ArrayList<>();
         String query = "SELECT * FROM productcategory";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
-        try (Connection connection = BdConnection.establishConnection(bddname);
+        try (Connection connection = BdConnection.establishConnection(website_name);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
@@ -41,15 +41,15 @@ public class BdCategories {
     /**
      * Retrieves all subcategories from the database.
      *
-     * @param bddname the name of the database
+     * @param website_name the name of the database
      * @return a list of ProductSubCategory objects
      * @throws SQLException if a database access error occurs
      */
-    public List<ProductSubCategory> getAllSubCategories(String bddname) throws SQLException {
+    public List<ProductSubCategory> getAllSubCategories(String website_name) throws SQLException {
         List<ProductSubCategory> subCategoryNamesList = new ArrayList<>();
         String query = "SELECT * FROM productsubcategory";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
-        try (Connection connection = BdConnection.establishConnection(bddname);
+        try (Connection connection = BdConnection.establishConnection(website_name);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
@@ -73,25 +73,25 @@ public class BdCategories {
      * @param subcategoryName3 the name of the third subcategory
      * @param subcategoryName4 the name of the fourth subcategory
      * @param subcategoryName5 the name of the fifth subcategory
-     * @param bddname          the name of the database
+     * @param website_name          the name of the database
      * @throws SQLException if a database access error occurs
      */
-    public void insertCategoryAndSubCategory(String categoryName, String subcategoryName1, String subcategoryName2, String subcategoryName3, String subcategoryName4, String subcategoryName5, String bddname) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection(bddname);
+    public void insertCategoryAndSubCategory(String categoryName, String subcategoryName1, String subcategoryName2, String subcategoryName3, String subcategoryName4, String subcategoryName5, String website_name) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection(website_name);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO productcategory (CategoryName) VALUES (?)")) {
 
             preparedStatement.setString(1, categoryName);
             preparedStatement.executeUpdate();
             System.out.println("Category " + categoryName + " created successfully.");
-            double idrecup = getIdcategory(categoryName, bddname);
+            double idrecup = getIdcategory(categoryName, website_name);
             System.out.println(idrecup);
             List<String> productSubCategory = new ArrayList<>();
             productSubCategory.add(subcategoryName1);
             Stream.of(subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5)
                     .filter(name -> !name.isEmpty())
                     .forEach(productSubCategory::add);
-            insertSubProductCategoryData(productSubCategory, idrecup, bddname);
+            insertSubProductCategoryData(productSubCategory, idrecup, website_name);
         }
     }
 
@@ -99,12 +99,12 @@ public class BdCategories {
      * Retrieves the ID of a category.
      *
      * @param categoryName the name of the category
-     * @param bddname      the name of the database
+     * @param website_name      the name of the database
      * @return the ID of the category
      * @throws SQLException if a database access error occurs
      */
-    private double getIdcategory(String categoryName, String bddname) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection(bddname);
+    private double getIdcategory(String categoryName, String website_name) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection(website_name);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT id FROM productcategory WHERE CategoryName = ?")) {
             preparedStatement.setString(1, categoryName);
@@ -123,12 +123,12 @@ public class BdCategories {
      *
      * @param productSubCategory a list of subcategory names
      * @param id_category        the ID of the category
-     * @param bddname            the name of the database
+     * @param website_name            the name of the database
      * @throws SQLException if a database access error occurs
      */
-    private void insertSubProductCategoryData(List<String> productSubCategory, Double id_category, String bddname) throws SQLException {
+    private void insertSubProductCategoryData(List<String> productSubCategory, Double id_category, String website_name) throws SQLException {
         for (String SubCategory : productSubCategory) {
-            try (Connection connection = BdConnection.establishConnection(bddname);
+            try (Connection connection = BdConnection.establishConnection(website_name);
                  PreparedStatement preparedStatement = connection.prepareStatement(
                          "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
 

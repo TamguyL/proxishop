@@ -16,7 +16,7 @@ public class SocialMediaController {
     /**
      * Gère la soumission des informations de médias sociaux.
      *
-     * @param bddname   Le nom de la base de données.
+     * @param website_name   Le nom de la base de données.
      * @param x         Le lien Twitter.
      * @param instagram Le lien Instagram.
      * @param facebook  Le lien Facebook.
@@ -27,12 +27,12 @@ public class SocialMediaController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping
-    public String socialMedia(@RequestParam String bddname, @RequestParam String x, @RequestParam String instagram,
+    public String socialMedia(@RequestParam String website_name, @RequestParam String x, @RequestParam String instagram,
                               @RequestParam String facebook, @RequestParam String tiktok, @RequestParam String whatsapp,
                               Model model) throws SQLException {
         BdSocialMedia db = new BdSocialMedia();
-        db.insertSocialMedia(bddname, x, instagram, facebook, tiktok, whatsapp);
-        model.addAttribute("bddname", bddname);
+        db.insertSocialMedia(website_name, x, instagram, facebook, tiktok, whatsapp);
+        model.addAttribute("website_name", website_name);
         return "index";
     }
 }

@@ -5,15 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Profile;
 
-@Profile("!disableJpa")
+
 @Getter
 @Setter
-@Entity
+
 public class Shopkeeper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Double id;
-    private Double siret;
+    private int siret;
     private String firstName;
     private String lastName;
     private String password;
@@ -25,7 +25,7 @@ public class Shopkeeper {
     public Shopkeeper() {
     }
 
-    public Shopkeeper(Double siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
+    public Shopkeeper(int siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
         this.siret = siret;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,7 +35,7 @@ public class Shopkeeper {
         this.profilePicture = profilePicture;
     }
 
-    public Shopkeeper(Double siret, String firstName, String lastName, String email, String adress, String profilePicture) {
+    public Shopkeeper(int siret, String firstName, String lastName, String email, String adress, String profilePicture) {
         this.siret = siret;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -44,7 +44,7 @@ public class Shopkeeper {
         this.profilePicture = profilePicture;
     }
 
-    public Shopkeeper(Double id, Double siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
+    public Shopkeeper(Double id, int siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
         this.id = id;
         this.siret = siret;
         this.firstName = firstName;

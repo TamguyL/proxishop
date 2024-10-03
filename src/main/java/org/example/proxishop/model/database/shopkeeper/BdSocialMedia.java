@@ -12,7 +12,7 @@ public class BdSocialMedia {
     /**
      * Inserts social media data into the database.
      *
-     * @param bddname   the name of the database
+     * @param website_name   the name of the database
      * @param x         the X link
      * @param instagram the Instagram link
      * @param facebook  the Facebook link
@@ -20,8 +20,8 @@ public class BdSocialMedia {
      * @param whatsapp  the WhatsApp link
      * @throws SQLException if a database access error occurs
      */
-    public void insertSocialMedia(String bddname, String x, String instagram, String facebook, String tiktok, String whatsapp) throws SQLException {
-        try (Connection connection = BdConnection.establishConnection(bddname);
+    public void insertSocialMedia(String website_name, String x, String instagram, String facebook, String tiktok, String whatsapp) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection(website_name);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO socialmedia (x, insta, fb, tiktok, whatsapp) VALUES (?, ?, ?, ?, ?)")) {
 

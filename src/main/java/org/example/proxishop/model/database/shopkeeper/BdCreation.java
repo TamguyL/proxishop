@@ -7,10 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,19 +15,23 @@ public class BdCreation {
 
     private static final Logger logger = LoggerFactory.getLogger(BdCreation.class);
 
+    private static final String URL = "jdbc:mysql://localhost:3306/";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+
     /**
      * Creates the database and tables based on the provided classes.
      *
-     * @param databaseName the name of the database
+     * @param website_name the name of the database
      * @param classes      a list of classes to create tables for
      * @param shopkeeper   the shopkeeper object to insert data for
      */
-    public void createDatabaseAndTables(String databaseName, List<Class<?>> classes, Shopkeeper shopkeeper) {
+    public void createDatabaseAndTables(String website_name, List<Class<?>> classes, Shopkeeper shopkeeper) {
         try {
-            BdConnection.validateParameters(databaseName, classes);
-            Connection connection = BdConnection.establishConnection(databaseName);
-            addBdAndTable(connection, databaseName, classes);
-            insertShopkeeperData(connection, shopkeeper, databaseName);
+            BdConnection.validateParameters(website_name, classes);
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            addBdAndTable(connection, website_name, classes);
+            insertShopkeeperData(connection, shopkeeper, website_name);
         } catch (SQLException e) {
             logger.error("SQL error occurred: " + e.getMessage(), e);
         } catch (IllegalArgumentException e) {
@@ -41,20 +42,20 @@ public class BdCreation {
      * Creates the database and tables.
      *
      * @param connection   the database connection
-     * @param databaseName the name of the database
+     * @param website_name the name of the database
      * @param classes      a list of classes to create tables for
      * @throws SQLException if a database access error occurs
      */
-    private void addBdAndTable(Connection connection, String databaseName, List<Class<?>> classes) throws SQLException {
+    private void addBdAndTable(Connection connection, String website_name, List<Class<?>> classes) throws SQLException {
         Statement statement = connection.createStatement();
 
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + databaseName;
+        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS " + website_name;
         logger.debug("Executing SQL: " + createDatabaseSQL);
         statement.executeUpdate(createDatabaseSQL);
-        logger.info("Database " + databaseName + " created successfully.");
+        logger.info("Database " + website_name + " created successfully.");
 
         // Use the newly created database
-        statement.execute("USE " + databaseName);
+        statement.execute("USE " + website_name);
 
         List<String> createTableSQLs = generateCreateTableSQL(classes);
         for (String createTableSQL : createTableSQLs) {
@@ -82,6 +83,8 @@ public class BdCreation {
                     sql.append("DOUBLE");
                 } else if (field.getType().equals(String.class)) {
                     sql.append("VARCHAR(255)");
+                } else if (field.getType().equals(int.class)) {
+                    sql.append("INT");
                 } else {
                     throw new IllegalArgumentException("Type non supporté: " + field.getType());
                 }
@@ -102,12 +105,12 @@ public class BdCreation {
      *
      * @param connection   the database connection
      * @param shopkeeper   the shopkeeper object to insert data for
-     * @param databaseName the name of the database
+     * @param website_name the name of the database
      * @throws SQLException if a database access error occurs
      */
-    private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper, String databaseName) throws SQLException {
+    private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper, String website_name) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO " + databaseName + ".shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
+                "INSERT INTO " + website_name + ".shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
         preparedStatement.setDouble(1, shopkeeper.getSiret()); // siret
         preparedStatement.setString(2, shopkeeper.getFirstName()); // firstName
         preparedStatement.setString(3, shopkeeper.getLastName()); // lastName

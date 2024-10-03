@@ -5,14 +5,12 @@ import org.example.proxishop.model.entities.customer.*;
 import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.ProxiShopService;
-import org.example.proxishop.service.ShopkeeperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 
 import java.sql.SQLException;
@@ -40,8 +38,6 @@ public class ShopkeeperController {
     @Autowired
     private ProxiShopService proxiShopService;
 
-    @Autowired
-    ShopkeeperService shopkeeperService;
 
     /**
      * Affiche la page du commerçant.
@@ -54,10 +50,7 @@ public class ShopkeeperController {
     /**
      * Affiche la page de création d'une nouvelle base de données.
      */
-    @GetMapping("/newbdd")
-    public String newbdd() {
-        return "newbdd";
-    }
+
 
     /**
      * Crée une nouvelle base de données et initialise les tables nécessaires.
@@ -77,68 +70,62 @@ public class ShopkeeperController {
      *
      * Ne pas oublier d'ajouter le PASSWORD dans DatabaseManager
      */
-    @PostMapping("/newbdd")
-    public String newbdd(@RequestParam String bddname, @RequestParam String firm_name, @RequestParam Double siret,
-                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
-                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam String option,
-                         Model model) {
-        Shopkeepers shopkeepers = new Shopkeepers();
-        shopkeepers.setFirmName(firm_name);
-        shopkeepers.setSiret(siret);
-        shopkeepers.setFirstName(firstName);
-        shopkeepers.setLastName(lastName);
-        shopkeepers.setEmail(email);
-        shopkeepers.setAdress(adress);
-        shopkeepers.setWebSiteName(bddname);
-        shopkeepers.setId_offer(Double.parseDouble(option));
+//    @PostMapping("/newbdd")
+//    public String newbdd(@RequestParam String bddname, @RequestParam String firm_name, @RequestParam Double siret,
+//                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
+//                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam int option,
+//                         Model model) {
+//        Shopkeepers shopkeepers = new Shopkeepers();
+//        shopkeepers.setFirmName(firm_name);
+//        shopkeepers.setSiret(siret);
+//        shopkeepers.setFirstName(firstName);
+//        shopkeepers.setLastName(lastName);
+//        shopkeepers.setEmail(email);
+//        shopkeepers.setAdress(adress);
+//        shopkeepers.setWebsiteName(bddname);
+//        shopkeepers.setId_offer(option);
+//
+//        proxiShopService.saveShopkeeper(shopkeepers);
+//
+//        Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
 
-        proxiShopService.saveShopkeeper(shopkeepers);
 
-        Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
-        shopkeeperService.saveShopkeeper(shopkeeper);
 
-        BdCreation db = new BdCreation();
-        List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
-                Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
-        db.createDatabaseAndTables(bddname, classes, shopkeeper);
-        model.addAttribute("bddname", bddname);
-        return "categories";
-    }
 
     /**
      * Met à jour l'état d'une commande dans la base de données.
      *
      * @param id            L'ID de la commande
-     * @param bddname       Le nom de la base de données.
+     * @param website_name       Le nom de la base de données.
      * @param model         Le modèle Spring MVC.
      * @return              La redirection vers la page des orders.
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/updateOrder")
-    public String updateOrder(@RequestParam double id, @RequestParam String bddname, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+    public String updateOrder(@RequestParam double id, @RequestParam String website_name, Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdOrder db = new BdOrder();
 
         db.updateOrderState(id,"prête","test");
-        model.addAttribute("bddname", bddname);
+        model.addAttribute("website_name", website_name);
 
         // Ajoute l'attribut temporaire pour la prochaine requête GET
-        redirectAttributes.addFlashAttribute("bddname", bddname);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
 
         // Redirige vers la page des orders
         return "redirect:/shopkeeper/orderlist";
     }
 
     @GetMapping("/orderlist")
-    public String showOrderList(@ModelAttribute("bddname") String bddname,Model model) throws SQLException{
+    public String showOrderList(@ModelAttribute("website_name") String website_name,Model model) throws SQLException{
 
         // Utilisez bddname comme nécessaire
-        model.addAttribute("bddname", bddname);
+        model.addAttribute("website_name", website_name);
 
         // Récupérez la liste des orders et affichez-la
         BdOrder db = new BdOrder();
         List<Orders> orderList = db.getOrderlist("test");
         model.addAttribute("orderList", orderList);
-        model.addAttribute("bddname", bddname);
+        model.addAttribute("website_name", website_name);
         return "orderlist"; // Nom de la vue Thymeleaf ou JSP
     }
 
@@ -151,6 +138,45 @@ public class ShopkeeperController {
         return "accountCreation";
     }
 
+    @PostMapping("/accountCreation")
+    public String newAccount(
+                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String firm_name, @RequestParam String adress, @RequestParam Double siret, @RequestParam String email,
+                         @RequestParam String password, @RequestParam String profilePicture,
+                         Model model) {
+        Shopkeepers shopkeepers = new Shopkeepers();
+        shopkeepers.setFirstName(firstName);
+        shopkeepers.setLastName(lastName);
+        shopkeepers.setFirmName(firm_name);
+        shopkeepers.setAdress(adress);
+        shopkeepers.setSiret(siret);
+        shopkeepers.setEmail(email);
+        shopkeepers.setPassword(password);
+        shopkeepers.setProfilePicture(profilePicture);
+
+        proxiShopService.saveShopkeeper(shopkeepers);
+
+        model.addAttribute("shopkeepers", shopkeepers);
+//        System.out.println(shopkeepers.getFirstName());
+        return "redirect:/shopkeeper/newbdd";
+    }
+
+    @GetMapping("/newbdd")
+    public String newbdd(@ModelAttribute("shopkeepers") Shopkeeper shopkeeper, Model model) {
+        model.addAttribute("shopkeepers", shopkeeper);
+        System.out.println(shopkeeper.getFirstName());
+        return "newbdd";
+    }
+
+        @PostMapping("/newbdd")
+        public String createShopkeeperDB(@ModelAttribute("shopkeepers") Shopkeeper shopkeeper,@RequestParam String website_name,@RequestParam int option, Model model){
+        System.out.println(shopkeeper.getFirstName());
+        BdCreation db = new BdCreation();
+        List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
+                Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
+        db.createDatabaseAndTables(website_name, classes, shopkeeper);
+        model.addAttribute("website_name", website_name);
+        return "categories";
+    }
 
     /**
      * Affiche la page de connexion
@@ -170,9 +196,9 @@ public class ShopkeeperController {
      */
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password, Model model) {
-        Shopkeeper shopkeeper = shopkeeperService.findByEmail(email);
-        if (shopkeeper != null && shopkeeper.getPassword().equals(password)) {
-            model.addAttribute("shopkeeper", shopkeeper);
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(email);
+        if (shopkeepers != null && shopkeepers.getPassword().equals(password)) {
+            model.addAttribute("shopkeepers", shopkeepers);
             return "redirect:/shopkeeper/dashboard";
         } else {
             model.addAttribute("error", "Invalid credentials");
@@ -183,13 +209,13 @@ public class ShopkeeperController {
     /**
      * Affiche le tableau de bord du commerçant.
      *
-     * @param shopkeeper L'objet Shopkeeper représentant le commerçant connecté.
+     * @param shopkeepers L'objet Shopkeeper représentant le commerçant connecté.
      * @param model       Le modèle Spring MVC.
      * @return La vue du tableau de bord.
      */
     @GetMapping("/dashboard")
-    public String showDashboard(@ModelAttribute("shopkeeper") Shopkeeper shopkeeper, Model model) {
-        model.addAttribute("shopkeeper", shopkeeper);
+    public String showDashboard(@ModelAttribute("shopkeepers") Shopkeepers shopkeepers, Model model) {
+        model.addAttribute("shopkeeper", shopkeepers);
         return "dashboard";
     }
 }

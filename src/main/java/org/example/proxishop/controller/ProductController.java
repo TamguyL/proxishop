@@ -16,11 +16,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/products")
-@SessionAttributes("bddname")
+@SessionAttributes("website_name")
 public class ProductController {
 
     // Initialisation de l'attribut de session
-    @ModelAttribute("bddname")
+    @ModelAttribute("website_name")
     public String setUpbddname() {
         return ""; // Initialisez avec une valeur par défaut ou null
     }
@@ -35,21 +35,21 @@ public class ProductController {
     /**
      * Affiche la page de création de produits.
      *
-     * @param bddname Le nom de la base de données.
+     * @param website_name Le nom de la base de données.
      * @param model   Le modèle Spring MVC.
      */
     @GetMapping
-    public String creaProd(@ModelAttribute("bddname") String bddname, Model model) {
+    public String creaProd(@ModelAttribute("website_name") String website_name, Model model) {
         BdCategories db = new BdCategories();
         BdProducts dbp = new BdProducts();
         try {
-            List<ProductCategory> categoryNamesList = db.getAllCategories(bddname);
+            List<ProductCategory> categoryNamesList = db.getAllCategories(website_name);
             model.addAttribute("categoryNamesList", categoryNamesList);
-            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(bddname);
+            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(website_name);
             model.addAttribute("subCategoryList", subCategoryList);
-            List<Product> productList = dbp.getAllProducts(bddname);
+            List<Product> productList = dbp.getAllProducts(website_name);
             model.addAttribute("productList", productList);
-            model.addAttribute("bddname", bddname);
+            model.addAttribute("bddname", website_name);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +60,7 @@ public class ProductController {
      * Ajoute un nouveau produit à la base de données.
      *
      * @param subCategoryid L'ID de la sous-catégorie.
-     * @param bddname       Le nom de la base de données.
+     * @param website_name       Le nom de la base de données.
      * @param productName   Le nom du produit.
      * @param description   La description du produit.
      * @param price         Le prix du produit.
@@ -71,13 +71,13 @@ public class ProductController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/addProducts")
-    public String addProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
+    public String addProducts(@RequestParam double subCategoryid, @RequestParam String website_name, @RequestParam String productName,
                               @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
                               Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdProducts db = new BdProducts();
-        db.insertNewProduct(subCategoryid, bddname, productName, description, price, stock, image);
-        model.addAttribute("bddname", bddname);
-        redirectAttributes.addFlashAttribute("bddname", bddname);
+        db.insertNewProduct(subCategoryid, website_name, productName, description, price, stock, image);
+        model.addAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
         return "redirect:/products";
     }
 
@@ -85,7 +85,7 @@ public class ProductController {
      * Met à jour un produit existant dans la base de données.
      *
      * @param subCategoryid L'ID de la sous-catégorie.
-     * @param bddname       Le nom de la base de données.
+     * @param website_name       Le nom de la base de données.
      * @param productName   Le nom du produit.
      * @param description   La description du produit.
      * @param price         Le prix du produit.
@@ -97,20 +97,20 @@ public class ProductController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/updateProducts")
-    public String updateProducts(@RequestParam double subCategoryid, @RequestParam String bddname, @RequestParam String productName,
+    public String updateProducts(@RequestParam double subCategoryid, @RequestParam String website_name, @RequestParam String productName,
                                  @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
                                  @RequestParam int id_product, Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdProducts db = new BdProducts();
-        db.updateProduct(id_product, subCategoryid, bddname, productName, description, price, stock, image);
-        model.addAttribute("bddname", bddname);
-        redirectAttributes.addFlashAttribute("bddname", bddname);
+        db.updateProduct(id_product, subCategoryid, website_name, productName, description, price, stock, image);
+        model.addAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
         return "redirect:/products";
     }
 
     /**
      * Supprime un produit de la base de données.
      *
-     * @param bddname     Le nom de la base de données.
+     * @param website_name     Le nom de la base de données.
      * @param productName Le nom du produit.
      * @param id_product  L'ID du produit à supprimer.
      * @param model       Le modèle Spring MVC.
@@ -118,12 +118,12 @@ public class ProductController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/deleteProducts")
-    public String deleteProducts(@RequestParam String bddname, @RequestParam String productName, @RequestParam int id_product,
+    public String deleteProducts(@RequestParam String website_name, @RequestParam String productName, @RequestParam int id_product,
                                  Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdProducts db = new BdProducts();
-        db.deleteProduct(id_product, bddname, productName);
-        model.addAttribute("bddname", bddname);
-        redirectAttributes.addFlashAttribute("bddname", bddname);
+        db.deleteProduct(id_product, website_name, productName);
+        model.addAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
         return "redirect:/products";
     }
 }

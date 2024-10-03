@@ -14,11 +14,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/categories")
-@SessionAttributes("bddname")
+@SessionAttributes("website_name")
 public class CategoryController {
 
     // Initialisation de l'attribut de session
-    @ModelAttribute("bddname")
+    @ModelAttribute("website_name")
     public String setUpbddname() {
         return ""; // Initialisez avec une valeur par défaut ou null
     }
@@ -43,7 +43,7 @@ public class CategoryController {
      * Gère la soumission des catégories et sous-catégories.
      *
      * @param action               L'action à effectuer (ajout de catégorie ou ajout de produit).
-     * @param bddname              Le nom de la base de données.
+     * @param website_name              Le nom de la base de données.
      * @param categoryName         Le nom de la catégorie.
      * @param subcategoryName1     Le nom de la première sous-catégorie.
      * @param subcategoryName2     Le nom de la deuxième sous-catégorie.
@@ -58,7 +58,7 @@ public class CategoryController {
     @PostMapping
     public String handleSubmit(
             @RequestParam("action") String action,
-            @RequestParam("bddname") String bddname,
+            @RequestParam("website_name") String website_name,
             @RequestParam("categories1") String categoryName,
             @RequestParam("subcategories1") String subcategoryName1,
             @RequestParam("subcategories2") String subcategoryName2,
@@ -68,14 +68,14 @@ public class CategoryController {
             Model model,
             RedirectAttributes redirectAttributes) throws SQLException {
 
-        System.out.println("Database name: " + bddname); // Ajouter un log pour vérifier le nom de la base de données
+        System.out.println("Database name: " + website_name); // Ajouter un log pour vérifier le nom de la base de données
         BdCategories db = new BdCategories();
-        db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, bddname);
-        model.addAttribute("bddname", bddname);
+        db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, website_name);
+        model.addAttribute("website_name", website_name);
         if ("ajoutcateg".equals(action)) {
             return "categories";
         } else if ("addProduct".equals(action)) {
-            redirectAttributes.addFlashAttribute("bddname", bddname);
+            redirectAttributes.addFlashAttribute("website_name", website_name);
             return "redirect:/products";
         }
         return "error";
@@ -84,17 +84,17 @@ public class CategoryController {
     /**
      * Affiche le catalogue des produits.
      *
-     * @param bddname Le nom de la base de données.
+     * @param website_name Le nom de la base de données.
      * @param model   Le modèle Spring MVC.
      */
     @GetMapping("/gestionCategories")
-    public String showCatalogue(@ModelAttribute("bddname") String bddname, Model model) {
-        System.out.println("Database name: " + bddname); // Ajouter un log pour vérifier le nom de la base de données
+    public String showCatalogue(@ModelAttribute("website_name") String website_name, Model model) {
+        System.out.println("Database name: " + website_name); // Ajouter un log pour vérifier le nom de la base de données
         BdCategories db = new BdCategories();
         try {
-            List<ProductCategory> categoryNamesList = db.getAllCategories(bddname);
+            List<ProductCategory> categoryNamesList = db.getAllCategories(website_name);
             model.addAttribute("categoryNamesList", categoryNamesList);
-            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(bddname);
+            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(website_name);
             model.addAttribute("subCategoryList", subCategoryList);
         } catch (SQLException e) {
             e.printStackTrace();
