@@ -1,6 +1,7 @@
 package org.example.proxishop.model.entities.shopkeeper;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Profile;
@@ -8,12 +9,12 @@ import org.springframework.context.annotation.Profile;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
 public class Shopkeeper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
-    private int siret;
+    private int id;
+    private String siret;
     private String firstName;
     private String lastName;
     private String password;
@@ -25,34 +26,5 @@ public class Shopkeeper {
     public Shopkeeper() {
     }
 
-    public Shopkeeper(int siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
-        this.siret = siret;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.email = email;
-        this.adress = adress;
-        this.profilePicture = profilePicture;
-    }
-
-    public Shopkeeper(int siret, String firstName, String lastName, String email, String adress, String profilePicture) {
-        this.siret = siret;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.adress = adress;
-        this.profilePicture = profilePicture;
-    }
-
-    public Shopkeeper(Double id, int siret, String firstName, String lastName, String password, String email, String adress, String profilePicture) {
-        this.id = id;
-        this.siret = siret;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.email = email;
-        this.adress = adress;
-        this.profilePicture = profilePicture;
-    }
 
 }

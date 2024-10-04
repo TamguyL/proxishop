@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ShopkeepersRepositoryProxi extends JpaRepository<Shopkeepers, Long> {
     Shopkeepers findByEmail(String email);
 
+    Shopkeepers findById(int id);
+
 
 }

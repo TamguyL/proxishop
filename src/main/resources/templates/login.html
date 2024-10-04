@@ -5,11 +5,15 @@
 </head>
 <body>
 <h1>Login</h1>
-<form method="post" action="/shopkeeper/login">
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email" required><br>
+<form method="post" th:action="@{/shopkeeper/login}">
+    <label for="username">Email:</label>
+    <input type="text" id="username" name="username" required><br>
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required><br>
+
+    <!-- Include CSRF token -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
     <button type="submit">Login</button>
 </form>
 <p th:if="${error}" th:text="${error}" style="color:red;"></p>

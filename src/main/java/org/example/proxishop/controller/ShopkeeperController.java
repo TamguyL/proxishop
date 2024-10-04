@@ -1,4 +1,6 @@
 package org.example.proxishop.controller;
+import jakarta.servlet.http.HttpSession;
+import org.example.proxishop.Security.SiretValidator;
 import org.example.proxishop.model.database.costumer.BdOrder;
 import org.example.proxishop.model.database.shopkeeper.BdCreation;
 import org.example.proxishop.model.entities.customer.*;
@@ -6,6 +8,9 @@ import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.ProxiShopService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +42,9 @@ public class ShopkeeperController {
 
     @Autowired
     private ProxiShopService proxiShopService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     /**
@@ -140,9 +148,17 @@ public class ShopkeeperController {
 
     @PostMapping("/accountCreation")
     public String newAccount(
-                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String firm_name, @RequestParam String adress, @RequestParam Double siret, @RequestParam String email,
+                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String firm_name, @RequestParam String adress, @RequestParam String siret, @RequestParam String email,
                          @RequestParam String password, @RequestParam String profilePicture,
-                         Model model) {
+                         HttpSession session) {
+
+        // Vérifier si le SIRET est valide
+        if (!SiretValidator.isValidSiret(siret)) {
+            // Gérer l'erreur, par exemple en renvoyant une vue d'erreur ou en ajoutant un message d'erreur
+            return "accountCreation"; // Remplacez par la vue appropriée
+        }
+
+        String encryptedPassword = passwordEncoder.encode(password);
         Shopkeepers shopkeepers = new Shopkeepers();
         shopkeepers.setFirstName(firstName);
         shopkeepers.setLastName(lastName);
@@ -150,33 +166,48 @@ public class ShopkeeperController {
         shopkeepers.setAdress(adress);
         shopkeepers.setSiret(siret);
         shopkeepers.setEmail(email);
-        shopkeepers.setPassword(password);
+        shopkeepers.setPassword(encryptedPassword);
         shopkeepers.setProfilePicture(profilePicture);
 
         proxiShopService.saveShopkeeper(shopkeepers);
+        // Convertir Shopkeepers en Shopkeeper
+        Shopkeeper shopkeeper = new Shopkeeper(
+                shopkeepers.getId(),
+                shopkeepers.getSiret(),
+                shopkeepers.getFirstName(),
+                shopkeepers.getLastName(),
+                shopkeepers.getPassword(),
+                shopkeepers.getEmail(),
+                shopkeepers.getAdress(),
+                shopkeepers.getProfilePicture()
+        );
 
-        model.addAttribute("shopkeepers", shopkeepers);
-//        System.out.println(shopkeepers.getFirstName());
+
+        session.setAttribute("shopkeeper", shopkeeper);
+
         return "redirect:/shopkeeper/newbdd";
     }
 
     @GetMapping("/newbdd")
-    public String newbdd(@ModelAttribute("shopkeepers") Shopkeeper shopkeeper, Model model) {
-        model.addAttribute("shopkeepers", shopkeeper);
-        System.out.println(shopkeeper.getFirstName());
+    public String newbdd() {
         return "newbdd";
     }
 
         @PostMapping("/newbdd")
-        public String createShopkeeperDB(@ModelAttribute("shopkeepers") Shopkeeper shopkeeper,@RequestParam String website_name,@RequestParam int option, Model model){
-        System.out.println(shopkeeper.getFirstName());
-        BdCreation db = new BdCreation();
-        List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
-                Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
-        db.createDatabaseAndTables(website_name, classes, shopkeeper);
-        model.addAttribute("website_name", website_name);
-        return "categories";
-    }
+        public String createShopkeeperDB(HttpSession session,@RequestParam String website_name,@RequestParam int id_offer, Model model) {
+
+            BdCreation db = new BdCreation();
+            List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,
+                    Customize.class, Product.class, ProductCategory.class, Shopkeeper.class, SocialMedia.class, ProductSubCategory.class);
+
+            Shopkeeper shopkeeper = (Shopkeeper) session.getAttribute("shopkeeper");
+            proxiShopService.updateShopkeeper(shopkeeper.getId(), website_name, id_offer);
+            db.createDatabaseAndTables(website_name, classes, shopkeeper);
+
+            model.addAttribute("website_name", website_name);
+            model.addAttribute("id_offer", id_offer);
+            return "login";
+        }
 
     /**
      * Affiche la page de connexion
@@ -189,14 +220,14 @@ public class ShopkeeperController {
     /**
      * Gère la connexion des commerçants.
      *
-     * @param email    L'adresse email du commerçant.
+     * @param username    L'adresse email du commerçant.
      * @param password Le mot de passe du commerçant.
      * @param model    Le modèle Spring MVC.
      * @return La redirection vers le tableau de bord si la connexion est réussie, sinon retourne la page de connexion avec un message d'erreur.
      */
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, Model model) {
-        Shopkeepers shopkeepers = proxiShopService.findByEmail(email);
+    public String login(@RequestParam String username, @RequestParam String password, Model model) {
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
         if (shopkeepers != null && shopkeepers.getPassword().equals(password)) {
             model.addAttribute("shopkeepers", shopkeepers);
             return "redirect:/shopkeeper/dashboard";

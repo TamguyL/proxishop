@@ -23,6 +23,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
+
         return username -> {
             Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
             if (shopkeepers != null) {
@@ -65,5 +66,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+}
 }

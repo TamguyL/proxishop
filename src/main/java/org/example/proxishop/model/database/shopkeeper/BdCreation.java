@@ -110,13 +110,14 @@ public class BdCreation {
      */
     private void insertShopkeeperData(Connection connection, Shopkeeper shopkeeper, String website_name) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO " + website_name + ".shopkeeper (siret, firstName, lastName, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?)");
-        preparedStatement.setDouble(1, shopkeeper.getSiret()); // siret
+                "INSERT INTO " + website_name + ".shopkeeper (siret, firstName, lastName,password, email, adress, profilePicture) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        preparedStatement.setString(1, shopkeeper.getSiret()); // siret
         preparedStatement.setString(2, shopkeeper.getFirstName()); // firstName
-        preparedStatement.setString(3, shopkeeper.getLastName()); // lastName
-        preparedStatement.setString(4, shopkeeper.getEmail()); // email
-        preparedStatement.setString(5, shopkeeper.getAdress()); // adress
-        preparedStatement.setString(6, shopkeeper.getProfilePicture()); // profilePicture
+        preparedStatement.setString(3, shopkeeper.getLastName());
+        preparedStatement.setString(4, shopkeeper.getPassword());// lastName
+        preparedStatement.setString(5, shopkeeper.getEmail()); // email
+        preparedStatement.setString(6, shopkeeper.getAdress()); // adress
+        preparedStatement.setString(7, shopkeeper.getProfilePicture()); // profilePicture
         preparedStatement.executeUpdate();
         System.out.println("Shopkeeper Profile created successfully.");
     }
