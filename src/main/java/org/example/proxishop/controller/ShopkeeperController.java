@@ -8,16 +8,19 @@ import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.ProxiShopService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
@@ -54,50 +57,6 @@ public class ShopkeeperController {
     public String shopkeeper() {
         return "shopkeeper";
     }
-
-    /**
-     * Affiche la page de création d'une nouvelle base de données.
-     */
-
-
-    /**
-     * Crée une nouvelle base de données et initialise les tables nécessaires.
-     *
-     * @param bddname         Le nom de la nouvelle base de données.
-     * @param firm_name       Le nom de la firme.
-     * @param siret           Le numéro SIRET.
-     * @param firstName       Le prénom du commerçant.
-     * @param lastName        Le nom de famille du commerçant.
-     * @param email           L'adresse email du commerçant.
-     * @param adress          L'adresse du commerçant.
-     * @param profilePicture  L'URL de la photo de profil du commerçant.
-     * @param option          Une option supplémentaire.
-     * @param model           Le modèle Spring MVC.
-     * -
-     * Pour créé les table il faut bien remplir la List<Class<?>> classes avec les models exemple.class
-     *
-     * Ne pas oublier d'ajouter le PASSWORD dans DatabaseManager
-     */
-//    @PostMapping("/newbdd")
-//    public String newbdd(@RequestParam String bddname, @RequestParam String firm_name, @RequestParam Double siret,
-//                         @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
-//                         @RequestParam String adress, @RequestParam String profilePicture, @RequestParam int option,
-//                         Model model) {
-//        Shopkeepers shopkeepers = new Shopkeepers();
-//        shopkeepers.setFirmName(firm_name);
-//        shopkeepers.setSiret(siret);
-//        shopkeepers.setFirstName(firstName);
-//        shopkeepers.setLastName(lastName);
-//        shopkeepers.setEmail(email);
-//        shopkeepers.setAdress(adress);
-//        shopkeepers.setWebsiteName(bddname);
-//        shopkeepers.setId_offer(option);
-//
-//        proxiShopService.saveShopkeeper(shopkeepers);
-//
-//        Shopkeeper shopkeeper = new Shopkeeper(siret, firstName, lastName, email, adress, profilePicture);
-
-
 
 
     /**
@@ -149,15 +108,51 @@ public class ShopkeeperController {
     @PostMapping("/accountCreation")
     public String newAccount(
                          @RequestParam String firstName, @RequestParam String lastName, @RequestParam String firm_name, @RequestParam String adress, @RequestParam String siret, @RequestParam String email,
-                         @RequestParam String password, @RequestParam String profilePicture,
-                         HttpSession session) {
+                         @RequestParam String password, @RequestParam("profilePicture") MultipartFile file,
+                         HttpSession session, Model model) throws IOException {
 
         // Vérifier si le SIRET est valide
         if (!SiretValidator.isValidSiret(siret)) {
-            // Gérer l'erreur, par exemple en renvoyant une vue d'erreur ou en ajoutant un message d'erreur
-            return "accountCreation"; // Remplacez par la vue appropriée
+            model.addAttribute("error", "Numéro siret non valide !");
+            return "accountCreation";
+        }
+        // Vérifier si EMAIL n'est pas déjà enregistré
+        if (proxiShopService.existsByEmail(email)) {
+            model.addAttribute("error", "Utilisateur est déjà enregistré !");
+            return "accountCreation";
         }
 
+        // Validation du fichier image
+        try {
+            // Verifier si file n'est pas vide
+            if (file.isEmpty()) {
+                model.addAttribute("error", "L'image de profil est vide");
+                return "accountCreation";
+            }
+            // Vérifier le format de image
+            String contentType = file.getContentType();
+            if (!(contentType.equals("image/png") || contentType.equals("image/jpeg") || contentType.equals("image/gif"))) {
+                model.addAttribute("error", "Le format de l'image doit être PNG, JPG ou GIF");
+                return "accountCreation";
+            }
+            BufferedImage image = ImageIO.read(file.getInputStream());
+            if (image == null) {
+                model.addAttribute("error", "Le fichier n'est pas une image valide");
+                return "accountCreation";
+            }
+            // Vérifier taille de image
+            if (image.getWidth() > 500 || image.getHeight() > 500) {
+                model.addAttribute("error", "L'image ne doit pas dépasser 500x500 pixels");
+                return "accountCreation";
+            }
+            // Sauvegarder image
+            String destinationPath = System.getProperty("user.dir") + "/uploads/profiles/" + file.getOriginalFilename();
+            File dest = new File(destinationPath);
+            file.transferTo(dest);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String imageUrl = "/uploads/profiles/" + file.getOriginalFilename();
         String encryptedPassword = passwordEncoder.encode(password);
         Shopkeepers shopkeepers = new Shopkeepers();
         shopkeepers.setFirstName(firstName);
@@ -167,7 +162,7 @@ public class ShopkeeperController {
         shopkeepers.setSiret(siret);
         shopkeepers.setEmail(email);
         shopkeepers.setPassword(encryptedPassword);
-        shopkeepers.setProfilePicture(profilePicture);
+        shopkeepers.setProfilePicture(imageUrl);
 
         proxiShopService.saveShopkeeper(shopkeepers);
         // Convertir Shopkeepers en Shopkeeper
@@ -188,6 +183,7 @@ public class ShopkeeperController {
         return "redirect:/shopkeeper/newbdd";
     }
 
+
     @GetMapping("/newbdd")
     public String newbdd() {
         return "newbdd";
@@ -195,6 +191,11 @@ public class ShopkeeperController {
 
         @PostMapping("/newbdd")
         public String createShopkeeperDB(HttpSession session,@RequestParam String website_name,@RequestParam int id_offer, Model model) {
+
+            if (proxiShopService.existsByWebsiteName(website_name)) {
+                model.addAttribute("error", "Nom du site déjà utilisé !");
+                return "newbdd";
+            }
 
             BdCreation db = new BdCreation();
             List<Class<?>> classes = Arrays.asList(Cartline.class, Customer.class, Orders.class, ShoppingCart.class,

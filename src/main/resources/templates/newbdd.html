@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>créez votre site</title>
@@ -28,5 +28,6 @@
 
     <button type="submit">suivant</button>
 </form>
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
 </body>
 </html>

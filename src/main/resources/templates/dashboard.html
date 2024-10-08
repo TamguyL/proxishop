@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dashboard</title>
 </head>
 <body>
 <h1>Welcome to your Dashboard</h1>
-<!-- Logique pour afficher les options de gestion du site -->
+<div th:if="${shopkeepers.profilePicture != null}">
+    <img th:src="@{${shopkeepers.profilePicture}}" alt="Photo de profil" style="max-width: 500px; max-height: 500px;">
+</div>
+<div th:if="${shopkeepers.profilePicture == null}">
+    <p>Aucune photo de profil n'a été téléchargée.</p>
+</div>
 </body>
 </html>

@@ -8,5 +8,7 @@ public interface ShopkeepersRepositoryProxi extends JpaRepository<Shopkeepers, L
 
     Shopkeepers findById(int id);
 
+    boolean existsByWebsiteName(String websiteName);
 
+    boolean existsByEmail(String email);
 }
