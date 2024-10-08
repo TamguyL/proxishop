@@ -1,10 +1,15 @@
 package org.example.proxishop.model.entities.customer;
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,15 +17,4 @@ public class ShoppingCart {
     private Double totalPrice;
     private Double id_customer;
 
-
-    public ShoppingCart(Double id, Double totalPrice, Double id_customer) {
-        this.id = id;
-        this.totalPrice = totalPrice;
-        this.id_customer = id_customer;
-    }
-    public ShoppingCart(Double totalPrice, Double id_customer) {
-        this.totalPrice = totalPrice;
-        this.id_customer = id_customer;
-    }
-    public ShoppingCart() {}
 }

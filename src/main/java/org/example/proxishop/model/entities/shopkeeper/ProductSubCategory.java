@@ -1,36 +1,20 @@
 package org.example.proxishop.model.entities.shopkeeper;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductSubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String SubCategoryName;
-    private Double id_category;
+    private int id_category;
 
-    public ProductSubCategory(Double id, String subCategoryName) {
-        this.id = id;
-        SubCategoryName = subCategoryName;
-    }
-
-    public ProductSubCategory(String subCategoryName,Double id_category) {
-        this.id_category = id_category;
-        this.SubCategoryName = subCategoryName;
-    }
-
-
-    public ProductSubCategory() {};
-
-    public ProductSubCategory(double id, String subCategoryName, double categoryId) {
-        this.id = id;
-        this.SubCategoryName = subCategoryName;
-        this.id_category = categoryId;
-    }
 }

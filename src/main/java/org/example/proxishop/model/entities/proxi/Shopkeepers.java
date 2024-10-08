@@ -3,11 +3,13 @@ package org.example.proxishop.model.entities.proxi;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="shopkeepers")
 public class Shopkeepers {
@@ -24,9 +26,5 @@ public class Shopkeepers {
     private int id_offer;
     private String password;
     private String profilePicture;
-
-    public Shopkeepers() {
-    }
-
 
 }

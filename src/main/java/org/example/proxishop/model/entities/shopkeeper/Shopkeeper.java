@@ -3,13 +3,13 @@ package org.example.proxishop.model.entities.shopkeeper;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Profile;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Shopkeeper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,5 @@ public class Shopkeeper {
     private String email;
     private String adress;
     private String profilePicture;
-
-
-    public Shopkeeper() {
-    }
-
 
 }

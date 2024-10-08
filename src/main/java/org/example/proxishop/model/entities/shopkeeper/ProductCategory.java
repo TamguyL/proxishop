@@ -1,25 +1,19 @@
 package org.example.proxishop.model.entities.shopkeeper;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductCategory{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id;
+    private int id;
     private String CategoryName;
 
-
-    public ProductCategory(Double id, String categoryName) {
-        this.id = id;
-        CategoryName = categoryName;
-    }
-
-
-    public ProductCategory() {};
 }

@@ -110,7 +110,7 @@ public class ShopkeeperController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/updateOrder")
-    public String updateOrder(@RequestParam double id, @RequestParam String website_name, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+    public String updateOrder(@RequestParam int id, @RequestParam String website_name, Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdOrder db = new BdOrder();
 
         db.updateOrderState(id,"prête","test");

@@ -25,9 +25,9 @@ public class BdOrder {
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                Double id = resultSet.getDouble("id");
+                int id = resultSet.getInt("id");
                 String tag = resultSet.getString("tags");
-                double fprice = resultSet.getDouble("finalPrice");
+                Double fprice = resultSet.getDouble("finalPrice");
                 String onumber = resultSet.getString("orderNumber");
                 String ostate = resultSet.getString("state");
                 orderList.add(new Orders(id, tag, fprice, onumber, ostate));
@@ -44,14 +44,14 @@ public class BdOrder {
      * @param bddname the name of the database
      * @throws SQLException if a database access error occurs
      */
-    public void updateOrderState(Double id, String state, String bddname) throws SQLException {
+    public void updateOrderState(int id, String state, String bddname) throws SQLException {
         String query = "UPDATE " + bddname + ".orders SET state = ? WHERE id = ?";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
         try (Connection connection = BdConnection.establishConnection(bddname);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, state);
-            preparedStatement.setDouble(2, id);
+            preparedStatement.setInt(2, id);
             int updated = preparedStatement.executeUpdate();
 
             if (updated > 0) {

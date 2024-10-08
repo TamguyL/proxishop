@@ -71,8 +71,8 @@ public class ProductController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/addProducts")
-    public String addProducts(@RequestParam double subCategoryid, @RequestParam String website_name, @RequestParam String productName,
-                              @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
+    public String addProducts(@RequestParam int subCategoryid, @RequestParam String website_name, @RequestParam String productName,
+                              @RequestParam String description, @RequestParam double price, @RequestParam int stock, @RequestParam String image,
                               Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdProducts db = new BdProducts();
         db.insertNewProduct(subCategoryid, website_name, productName, description, price, stock, image);
@@ -97,8 +97,8 @@ public class ProductController {
      * @throws SQLException Si une erreur SQL se produit.
      */
     @PostMapping("/updateProducts")
-    public String updateProducts(@RequestParam double subCategoryid, @RequestParam String website_name, @RequestParam String productName,
-                                 @RequestParam String description, @RequestParam double price, @RequestParam double stock, @RequestParam String image,
+    public String updateProducts(@RequestParam int subCategoryid, @RequestParam String website_name, @RequestParam String productName,
+                                 @RequestParam String description, @RequestParam double price, @RequestParam int stock, @RequestParam String image,
                                  @RequestParam int id_product, Model model, RedirectAttributes redirectAttributes) throws SQLException {
         BdProducts db = new BdProducts();
         db.updateProduct(id_product, subCategoryid, website_name, productName, description, price, stock, image);

@@ -27,12 +27,12 @@ public class BdProducts {
              ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
-                double id = resultSet.getDouble("id");
+                int id = resultSet.getInt("id");
                 String productName = resultSet.getString("productName");
-                double subcatid = resultSet.getDouble("id_subCategory");
+                int subcatid = resultSet.getInt("id_subCategory");
                 double price = resultSet.getDouble("price");
                 String description = resultSet.getString("description");
-                double stockProd = resultSet.getDouble("stock");
+                int stockProd = resultSet.getInt("stock");
                 String imageProd = resultSet.getString("image");
                 productNamesList.add(new Product(id, productName, description, stockProd, imageProd, price, subcatid));
             }
@@ -53,7 +53,7 @@ public class BdProducts {
      * @param image         the image of the product
      * @throws SQLException if a database access error occurs
      */
-    public void insertNewProduct(double subCategoryid, String website_name, String productName, String description, double price, double stock, String image) throws SQLException {
+    public void insertNewProduct(int subCategoryid, String website_name, String productName, String description, double price, int stock, String image) throws SQLException {
         String query = "INSERT INTO " + website_name + ".product (productName, description, stock, image, price, id_subCategory) VALUES (?, ?, ?, ?, ?, ?)";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
         try (Connection connection = BdConnection.establishConnection(website_name);
@@ -61,10 +61,10 @@ public class BdProducts {
 
             preparedStatement.setString(1, productName);
             preparedStatement.setString(2, description);
-            preparedStatement.setDouble(3, stock);
+            preparedStatement.setInt(3, stock);
             preparedStatement.setString(4, image);
             preparedStatement.setDouble(5, price);
-            preparedStatement.setDouble(6, subCategoryid);
+            preparedStatement.setInt(6, subCategoryid);
             preparedStatement.executeUpdate();
 
             System.out.println("Product " + productName + " created successfully.");
@@ -84,7 +84,7 @@ public class BdProducts {
      * @param image          the image of the product
      * @throws SQLException if a database access error occurs
      */
-    public void updateProduct(int productid, double subCategoryid, String website_name, String productName, String description, double price, double stock, String image) throws SQLException {
+    public void updateProduct(int productid, int subCategoryid, String website_name, String productName, String description, double price, int stock, String image) throws SQLException {
         String query = "UPDATE " + website_name + ".product SET productName = ?, description = ?, stock = ?, image = ?, price = ?, id_subCategory = ? WHERE id = ?";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
         try (Connection connection = BdConnection.establishConnection(website_name);
@@ -92,10 +92,10 @@ public class BdProducts {
 
             preparedStatement.setString(1, productName);
             preparedStatement.setString(2, description);
-            preparedStatement.setDouble(3, stock);
+            preparedStatement.setInt(3, stock);
             preparedStatement.setString(4, image);
             preparedStatement.setDouble(5, price);
-            preparedStatement.setDouble(6, subCategoryid);
+            preparedStatement.setInt(6, subCategoryid);
             preparedStatement.setInt(7, productid);
             int updated = preparedStatement.executeUpdate();
 

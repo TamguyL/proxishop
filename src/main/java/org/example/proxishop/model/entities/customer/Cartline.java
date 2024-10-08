@@ -1,24 +1,20 @@
 package org.example.proxishop.model.entities.customer;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cartline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Double id_product;
-    private Double productQuantity;
-    private Double id_shoppingCart;
+    private int id_product;
+    private int productQuantity;
+    private int id_shoppingCart;
 
-
-    public Cartline(Double product, Double productQuantity, Double shoppingCart) {
-        this.id_product = product;
-        this.productQuantity = productQuantity;
-        this.id_shoppingCart = shoppingCart;
-    }
-
-    public Cartline() {};
 }
