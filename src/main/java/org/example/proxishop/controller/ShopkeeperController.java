@@ -267,4 +267,43 @@ public class ShopkeeperController {
         model.addAttribute("shopkeepers", shopkeepers);
         return "dashboard";
     }
+
+    @GetMapping("/accountUpdate")
+    public String showAccountUpdate() {
+        return "accountUpdate";
+    }
+
+    @PostMapping("/updatePersonnel")
+    public String updatePersonnel(
+            @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
+
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        proxiShopService.updatePersonnel(shopkeepers.getId(), firstName, lastName, email);
+        redirectAttributes.addFlashAttribute("update", "Personnel mise à jours !");
+
+        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+
+        return "redirect:/shopkeeper/accountUpdate";
+    }
+
+    @PostMapping("/updateEntreprise")
+    public String updateEntreprise(
+            @RequestParam String siret, @RequestParam String firm_name, @RequestParam String adress,
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
+
+        if (!SiretValidator.isValidSiret(siret)) {
+            model.addAttribute("error", "Numéro siret non valide !");
+            return "accountUpdate";
+        }
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        proxiShopService.updateEntreprise(shopkeepers.getId(), siret, firm_name, adress);
+        redirectAttributes.addFlashAttribute("update", "Entreprise mise à jours !");
+
+        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+
+        return "redirect:/shopkeeper/accountUpdate";
+    }
+
+
 }

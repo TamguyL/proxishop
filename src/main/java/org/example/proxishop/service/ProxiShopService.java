@@ -6,6 +6,7 @@ import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.repository.ShopkeepersRepositoryProxi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class ProxiShopService {
@@ -26,6 +27,24 @@ public class ProxiShopService {
         shopkeeper.setId_offer(id_offer);
 
         // Enregistrer l'entité mise à jour dans la base de données
+        shopkeepersRepositoryProxi.save(shopkeeper);
+    }
+
+    @Transactional
+    public void updatePersonnel(int id, String firstName, String lastName, String email) {
+        Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
+        shopkeeper.setFirstName(firstName);
+        shopkeeper.setLastName(lastName);
+        shopkeeper.setEmail(email);
+        shopkeepersRepositoryProxi.save(shopkeeper);
+    }
+
+    @Transactional
+    public void updateEntreprise(int id, String siret, String firm_name,  String adress) {
+        Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
+        shopkeeper.setSiret(siret);
+        shopkeeper.setFirmName(firm_name);
+        shopkeeper.setAdress(adress);
         shopkeepersRepositoryProxi.save(shopkeeper);
     }
 
