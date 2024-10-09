@@ -48,7 +48,7 @@ public class BdCategories {
     public List<ProductSubCategory> getAllSubCategories(String website_name) throws SQLException {
         List<ProductSubCategory> subCategoryNamesList = new ArrayList<>();
         String query = "SELECT * FROM productsubcategory";
-        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+        System.out.println("Executing query: " + query);
         try (Connection connection = BdConnection.establishConnection(website_name);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {

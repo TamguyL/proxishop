@@ -20,7 +20,7 @@ public class BdProducts {
      */
     public List<Product> getAllProducts(String bddname) throws SQLException {
         List<Product> productNamesList = new ArrayList<>();
-        String query = "SELECT * FROM " + bddname + ".product";
+        String query = "SELECT * FROM product";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
         try (Connection connection = BdConnection.establishConnection(bddname);
              Statement statement = connection.createStatement();

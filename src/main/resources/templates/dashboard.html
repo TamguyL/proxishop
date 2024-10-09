@@ -4,12 +4,29 @@
     <title>Dashboard</title>
 </head>
 <body>
-<h1>Welcome to your Dashboard</h1>
-<div th:if="${shopkeepers.profilePicture != null}">
-    <img th:src="@{${shopkeepers.profilePicture}}" alt="Photo de profil" style="max-width: 500px; max-height: 500px;">
-</div>
-<div th:if="${shopkeepers.profilePicture == null}">
-    <p>Aucune photo de profil n'a été téléchargée.</p>
-</div>
+<h1>Welcome to your Dashboard : <span th:text="${shopkeepers.websiteName}" style="text-decoration: darkblue underline;"></span></h1>
+<card>
+    <p th:text="${shopkeepers.firstName}"></p>
+    <p th:text="${shopkeepers.lastName}"></p>
+    <p th:text="${shopkeepers.email}"></p>
+    <img th:src="@{${shopkeepers.profilePicture}}" alt="Photo de profil" style="width: 150px; height: 150px; border-radius: 50%;"/>
+</card>
+
+
+        <div th:each="category : ${categoryList}" style="border: 1px solid black; margin-top: 2vh; margin-bottom: 2vh;">
+            <h1 th:text="${category.CategoryName}" style="padding: 1.2vh;"></h1>
+            <div th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}" style="border: 1px solid black;">
+                <h2 th:text="${subCategory.SubCategoryName}" style="padding: 0.8vh; padding-left: 15vh;"></h2>
+                <div th:each="product : ${productList}" th:if="${product.id_subCategory == subCategory.id}" style="border: 1px solid black;">
+                    <p th:text="${product.productName}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh; font-weight: bold; font-size: large"></p>
+                    <p th:text="'Description : ' + ${product.description}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
+                    <p th:text="'Stock : ' + ${product.stock}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
+                    <p th:text="'Prix : ' + ${product.price}+ ' €'" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
+                    <img th:src="@{${product.image}}" th:alt="'image du '+ ${product.productName}" style="width: 150px; height: 150px;"/>
+                </div>
+            </div>
+        </div>
+
+
 </body>
 </html>

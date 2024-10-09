@@ -2,7 +2,9 @@ package org.example.proxishop.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.proxishop.Security.SiretValidator;
 import org.example.proxishop.model.database.costumer.BdOrder;
+import org.example.proxishop.model.database.shopkeeper.BdCategories;
 import org.example.proxishop.model.database.shopkeeper.BdCreation;
+import org.example.proxishop.model.database.shopkeeper.BdProducts;
 import org.example.proxishop.model.entities.customer.*;
 import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
@@ -250,8 +252,19 @@ public class ShopkeeperController {
     @GetMapping("/dashboard")
     public String showDashboard(Model model, Authentication authentication) {
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        BdCategories db = new BdCategories();
+        BdProducts dbp = new BdProducts();
+        try {
+            List<ProductCategory> categoryList = db.getAllCategories(shopkeepers.getWebsiteName());
+            model.addAttribute("categoryList", categoryList);
+            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(shopkeepers.getWebsiteName());
+            model.addAttribute("subCategoryList", subCategoryList);
+            List<Product> productList = dbp.getAllProducts(shopkeepers.getWebsiteName());
+            model.addAttribute("productList", productList);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         model.addAttribute("shopkeepers", shopkeepers);
-        System.out.println(shopkeepers.getProfilePicture());
         return "dashboard";
     }
 }
