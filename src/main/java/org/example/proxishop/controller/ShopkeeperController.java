@@ -8,6 +8,7 @@ import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
 import org.example.proxishop.service.ProxiShopService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -146,7 +147,7 @@ public class ShopkeeperController {
                 return "accountCreation";
             }
             // Sauvegarder image
-            String destinationPath = System.getProperty("user.dir") + "/uploads/profiles/" + file.getOriginalFilename();
+            String destinationPath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/profiles/" + file.getOriginalFilename();
             File dest = new File(destinationPath);
             file.transferTo(dest);
         } catch (IOException e) {
@@ -218,36 +219,39 @@ public class ShopkeeperController {
         return "login";
     }
 
-    /**
-     * Gère la connexion des commerçants.
-     *
-     * @param username    L'adresse email du commerçant.
-     * @param password Le mot de passe du commerçant.
-     * @param model    Le modèle Spring MVC.
-     * @return La redirection vers le tableau de bord si la connexion est réussie, sinon retourne la page de connexion avec un message d'erreur.
-     */
-    @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, Model model) {
-        Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
-        if (shopkeepers != null && shopkeepers.getPassword().equals(password)) {
-            model.addAttribute("shopkeepers", shopkeepers);
-            return "redirect:/shopkeeper/dashboard";
-        } else {
-            model.addAttribute("error", "Invalid credentials");
-            return "login";
-        }
-    }
+//    /**
+//     * Gère la connexion des commerçants.
+//     *
+//     * @param username    L'adresse email du commerçant.
+//     * @param password Le mot de passe du commerçant.
+//     * @param model    Le modèle Spring MVC.
+//     * @return La redirection vers le tableau de bord si la connexion est réussie, sinon retourne la page de connexion avec un message d'erreur.
+//     */
+//    @PostMapping("/login")
+//    public String login(@RequestParam String username, @RequestParam String password,Model model, RedirectAttributes redirectAttributes) {
+//        System.out.println("test2");
+//        Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
+//        if (shopkeepers != null && shopkeepers.getPassword().equals(password)) {
+//            redirectAttributes.addFlashAttribute("shopkeepers", shopkeepers);
+//            return "redirect:/shopkeeper/dashboard";
+//        } else {
+//            model.addAttribute("error", "Invalid credentials");
+//            return "login";
+//        }
+//    }
 
     /**
      * Affiche le tableau de bord du commerçant.
      *
-     * @param shopkeepers L'objet Shopkeeper représentant le commerçant connecté.
      * @param model       Le modèle Spring MVC.
+     * @param authentication  Les infos de la session
      * @return La vue du tableau de bord.
      */
     @GetMapping("/dashboard")
-    public String showDashboard(@ModelAttribute("shopkeepers") Shopkeepers shopkeepers, Model model) {
-        model.addAttribute("shopkeeper", shopkeepers);
+    public String showDashboard(Model model, Authentication authentication) {
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        model.addAttribute("shopkeepers", shopkeepers);
+        System.out.println(shopkeepers.getProfilePicture());
         return "dashboard";
     }
 }
