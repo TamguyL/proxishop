@@ -112,7 +112,7 @@ public class ShopkeeperController {
     public String newAccount(
                          @RequestParam String firstName, @RequestParam String lastName, @RequestParam String firm_name, @RequestParam String adress, @RequestParam String siret, @RequestParam String email,
                          @RequestParam String password, @RequestParam("profilePicture") MultipartFile file,
-                         HttpSession session, Model model) throws IOException {
+                         HttpSession session, Authentication authentication, Model model) throws IOException {
 
         // Vérifier si le SIRET est valide
         if (!SiretValidator.isValidSiret(siret)) {
@@ -126,36 +126,14 @@ public class ShopkeeperController {
         }
 
         // Validation du fichier image
+        String imageUrl;
         try {
-            // Verifier si file n'est pas vide
-            if (file.isEmpty()) {
-                model.addAttribute("error", "L'image de profil est vide");
-                return "accountCreation";
-            }
-            // Vérifier le format de image
-            String contentType = file.getContentType();
-            if (!(contentType.equals("image/png") || contentType.equals("image/jpeg") || contentType.equals("image/gif"))) {
-                model.addAttribute("error", "Le format de l'image doit être PNG, JPG ou GIF");
-                return "accountCreation";
-            }
-            BufferedImage image = ImageIO.read(file.getInputStream());
-            if (image == null) {
-                model.addAttribute("error", "Le fichier n'est pas une image valide");
-                return "accountCreation";
-            }
-            // Vérifier taille de image
-            if (image.getWidth() > 500 || image.getHeight() > 500) {
-                model.addAttribute("error", "L'image ne doit pas dépasser 500x500 pixels");
-                return "accountCreation";
-            }
-            // Sauvegarder image
-            String destinationPath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/profiles/" + file.getOriginalFilename();
-            File dest = new File(destinationPath);
-            file.transferTo(dest);
+            imageUrl = saveProfilePicture(file, authentication, model);
         } catch (IOException e) {
-            e.printStackTrace();
+            model.addAttribute("error", e.getMessage());
+            return "accountCreation";
         }
-        String imageUrl = "/uploads/profiles/" + file.getOriginalFilename();
+
         String encryptedPassword = passwordEncoder.encode(password);
         Shopkeepers shopkeepers = new Shopkeepers();
         shopkeepers.setFirstName(firstName);
@@ -185,6 +163,65 @@ public class ShopkeeperController {
 
         return "redirect:/shopkeeper/newbdd";
     }
+
+    public String saveProfilePicture(MultipartFile file, Authentication authentication, Model model) throws IOException {
+
+        if (authentication != null) {
+            Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+            if (shopkeepers.getProfilePicture() != null) {
+                String oldImagePath = System.getProperty("user.dir") + "/src/main/resources/static" + shopkeepers.getProfilePicture();
+                File oldImageFile = new File(oldImagePath);
+                if (oldImageFile.exists()) {
+                    if (oldImageFile.delete()) {
+                        System.out.println("Ancienne photo supprimée avec succès.");
+                    } else {
+                        throw new IOException("Échec de la suppression de l'ancienne photo.");
+                    }
+                }
+            }
+        }
+
+        // Vérifie que file n'est pas vide
+        if (file.isEmpty()) {
+            throw new IOException("L'image de profil est vide");
+        }
+
+        // Vérifie format de l'image
+        String contentType = file.getContentType();
+        if (!(contentType.equals("image/png") || contentType.equals("image/jpeg") || contentType.equals("image/gif"))) {
+            throw new IOException("Le format de l'image doit être PNG, JPG ou GIF");
+        }
+
+        // Lis l'image et vérifie si l'image est valide
+        BufferedImage image = ImageIO.read(file.getInputStream());
+        if (image == null) {
+            throw new IOException("Le fichier n'est pas une image valide");
+        }
+
+        // Vérifie taille de l'image
+        if (image.getWidth() > 500 || image.getHeight() > 500) {
+            throw new IOException("L'image ne doit pas dépasser 500x500 pixels");
+        }
+
+        // Récupérer le nom original du fichier et son extension
+        String originalFileName = file.getOriginalFilename();
+        String fileExtension = "";
+
+        // Extraire l'extension du fichier (après le dernier point)
+        if (originalFileName != null && originalFileName.contains(".")) {
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
+        String uniqueFileName = System.currentTimeMillis() + fileExtension;
+
+        // Sauvegarde l'image
+        String destinationPath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/profiles/" + uniqueFileName;
+        File dest = new File(destinationPath);
+        file.transferTo(dest);
+
+        // Retourne le chemin relatif de l'image
+        return "/uploads/profiles/" + uniqueFileName;
+    }
+
 
 
     @GetMapping("/newbdd")
@@ -269,7 +306,9 @@ public class ShopkeeperController {
     }
 
     @GetMapping("/accountUpdate")
-    public String showAccountUpdate() {
+    public String showAccountUpdate(Authentication authentication, Model model) {
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        model.addAttribute("shopkeepers", shopkeepers);
         return "accountUpdate";
     }
 
@@ -280,7 +319,7 @@ public class ShopkeeperController {
 
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         proxiShopService.updatePersonnel(shopkeepers.getId(), firstName, lastName, email);
-        redirectAttributes.addFlashAttribute("update", "Personnel mise à jours !");
+        redirectAttributes.addFlashAttribute("update", "Personnel mis à jour !");
 
         // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
 
@@ -298,12 +337,31 @@ public class ShopkeeperController {
         }
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         proxiShopService.updateEntreprise(shopkeepers.getId(), siret, firm_name, adress);
-        redirectAttributes.addFlashAttribute("update", "Entreprise mise à jours !");
+        redirectAttributes.addFlashAttribute("update", "Entreprise mise à jour !");
 
         // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
 
         return "redirect:/shopkeeper/accountUpdate";
     }
 
+    @PostMapping("/updatePhoto")
+    public String updatePhoto(
+            @RequestParam("profilePicture") MultipartFile file,
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
+        String imageUrl;
+        try {
+            imageUrl = saveProfilePicture(file, authentication, model);
+        } catch (IOException e) {
+            model.addAttribute("error", e.getMessage());
+            return "accountUpdate";
+        }
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        proxiShopService.updatePhoto(shopkeepers.getId(), imageUrl);
+        redirectAttributes.addFlashAttribute("update", "Photo mis à jour !");
+
+        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+
+        return "redirect:/shopkeeper/accountUpdate";
+    }
 }

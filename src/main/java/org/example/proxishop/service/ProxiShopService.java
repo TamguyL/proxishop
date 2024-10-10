@@ -48,6 +48,13 @@ public class ProxiShopService {
         shopkeepersRepositoryProxi.save(shopkeeper);
     }
 
+    @Transactional
+    public void updatePhoto(int id, String profilePicture) {
+        Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
+        shopkeeper.setProfilePicture(profilePicture);
+        shopkeepersRepositoryProxi.save(shopkeeper);
+    }
+
     public Shopkeepers findByEmail(String email) {
         return shopkeepersRepositoryProxi.findByEmail(email);
     }
