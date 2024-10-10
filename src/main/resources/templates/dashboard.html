@@ -12,21 +12,35 @@
     <img th:src="@{${shopkeepers.profilePicture}}" alt="Photo de profil" style="width: 150px; height: 150px; border-radius: 50%;"/>
     <a href="/shopkeeper/accountUpdate"><button>Modifier</button></a>
 </card>
-
+<hr>
+    <a href="/shopkeeper/addCategory"><button>Ajout catégories</button></a>
 
         <div th:each="category : ${categoryList}" style="border: 1px solid black; margin-top: 2vh; margin-bottom: 2vh;">
             <h1 th:text="${category.CategoryName}" style="padding: 1.2vh;"></h1>
+            <a th:href="'/shopkeeper/updateCategory?id'+${category.id}"><button>Modifier Catégorie</button></a>
+            <a th:href="'/shopkeeper/supprCategory?id'+${category.id}"><button>Supprimer Catégorie</button></a><hr>
+            <a th:href="'/shopkeeper/addSubcategory?id'+${category.id}"><button>Ajout Sous Catégorie</button></a>
+
+
             <div th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}" style="border: 1px solid black;">
                 <h2 th:text="${subCategory.SubCategoryName}" style="padding: 0.8vh; padding-left: 15vh;"></h2>
+                <a th:href="'/shopkeeper/updateSubcategory?id'+${subCategory.id}"><button>Modifier Sous Catégorie</button></a>
+                <a th:href="'/shopkeeper/supprSubcategory?id'+${subCategory.id}"><button>Supprimer Sous Catégorie</button></a><hr>
+                <a th:href="'/shopkeeper/addProduct?id'+${subCategory.id}"><button>Ajout Produit</button></a>
+
+
                 <div th:each="product : ${productList}" th:if="${product.id_subCategory == subCategory.id}" style="border: 1px solid black;">
                     <p th:text="${product.productName}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh; font-weight: bold; font-size: large"></p>
                     <p th:text="'Description : ' + ${product.description}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
                     <p th:text="'Stock : ' + ${product.stock}" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
                     <p th:text="'Prix : ' + ${product.price}+ ' €'" style="padding: 0.6vh; margin-left: 25vh; margin-right: 25vh;"></p>
                     <img th:src="@{${product.image}}" th:alt="'image du '+ ${product.productName}" style="width: 150px; height: 150px;"/>
+                    <a th:href="'/shopkeeper/updateProduct?id'+${product.id}"><button>Modifier Produit</button></a>
+                    <a th:href="'/shopkeeper/supprProduct?id'+${product.id}"><button>Supprimer Produit</button></a>
                 </div>
             </div>
         </div>
+
 
 
 </body>

@@ -315,13 +315,15 @@ public class ShopkeeperController {
     @PostMapping("/updatePersonnel")
     public String updatePersonnel(
             @RequestParam String firstName, @RequestParam String lastName, @RequestParam String email,
-            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException, SQLException {
 
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         proxiShopService.updatePersonnel(shopkeepers.getId(), firstName, lastName, email);
-        redirectAttributes.addFlashAttribute("update", "Personnel mis à jour !");
 
-        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+        BdCreation db = new BdCreation();
+        db.updateShopkeeperPersonnel(shopkeepers.getWebsiteName(), firstName, lastName, email);
+
+        redirectAttributes.addFlashAttribute("update", "Personnel mis à jour !");
 
         return "redirect:/shopkeeper/accountUpdate";
     }
@@ -329,7 +331,7 @@ public class ShopkeeperController {
     @PostMapping("/updateEntreprise")
     public String updateEntreprise(
             @RequestParam String siret, @RequestParam String firm_name, @RequestParam String adress,
-            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException, SQLException {
 
         if (!SiretValidator.isValidSiret(siret)) {
             model.addAttribute("error", "Numéro siret non valide !");
@@ -337,9 +339,11 @@ public class ShopkeeperController {
         }
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         proxiShopService.updateEntreprise(shopkeepers.getId(), siret, firm_name, adress);
-        redirectAttributes.addFlashAttribute("update", "Entreprise mise à jour !");
 
-        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+        BdCreation db = new BdCreation();
+        db.updateShopkeeperEntreprise(shopkeepers.getWebsiteName(), siret, adress);
+
+        redirectAttributes.addFlashAttribute("update", "Entreprise mise à jour !");
 
         return "redirect:/shopkeeper/accountUpdate";
     }
@@ -347,7 +351,7 @@ public class ShopkeeperController {
     @PostMapping("/updatePhoto")
     public String updatePhoto(
             @RequestParam("profilePicture") MultipartFile file,
-            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
+            Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException, SQLException {
 
         String imageUrl;
         try {
@@ -358,9 +362,11 @@ public class ShopkeeperController {
         }
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         proxiShopService.updatePhoto(shopkeepers.getId(), imageUrl);
-        redirectAttributes.addFlashAttribute("update", "Photo mis à jour !");
 
-        // Mise a jour du Shopkeeper dans sa base de donnée A FAIRE !
+        BdCreation db = new BdCreation();
+        db.updateShopkeeperPhoto(shopkeepers.getWebsiteName(), imageUrl);
+
+        redirectAttributes.addFlashAttribute("update", "Photo mis à jour !");
 
         return "redirect:/shopkeeper/accountUpdate";
     }

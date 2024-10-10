@@ -121,4 +121,75 @@ public class BdCreation {
         preparedStatement.executeUpdate();
         System.out.println("Shopkeeper Profile created successfully.");
     }
+
+
+
+    public void updateShopkeeperPersonnel(String website_name, String firstName, String lastName, String email) throws SQLException {
+        // Requête de mise à jour
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        String query = "UPDATE " + website_name + ".shopkeeper SET firstName = ?, lastName = ?, email = ? WHERE id = 1";
+
+        // Préparation de la requête
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        // Assignation des valeurs des champs à mettre à jour
+        preparedStatement.setString(1, firstName); // firstName
+        preparedStatement.setString(2, lastName); // lastName
+        preparedStatement.setString(3, email); // email
+
+        // Exécution de la requête
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        // Vérification si l'enregistrement a été mis à jour avec succès
+        if (rowsAffected > 0) {
+            System.out.println("Shopkeeper Profile Personnel updated successfully.");
+        } else {
+            System.out.println("Shopkeeper not found.");
+        }
+    }
+
+    public void updateShopkeeperEntreprise(String website_name, String siret, String adress) throws SQLException {
+        // Requête de mise à jour
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        String query = "UPDATE " + website_name + ".shopkeeper SET siret = ?, adress = ? WHERE id = 1";
+
+        // Préparation de la requête
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        // Assignation des valeurs des champs à mettre à jour
+        preparedStatement.setString(1, siret);
+        preparedStatement.setString(2, adress);
+
+        // Exécution de la requête
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        // Vérification si l'enregistrement a été mis à jour avec succès
+        if (rowsAffected > 0) {
+            System.out.println("Shopkeeper Profile Entreprise updated successfully.");
+        } else {
+            System.out.println("Shopkeeper not found.");
+        }
+    }
+
+    public void updateShopkeeperPhoto(String website_name, String photo) throws SQLException {
+        // Requête de mise à jour
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        String query = "UPDATE " + website_name + ".shopkeeper SET profilePicture = ? WHERE id = 1";
+
+        // Préparation de la requête
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        // Assignation des valeurs des champs à mettre à jour
+        preparedStatement.setString(1, photo);
+
+        // Exécution de la requête
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        // Vérification si l'enregistrement a été mis à jour avec succès
+        if (rowsAffected > 0) {
+            System.out.println("Shopkeeper Profile Entreprise updated successfully.");
+        } else {
+            System.out.println("Shopkeeper not found.");
+        }
+    }
 }
