@@ -1,13 +1,18 @@
 package org.example.proxishop.controller;
+
 import jakarta.servlet.http.HttpSession;
 import org.example.proxishop.Security.SiretValidator;
 import org.example.proxishop.model.database.costumer.BdOrder;
 import org.example.proxishop.model.database.shopkeeper.BdCategories;
 import org.example.proxishop.model.database.shopkeeper.BdCreation;
 import org.example.proxishop.model.database.shopkeeper.BdProducts;
-import org.example.proxishop.model.entities.customer.*;
+import org.example.proxishop.model.entities.customer.Cartline;
+import org.example.proxishop.model.entities.customer.Customer;
+import org.example.proxishop.model.entities.customer.Orders;
+import org.example.proxishop.model.entities.customer.ShoppingCart;
 import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.*;
+import org.example.proxishop.repository.ShopkeepersRepositoryProxi;
 import org.example.proxishop.service.ProxiShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -18,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -32,6 +36,9 @@ import java.util.List;
 @RequestMapping("/shopkeeper")
 @SessionAttributes("bddname")
 public class ShopkeeperController {
+
+    @Autowired
+    private ShopkeepersRepositoryProxi shopkeepersRepositoryProxi;
 
     // Initialisation de l'attribut de session
     @ModelAttribute("bddname")
@@ -369,5 +376,36 @@ public class ShopkeeperController {
         redirectAttributes.addFlashAttribute("update", "Photo mis à jour !");
 
         return "redirect:/shopkeeper/accountUpdate";
+    }
+
+    @PostMapping("/updatePassword")
+    public String updatePassword(@RequestParam("oldpassword") String oldPassword,
+                                 @RequestParam("password1") String newPassword,
+                                 @RequestParam("password2") String confirmPassword,
+                                 Authentication authentication, Model model) throws SQLException {
+        // Vérification si les mots de passe correspondent
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "Les mots de passe ne correspondent pas");
+            return "accountUpdate";
+        }
+        Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+        // Vérifier l'ancien mot de passe
+        if (!passwordEncoder.matches(oldPassword, shopkeepers.getPassword())) {
+            throw new RuntimeException("L'ancien mot de passe est incorrect");
+        }
+
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+
+        try {
+            proxiShopService.updatePassword(shopkeepers.getId(), encryptedPassword);
+            model.addAttribute("update", "Mot de passe mis à jour avec succès");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
+        BdCreation db = new BdCreation();
+        db.updateShopkeeperPassword(shopkeepers.getWebsiteName(), encryptedPassword);
+
+        return "login";
     }
 }

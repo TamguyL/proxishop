@@ -1,8 +1,6 @@
 package org.example.proxishop.model.database.shopkeeper;
 
 import org.example.proxishop.model.entities.shopkeeper.Shopkeeper;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,7 +185,29 @@ public class BdCreation {
 
         // Vérification si l'enregistrement a été mis à jour avec succès
         if (rowsAffected > 0) {
-            System.out.println("Shopkeeper Profile Entreprise updated successfully.");
+            System.out.println("Shopkeeper Profile Photo updated successfully.");
+        } else {
+            System.out.println("Shopkeeper not found.");
+        }
+    }
+
+    public void updateShopkeeperPassword(String website_name, String encryptedPassword) throws SQLException {
+        // Requête de mise à jour
+        Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        String query = "UPDATE " + website_name + ".shopkeeper SET password = ? WHERE id = 1";
+
+        // Préparation de la requête
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        // Assignation des valeurs des champs à mettre à jour
+        preparedStatement.setString(1, encryptedPassword);
+
+        // Exécution de la requête
+        int rowsAffected = preparedStatement.executeUpdate();
+
+        // Vérification si l'enregistrement a été mis à jour avec succès
+        if (rowsAffected > 0) {
+            System.out.println("Shopkeeper Password updated successfully.");
         } else {
             System.out.println("Shopkeeper not found.");
         }

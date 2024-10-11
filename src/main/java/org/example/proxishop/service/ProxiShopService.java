@@ -1,12 +1,10 @@
 package org.example.proxishop.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.repository.ShopkeepersRepositoryProxi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class ProxiShopService {
@@ -53,6 +51,13 @@ public class ProxiShopService {
         Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
         shopkeeper.setProfilePicture(profilePicture);
         shopkeepersRepositoryProxi.save(shopkeeper);
+    }
+
+    @Transactional
+    public void updatePassword(int id, String encryptedPassword) {
+        Shopkeepers shopkeepers = shopkeepersRepositoryProxi.findById(id);
+        shopkeepers.setPassword(encryptedPassword);
+        shopkeepersRepositoryProxi.save(shopkeepers);
     }
 
     public Shopkeepers findByEmail(String email) {

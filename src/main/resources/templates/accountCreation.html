@@ -35,9 +35,13 @@
 
     <hr>
     <h3>Mot de passe</h3>
-    <label for="password">Mot de Passe:</label>
-    <input type="password" id="password" name="password" required><br>
-    <!-- Faire un double MDP pour etre sur -->
+    <label for="password">Nouveau Mot de Passe:</label>
+    <input type="password" id="password" name="password" required oninput="validatePassword()">
+    <br>
+    <label for="password2">Confirmer Nouveau Mot de Passe:</label>
+    <input type="password" id="password2" name="password2" required oninput="validatePassword()">
+    <br>
+    <div id="password-error" style="color:red; display:none;"></div>
 
     <!-- Include CSRF token -->
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -45,5 +49,45 @@
     <button type="submit">Créer</button>
 </form>
 <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<script>
+    function validatePassword() {
+        const password1 = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        const errorDiv = document.getElementById("password-error");
+        const submitBtn = document.getElementById("submit-btn");
+
+        // Vérification si les deux mots de passe sont identiques
+        if (password1 !== password2) {
+            errorDiv.style.display = "block";
+            errorDiv.textContent = "Les mots de passe ne correspondent pas.";
+            submitBtn.disabled = true; // Désactiver le bouton si les mots de passe ne correspondent pas
+            return;
+        }
+
+        // Vérification des critères de sécurité
+        const minLength = 8;
+        const uppercase = /[A-Z]/;
+        const lowercase = /[a-z]/;
+        const digit = /[0-9]/;
+        const specialChar = /[!@#$%^&*(),.?":{}|<>+-]/;
+
+        if (password1.length < minLength ||
+            !uppercase.test(password1) ||
+            !lowercase.test(password1) ||
+            !digit.test(password1) ||
+            !specialChar.test(password1)) {
+
+            errorDiv.style.display = "block";
+            errorDiv.textContent = "Le mot de passe doit contenir au moins 8 caractères, avec une majuscule, une minuscule, un chiffre et un caractère spécial.";
+            submitBtn.disabled = true; // Désactiver le bouton si les critères ne sont pas respectés
+            return;
+        }
+
+        // Si les mots de passe sont identiques et respectent les critères
+        errorDiv.style.display = "none";
+        submitBtn.disabled = false; // Activer le bouton
+    }
+</script>
 </body>
 </html>

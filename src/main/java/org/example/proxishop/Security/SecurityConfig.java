@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 .requestMatchers("/shopkeeper/dashboard").authenticated()
                                 .requestMatchers("/shopkeeper/categories").authenticated()
                                 .requestMatchers("/shopkeeper/orders").authenticated()
+                                .requestMatchers("/shopkeeper/accountUpdate").authenticated()
                                 .requestMatchers("/shopkeeper/accountCreation").permitAll() //autorise la création d'un nouveau compte sur proxishop
                                 .requestMatchers("/shopkeeper/newbdd").permitAll() // Autoriser la création de base de données
                                 .anyRequest().permitAll()
@@ -66,5 +67,6 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-}
+    }
+    
 }
