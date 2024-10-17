@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head th:insert="header">
-    <meta charset="UTF-8">
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>Gestion des cookies</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
 </body>
-<footer th:insert="footer"></footer>
+<footer th:insert="fragments/fragments :: footer"></footer>
 </html>

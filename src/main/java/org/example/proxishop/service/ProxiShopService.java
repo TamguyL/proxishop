@@ -64,6 +64,10 @@ public class ProxiShopService {
         return shopkeepersRepositoryProxi.findByEmail(email);
     }
 
+    public Shopkeepers findByWebsiteName(String websiteName) {
+        return shopkeepersRepositoryProxi.findByWebsiteName(websiteName);
+    }
+
     public boolean existsByWebsiteName(String websiteName) {
         return shopkeepersRepositoryProxi.existsByWebsiteName(websiteName);
     }

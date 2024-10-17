@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
+    <title th:text="${website_name}"></title>
+    <style>
+        .product-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover; /* Maintient le ratio d'aspect */
+        }
+        .product-info {
+            flex-grow: 1; /* Permet au texte de prendre tout l'espace disponible */
+            padding-left: 20px; /* Ajoute un espacement à gauche pour séparer l'image du texte */
+        }
+    </style>
+</head>
+
+<body>
+<div class="container mt-5">
+    <div th:insert="fragments/fragments :: headerClient"></div>
+
+    <hr>
+
+    <div th:if="${message != null}" class="alert alert-info">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div class="text-end mb-3">
+        <a href="/site/panier" class="btn btn-primary">Panier</a>
+    </div>
+
+    <hr>
+    <div th:each="category : ${categoryList}" class="border rounded p-3 mb-4">
+        <h2 th:text="${category.CategoryName}" class="text-success"></h2>
+
+        <div th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}" class="border-top pt-3">
+            <h3 th:text="${subCategory.SubCategoryName}" class="ms-3"></h3>
+
+            <div th:each="product : ${productList}" th:if="${product.id_subCategory == subCategory.id}" class="border rounded p-3 mb-3 d-flex align-items-center">
+                <img th:src="@{${product.image}}" th:alt="'image du '+ ${product.productName}" class="product-image"/>
+
+                <div class="product-info">
+                    <p th:text="${product.productName}" class="fw-bold fs-4"></p>
+                    <p th:text="'Description : ' + ${product.description}"></p>
+                    <p th:text="'Stock : ' + ${product.stock}"></p>
+                    <p th:text="'Prix : ' + ${product.price}+ ' €'" class="fw-bold fs-5"></p>
+                </div>
+
+                <form action="#" th:action="@{/site/add-to-cart/{productId}(productId=${product.id})}" method="post" class="ms-3">
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantité :</label>
+                        <input type="number" name="quantity" min="1" value="1" class="form-control w-25" id="quantity">
+                    </div>
+                    <button type="submit" class="btn btn-success">Ajouter au Panier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

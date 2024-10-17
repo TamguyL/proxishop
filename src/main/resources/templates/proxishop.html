@@ -1,17 +1,11 @@
 
 <!DOCTYPE html>
 <html lang="fr" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:insert="header">
-    <meta charset="UTF-8">
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>ProxiShop</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
 <div class="flex_container">
@@ -78,6 +72,5 @@ Notre objectif? Vous faciliter la vie!<br>Créez votre site d'e-commerce local a
     <br>
 
 </body>
-<footer th:insert="footer">
-</footer>
+<footer th:insert="fragments/fragments :: footer"></footer>
 </html>

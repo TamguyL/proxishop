@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head th:insert="header">
-    <meta charset="UTF-8">
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>contactez-nous</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-
 </head>
 <body>
 <div class="contact_container">
@@ -18,5 +13,5 @@
 </div>
 
 </body>
-<footer th:insert="footer"></footer>
+<footer th:insert="fragments/fragments :: footer"></footer>
 </html>

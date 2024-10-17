@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head th:insert="header">
-    <meta charset="UTF-8">
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>mentions légales</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 <div id="mentions_container">
@@ -127,5 +126,5 @@
     </div>
 </div>
 </body>
-<footer th:insert="footer"></footer>
+<footer th:insert="fragments/fragments :: footer"></footer>
 </html>

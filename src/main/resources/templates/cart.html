@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
+    <title>Panier</title>
+</head>
+
+<body class="container mt-5">
+<div th:insert="fragments/fragments :: headerClient"></div>
+<h1 class="mb-4 text-center">Votre Panier</h1>
+
+<!-- Message si le panier est vide -->
+<div th:if="${message != null}" class="alert alert-warning">
+    <p th:text="${message}"></p>
+</div>
+
+<!-- Table pour afficher les produits -->
+<table th:if="${productWithQuantities != null}" class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th class="text-center">Nom du Produit</th>
+        <th class="text-center">Quantité</th>
+        <th class="text-center">Prix Unitaire</th>
+        <th class="text-center">Sous-total</th>
+        <th class="text-center">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Parcours de la map des produits et quantités -->
+    <tr th:each="entry : ${productWithQuantities}">
+        <td class="text-center" th:text="${entry.key.productName}">Nom du produit</td>
+        <td class="text-center" th:text="${entry.value}">Quantité</td>
+        <!-- Formater le prix unitaire à deux décimales -->
+        <td class="text-center" th:text="${#numbers.formatDecimal(entry.key.price, 1, 'COMMA', 2, 'POINT')}">Prix unitaire</td>
+        <!-- Formater le sous-total (prix * quantité) à deux décimales -->
+        <td class="text-center" th:text="${#numbers.formatDecimal(entry.key.price * entry.value, 1, 'COMMA', 2, 'POINT')}">Sous-total</td>
+        <td class="text-center">
+            <!-- Bouton supprimer avec un style Bootstrap -->
+            <form th:action="@{/site/panier/supprimer/{id_product}(id_product=${entry.key.id})}" method="post">
+                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Total avec un style -->
+<h2 class="d-flex justify-content-end mt-4 me-5" >Total :
+    <span th:text="${#numbers.formatDecimal(totalPrice, 1, 'COMMA', 2, 'POINT')}">0.00</span> €
+</h2>
+
+<!-- Bouton pour retourner aux achats -->
+<a th:href="@{'/site/' + ${session.website_name}}" class="btn btn-primary mt-3">Retourner aux achats</a>
+
+<!-- Inclusion de Bootstrap JS et ses dépendances -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
