@@ -2,16 +2,21 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:insert="fragments/fragments :: headerfiles"></div>
-    <title>contactez-nous</title>
+    <title>Contactez-nous</title>
 </head>
 <body>
-<div class="contact_container">
-    <h2>Des questions? Un problème? Contactez-nous!</h2>
-    <p class="text">Nous sommes joignables du lundi au jeudi de 9h à 16h00</p>
-    <p class="text">par mail: proxishop@gmail.com</p>
-    <p class="text">par téléphone: 06 01 02 03 04</p>
+<div th:insert="fragments/fragments :: headerProxi"></div>
+<div class="container mt-5">
+    <div class="card p-4">
+        <h2 class="text-center mb-4">Des questions? Un problème? Contactez-nous!</h2>
+        <p class="text-center">Nous sommes joignables du lundi au jeudi de 9h à 16h00</p>
+        <div class="text-center">
+            <p><strong>Email :</strong> <a href="mailto:proxishop@gmail.com" class="text-primary">proxishop@gmail.com</a></p>
+            <p><strong>Téléphone :</strong> 06 01 02 03 04</p>
+        </div>
+    </div>
 </div>
 
-</body>
 <footer th:insert="fragments/fragments :: footer"></footer>
+</body>
 </html>

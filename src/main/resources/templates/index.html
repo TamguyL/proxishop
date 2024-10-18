@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>Index</title>
 </head>
 <body>
-<h1>Index</h1>
 
-<div class="Session">
-    <a href="/shopkeeper/login">Sign In</a>
-    <a href="/shopkeeper/accountCreation">Sign Up</a>
+<div th:insert="fragments/fragments :: headerProxi"></div>
+
+<div class="container mt-5">
+    <h1 class="text-center">Index</h1>
+
+    <!-- Section pour la connexion / inscription -->
+    <div class="d-flex justify-content-end mb-4">
+        <a href="/shopkeeper/login" class="btn btn-primary me-2">Sign In</a>
+        <a href="/shopkeeper/accountCreation" class="btn btn-outline-primary">Sign Up</a>
+    </div>
+
+    <!-- Bouton vers Shopkeeper -->
+    <div class="text-center mb-3">
+        <a href="/shopkeeper">
+            <button class="btn btn-secondary btn-lg">Shopkeeper</button>
+        </a>
+    </div>
+
+    <!-- Bouton vers ProxiShop -->
+    <div class="text-center mb-3">
+        <a href="/proxishop">
+            <button class="btn btn-secondary btn-lg">ProxiShop</button>
+        </a>
+    </div>
+
+    <!-- Bouton de gestion des catégories -->
+    <div class="text-center mb-3">
+        <a href="/categories/gestionCategories">
+            <button class="btn btn-secondary btn-lg">Gestion des Catégories</button>
+        </a>
+    </div>
 </div>
-
-<a href="/shopkeeper"><button>Shopkeeper</button></a>
-<br><br>
-<a href="/shopkeeper/orderlist"><button>Orderlist</button></a>
-<br><br>
-<a href="/proxishop"><button>ProxiShop</button></a>
-<br><br>
-<a href="/shopkeeper/newbdd"><button>NewBdd</button></a>
-<br><br>
-<a href="/categories/gestionCategories"><button>Gestion des Catégories</button></a>
 
 </body>
 <footer th:insert="fragments/fragments :: footer"></footer>

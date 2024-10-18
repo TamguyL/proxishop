@@ -21,8 +21,20 @@ import java.util.Map;
 @Controller
 @RequestMapping("/site")
 public class ClientController{
+
+//    /**
+//     * Affiche la page d'accueil du Client qui ne connait pas l'adresse du Shopkeeper
+//     *
+//     */
+//    @GetMapping
+//    public String website (){
+//        return "website";
+//    }
+
+
+
      /**
-     * Affiche la page d'accueil de ProxiShop.
+     * Affiche la page d'accueil du Client ShopKeeper
      *
      */
     @GetMapping("/{website_name}")
