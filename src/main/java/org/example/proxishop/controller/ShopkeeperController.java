@@ -68,7 +68,6 @@ public class ShopkeeperController {
         return "shopkeeper";
     }
 
-
     /**
      * Met à jour l'état d'une commande dans la base de données.
      *
@@ -257,6 +256,8 @@ public class ShopkeeperController {
             return "login";
         }
 
+
+//--------LOGIN-------------------------------------------------------------------------------------
     /**
      * Affiche la page de connexion
      */
@@ -272,6 +273,7 @@ public class ShopkeeperController {
      * @param authentication  Les infos de la session
      * @return La vue du tableau de bord.
      */
+//--------AFFICHAGE----DASHBOARD-----------------------------------------------------------------------------------------------
     @GetMapping("/dashboard")
     public String showDashboard(Model model, Authentication authentication) {
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());

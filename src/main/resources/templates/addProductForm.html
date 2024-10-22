@@ -5,9 +5,10 @@
 </head>
 <body>
 <h1>Ajouter un produit</h1>
-<form method="post" th:action="@{/products/addProducts}">
-    <input type="hidden" name="id_subCategory" th:value="${id_subCategory}">
+<form method="post" th:action="@{/products/addProducts}" enctype="multipart/form-data">
+    <input type="hidden" name="id_subcategory" th:value="${id_subcategory}">
     <input type="hidden" name="website_name" th:value="${website_name}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <label for="productName">Nom du produit:</label>
         <input type="text" id="productName" name="productName" required>
@@ -25,8 +26,8 @@
         <input type="number" id="stock" name="stock" required>
     </div>
     <div>
-        <label for="image">URL de l'image:</label>
-        <input type="text" id="image" name="image" required>
+        <label for="file">Choisir une image produit:</label>
+        <input type="file" id="file" name="file" accept="image/png, image/jpeg, image/gif" required/><br>
     </div>
     <button type="submit">Ajouter le produit</button>
 </form>

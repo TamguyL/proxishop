@@ -41,6 +41,33 @@ public class BdProducts {
         return productNamesList;
     }
 
+
+    public Product getProductById(String bddname, int productId) throws SQLException {
+        Product product = null;
+
+        // Connexion à la base de données (à adapter selon ta configuration)
+        Connection conn = BdConnection.establishConnection(bddname);
+        String sql = "SELECT * FROM product WHERE id = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setLong(1, productId);
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            product = new Product();
+            product.setId(rs.getInt("id"));
+            product.setProductName(rs.getString("productName"));
+            product.setImage(rs.getString("image"));
+            product.setPrice(rs.getDouble("price"));
+            // Remplir les autres champs si nécessaire
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+
+        return product;
+    }
+
     /**
      * Inserts a new product into the database.
      *
