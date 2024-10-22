@@ -22,10 +22,8 @@ main{
     flex:1;
 }
 
-#main_title{
+.main_title{
     font-family: 'Lobster Two', sans-serif;
-    font-size:35px;
-
 }
 
 h3{
@@ -122,4 +120,14 @@ a{
 td {
     border: 2px solid black;
     text-align:center;
+}
+
+.product-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* Maintient le ratio d'aspect */
+}
+.product-info {
+    flex-grow: 1; /* Permet au texte de prendre tout l'espace disponible */
+    padding-left: 20px; /* Ajoute un espacement à gauche pour séparer l'image du texte */
 }

@@ -4,24 +4,11 @@
 <head>
     <div th:insert="fragments/fragments :: headerfiles"></div>
     <title th:text="${website_name}"></title>
-    <style>
-        .product-image {
-            width: 150px;
-            height: 150px;
-            object-fit: cover; /* Maintient le ratio d'aspect */
-        }
-        .product-info {
-            flex-grow: 1; /* Permet au texte de prendre tout l'espace disponible */
-            padding-left: 20px; /* Ajoute un espacement à gauche pour séparer l'image du texte */
-        }
-    </style>
 </head>
 
 <body>
 <div class="container mt-5">
     <div th:insert="fragments/fragments :: headerClient"></div>
-
-    <hr>
 
     <div th:if="${message != null}" class="alert alert-info">
         <p th:text="${message}"></p>

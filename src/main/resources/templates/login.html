@@ -1,21 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>Login</title>
 </head>
 <body>
-<h1>Login</h1>
-<form method="post" th:action="@{/shopkeeper/login}">
-    <label for="username">Email:</label>
-    <input type="text" id="username" name="username" required><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br>
+<div th:insert="fragments/fragments :: headerProxi"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Se connecter</h3>
 
-    <!-- Include CSRF token -->
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <!-- Message d'erreur -->
+                    <p th:if="${error}" th:text="${error}" class="text-danger text-center"></p>
 
-    <button type="submit">Login</button>
-</form>
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+                    <!-- Formulaire de connexion -->
+                    <form method="post" th:action="@{/shopkeeper/login}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Email :</label>
+                            <input type="email" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe :</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+
+                        <!-- Include CSRF token -->
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                        </div>
+                    </form>
+
+                    <!-- Lien vers la création de compte ou mot de passe oublié -->
+                    <div class="mt-3 text-center">
+                        <a href="#" class="text-decoration-none">Mot de passe oublié ?</a><br>
+                        <a href="#" class="text-decoration-none">Créer un compte</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:insert="fragments/fragments :: footer"></footer>
+<script th:insert="fragments/fragments :: scriptBootstrap"></script>
 </body>
 </html>

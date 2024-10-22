@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <a href="/categories/catalogue"><button th:text="${bddname}">Gestion Catégories</button></a>
     <select id="categorySelect" onchange="onCategorySelect(this.value)">
         <option value="">Sélectionnez une catégorie</option>
@@ -139,8 +140,8 @@
             <label for="stock">Stock :</label>
             <input type="number" id="stock" name="stock">
             <br>
-            <label for="image">Image :</label>
-            <input type="text" id="image" name="image">
+            <label for="Image">Choisir une photo de profil:</label>
+            <input type="file" id="Image" name="Image" accept="image/png, image/jpeg, image/gif" required/><br>
             <br>
             <button id="submit" type="submit">Ajouter un produit</button>
             <input type="hidden" id="id_product" name="id_product" value="">

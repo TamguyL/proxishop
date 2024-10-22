@@ -48,7 +48,8 @@ public class SecurityConfig {
                                 .requestMatchers("/shopkeeper/orders").authenticated()
                                 .requestMatchers("/shopkeeper/accountUpdate").authenticated()
                                 .requestMatchers("/shopkeeper/accountCreation").permitAll() //autorise la création d'un nouveau compte sur proxishop
-                                .requestMatchers("/shopkeeper/newbdd").permitAll() // Autoriser la création de base de données
+                                .requestMatchers("/shopkeeper/newbdd").permitAll()
+                                .requestMatchers("/products/updateProducts").authenticated()
                                 .anyRequest().permitAll()
                 )
 

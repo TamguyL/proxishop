@@ -1,68 +1,191 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
     <title>Modification du Compte</title>
 </head>
 <body>
-<h1>Modification du Compte</h1>
+
+<div th:insert="fragments/fragments :: headerProxi"></div>
 
 
-    <h3>Personnel</h3>
-    <form method="post" th:action="@{/shopkeeper/updatePersonnel}">
-        <label for="firstName">Prénom:</label>
-        <input type="text" id="firstName" name="firstName" th:value="${shopkeepers.firstName}" required><br>
+<div class="text-center">
+    <a href="/shopkeeper/dashboard">
+        <button class="btn btn-outline-primary" style="margin-left: 50%;" >Retour au Dashboard</button>
+    </a>
+</div>
 
-        <label for="lastName">Nom:</label>
-        <input type="text" id="lastName" name="lastName" th:value="${shopkeepers.lastName}" required><br>
 
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" th:value="${shopkeepers.email}" required><br>
-        <button type="submit">Modifier Personnel</button>
-    </form>
+<div class="card container mt-2">
+    <h1 class="text-center mt-2 mb-4 main_title">Modification du Compte</h1>
 
-        <hr>
-    <h3>Entreprise</h3>
-    <form method="post" th:action="@{/shopkeeper/updateEntreprise}">
-        <label for="siret">Siret:</label>
-        <input type="number" id="siret" name="siret"  th:value="${shopkeepers.siret}" required><br>
+        <!-- Personnel Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Personnel</h3>
+                <form method="post" th:action="@{/shopkeeper/updatePersonnel}" class="needs-validation" novalidate>
+                    <div class="row mb-3">
+                        <label for="firstName" class="col-sm-3 col-form-label">Prénom:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="firstName" name="firstName" th:value="${shopkeepers.firstName}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="lastName" class="col-sm-3 col-form-label">Nom:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="lastName" name="lastName" th:value="${shopkeepers.lastName}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="email" name="email" th:value="${shopkeepers.email}" required>
+                        </div>
+                    </div>
+                    <div class="text-center mb-2">
+                        <button type="submit" class="btn btn-primary">Modifier Personnel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <label for="firm_name">Nom d'entreprise:</label>
-        <input type="text" id="firm_name" name="firm_name"  th:value="${shopkeepers.firmName}" required><br>
+        <!-- Entreprise Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Entreprise</h3>
+                <form method="post" th:action="@{/shopkeeper/updateEntreprise}">
+                    <div class="row mb-3">
+                        <label for="siret" class="col-sm-3 col-form-label">Siret:</label>
+                        <div class="col-sm-9">
+                            <input type="number" class="form-control" id="siret" name="siret" th:value="${shopkeepers.siret}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="firm_name" class="col-sm-3 col-form-label">Nom d'entreprise:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="firm_name" name="firm_name" th:value="${shopkeepers.firmName}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="adress" class="col-sm-3 col-form-label">Adresse:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="adress" name="adress" th:value="${shopkeepers.adress}" required>
+                        </div>
+                    </div>
+                    <div class="text-center mb-2">
+                        <button type="submit" class="btn btn-primary">Modifier Entreprise</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <label for="adress">adresse:</label>
-        <input type="text" id="adress" name="adress"  th:value="${shopkeepers.adress}" required><br>
-        <button type="submit">Modifier Entreprise</button>
-    </form>
+        <!-- Photo Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Photo</h3>
+                <form method="post" th:action="@{/shopkeeper/updatePhoto}" enctype="multipart/form-data">
+                    <div class="row mb-3">
+                        <label for="profilePicture" class="col-sm-3 col-form-label">Photo de profil:</label>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/png, image/jpeg, image/gif" required>
+                        </div>
+                    </div>
+                    <div class="text-center mb-2">
+                        <button type="submit" class="btn btn-primary">Modifier Personnel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <hr>
-    <h3>Photo</h3>
-    <form method="post" th:action="@{/shopkeeper/updatePhoto}" enctype="multipart/form-data">
-        <label for="profilePicture">Choisir une photo de profil:</label>
-        <input type="file" id="profilePicture" name="profilePicture" accept="image/png, image/jpeg, image/gif" required/><br>
-        <button type="submit">Modifier Photo de profil</button>
-    </form>
+        <!-- Password Section -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">Mot de passe</h3>
+                <form method="post" th:action="@{/shopkeeper/updatePassword}">
+                    <div class="row mb-3">
+                        <label for="password" class="col-sm-3 col-form-label">Mot de Passe:</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password" name="password" required oninput="validatePassword()">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="password2" class="col-sm-3 col-form-label">Confirmer Mot de Passe:</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password2" name="password2" required oninput="validatePassword()">
+                        </div>
+                    </div>
+                    <div id="password-error" class="text-danger" style="display:none;"></div>
+                    <div class="text-center mb-2">
+                        <button type="submit" class="btn btn-primary">Modifier Personnel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-        <hr>
-    <h3>Mot de passe</h3>
-    <form method="post" th:action="@{/shopkeeper/updatePassword}">
-        <label for="oldpassword">Ancien Mot de Passe:</label>
-        <input type="password" id="oldpassword" name="oldpassword" required>
-        <br>
-        <label for="password1">Mot de Passe:</label>
-        <input type="password" id="password1" name="password1" required oninput="validatePassword()">
-        <br>
-        <label for="password2">Confirmer Mot de Passe:</label>
-        <input type="password" id="password2" name="password2" required oninput="validatePassword()">
-        <br>
+    <p th:if="${error}" th:text="${error}" class="text-danger text-center mt-3"></p>
+</div>
 
-        <div id="password-error" style="color:red; display:none;"></div>
+<!--<h1>Modification du Compte</h1>-->
 
-        <button type="submit" id="submit-btn" disabled>Modifier Mot de Passe</button>
-    </form>
+
+<!--    <h3>Personnel</h3>-->
+<!--    <form method="post" th:action="@{/shopkeeper/updatePersonnel}">-->
+<!--        <label for="firstName">Prénom:</label>-->
+<!--        <input type="text" id="firstName" name="firstName" th:value="${shopkeepers.firstName}" required><br>-->
+
+<!--        <label for="lastName">Nom:</label>-->
+<!--        <input type="text" id="lastName" name="lastName" th:value="${shopkeepers.lastName}" required><br>-->
+
+<!--        <label for="email">Email:</label>-->
+<!--        <input type="text" id="email" name="email" th:value="${shopkeepers.email}" required><br>-->
+<!--        <button type="submit">Modifier Personnel</button>-->
+<!--    </form>-->
+
+<!--        <hr>-->
+<!--    <h3>Entreprise</h3>-->
+<!--    <form method="post" th:action="@{/shopkeeper/updateEntreprise}">-->
+<!--        <label for="siret">Siret:</label>-->
+<!--        <input type="number" id="siret" name="siret"  th:value="${shopkeepers.siret}" required><br>-->
+
+<!--        <label for="firm_name">Nom d'entreprise:</label>-->
+<!--        <input type="text" id="firm_name" name="firm_name"  th:value="${shopkeepers.firmName}" required><br>-->
+
+<!--        <label for="adress">adresse:</label>-->
+<!--        <input type="text" id="adress" name="adress"  th:value="${shopkeepers.adress}" required><br>-->
+<!--        <button type="submit">Modifier Entreprise</button>-->
+<!--    </form>-->
+
+<!--        <hr>-->
+<!--    <h3>Photo</h3>-->
+<!--    <form method="post" th:action="@{/shopkeeper/updatePhoto}" enctype="multipart/form-data">-->
+<!--        <label for="profilePicture">Choisir une photo de profil:</label>-->
+<!--        <input type="file" id="profilePicture" name="profilePicture" accept="image/png, image/jpeg, image/gif" required/><br>-->
+<!--        <button type="submit">Modifier Photo de profil</button>-->
+<!--    </form>-->
+
+<!--        <hr>-->
+<!--    <h3>Mot de passe</h3>-->
+<!--    <form method="post" th:action="@{/shopkeeper/updatePassword}">-->
+<!--        <label for="oldpassword">Ancien Mot de Passe:</label>-->
+<!--        <input type="password" id="oldpassword" name="oldpassword" required>-->
+<!--        <br>-->
+<!--        <label for="password1">Mot de Passe:</label>-->
+<!--        <input type="password" id="password1" name="password1" required oninput="validatePassword()">-->
+<!--        <br>-->
+<!--        <label for="password2">Confirmer Mot de Passe:</label>-->
+<!--        <input type="password" id="password2" name="password2" required oninput="validatePassword()">-->
+<!--        <br>-->
+
+<!--        <div id="password-error" style="color:red; display:none;"></div>-->
+
+<!--        <button type="submit" id="submit-btn" disabled>Modifier Mot de Passe</button>-->
+<!--    </form>-->
+
 <p th:if="${error}" th:text="${error}" style="color:red;"></p>
 <p th:if="${update}" th:text="${update}" style="color:green;"></p>
-<hr><br>
-<a href="/shopkeeper/dashboard"><button>Retour Dashboard</button></a>
+
+
+<div th:insert="fragments/fragments :: footer"></div>
 
 <script>
     function validatePassword() {

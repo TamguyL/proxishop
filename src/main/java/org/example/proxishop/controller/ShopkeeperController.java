@@ -1,6 +1,7 @@
 package org.example.proxishop.controller;
 
 import jakarta.servlet.http.HttpSession;
+import net.coobird.thumbnailator.Thumbnails;
 import org.example.proxishop.Security.SiretValidator;
 import org.example.proxishop.model.database.costumer.BdOrder;
 import org.example.proxishop.model.database.shopkeeper.BdCategories;
@@ -205,9 +206,12 @@ public class ShopkeeperController {
             throw new IOException("Le fichier n'est pas une image valide");
         }
 
-        // Vérifie taille de l'image
+        // Vérifie et redimensionne l'image si elle dépasse 500x500
         if (image.getWidth() > 500 || image.getHeight() > 500) {
-            throw new IOException("L'image ne doit pas dépasser 500x500 pixels");
+            // Utilisation de Thumbnailator pour redimensionner l'image tout en conservant le ratio
+            image = Thumbnails.of(image)
+                    .size(500, 500) // Taille maximale
+                    .asBufferedImage(); // Retourne l'image redimensionnée en mémoire
         }
 
         // Récupérer le nom original du fichier et son extension
@@ -218,12 +222,19 @@ public class ShopkeeperController {
         if (originalFileName != null && originalFileName.contains(".")) {
             fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         }
+
+        // Génère un nom unique pour le fichier avec un timestamp
         String uniqueFileName = System.currentTimeMillis() + fileExtension;
 
         // Sauvegarde l'image
         String destinationPath = System.getProperty("user.dir") + "/src/main/resources/static/uploads/profiles/" + uniqueFileName;
         File dest = new File(destinationPath);
-        file.transferTo(dest);
+
+        // Sauvegarde l'image redimensionnée avec Thumbnailator
+        Thumbnails.of(image)
+                .size(image.getWidth(), image.getHeight()) // Utilise les dimensions actuelles de l'image (redimensionnée si nécessaire)
+                .outputFormat(fileExtension.replace(".", "")) // Format de sortie en fonction de l'extension d'origine
+                .toFile(dest); // Sauvegarde dans le fichier de destination
 
         // Retourne le chemin relatif de l'image
         return "/uploads/profiles/" + uniqueFileName;
