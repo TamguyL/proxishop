@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ajouter un produit</title>
+</head>
+<body>
+<h1>Ajouter un produit</h1>
+<form method="post" th:action="@{/products/addProducts}">
+    <input type="hidden" name="id_subCategory" th:value="${id_subCategory}">
+    <input type="hidden" name="website_name" th:value="${website_name}">
+    <div>
+        <label for="productName">Nom du produit:</label>
+        <input type="text" id="productName" name="productName" required>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+    </div>
+    <div>
+        <label for="price">Prix:</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+    </div>
+    <div>
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" required>
+    </div>
+    <div>
+        <label for="image">URL de l'image:</label>
+        <input type="text" id="image" name="image" required>
+    </div>
+    <button type="submit">Ajouter le produit</button>
+</form>
+</body>
+</html>

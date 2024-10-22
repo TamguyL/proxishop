@@ -226,7 +226,7 @@ public class ShopkeeperController {
         file.transferTo(dest);
 
         // Retourne le chemin relatif de l'image
-        return "/uploads/profiles/" + uniqueFileName;
+        return "/static/uploads/profiles/" + uniqueFileName;
     }
 
 
@@ -265,27 +265,6 @@ public class ShopkeeperController {
         return "login";
     }
 
-//    /**
-//     * Gère la connexion des commerçants.
-//     *
-//     * @param username    L'adresse email du commerçant.
-//     * @param password Le mot de passe du commerçant.
-//     * @param model    Le modèle Spring MVC.
-//     * @return La redirection vers le tableau de bord si la connexion est réussie, sinon retourne la page de connexion avec un message d'erreur.
-//     */
-//    @PostMapping("/login")
-//    public String login(@RequestParam String username, @RequestParam String password,Model model, RedirectAttributes redirectAttributes) {
-//        System.out.println("test2");
-//        Shopkeepers shopkeepers = proxiShopService.findByEmail(username);
-//        if (shopkeepers != null && shopkeepers.getPassword().equals(password)) {
-//            redirectAttributes.addFlashAttribute("shopkeepers", shopkeepers);
-//            return "redirect:/shopkeeper/dashboard";
-//        } else {
-//            model.addAttribute("error", "Invalid credentials");
-//            return "login";
-//        }
-//    }
-
     /**
      * Affiche le tableau de bord du commerçant.
      *
@@ -311,6 +290,7 @@ public class ShopkeeperController {
         model.addAttribute("shopkeepers", shopkeepers);
         return "dashboard";
     }
+
 
     @GetMapping("/accountUpdate")
     public String showAccountUpdate(Authentication authentication, Model model) {

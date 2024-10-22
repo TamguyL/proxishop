@@ -1,129 +1,75 @@
 package org.example.proxishop.controller;
 
-import org.example.proxishop.model.database.shopkeeper.BdCategories;
 import org.example.proxishop.model.database.shopkeeper.BdProducts;
-import org.example.proxishop.model.entities.shopkeeper.Product;
-import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
-import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
+import org.example.proxishop.model.entities.proxi.Shopkeepers;
+import org.example.proxishop.service.ProxiShopService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @Controller
-@RequestMapping("/products")
-@SessionAttributes("website_name")
 public class ProductController {
 
-    // Initialisation de l'attribut de session
-    @ModelAttribute("website_name")
-    public String setUpbddname() {
-        return ""; // Initialisez avec une valeur par défaut ou null
+
+    @Autowired
+    private ProxiShopService proxiShopService;
+
+    @GetMapping("/products/addProduct")
+    public String showAddProductForm(@RequestParam(required = false, defaultValue = "0") int id_subCategory, Model model) {
+        model.addAttribute("id_subCategory", id_subCategory);
+        return "addProductForm"; // Nom de la vue Thymeleaf
     }
 
-    // Méthode pour nettoyer la session
-    @GetMapping("/clearSession")
-    public String clearSession(SessionStatus sessionStatus) {
-        sessionStatus.setComplete();
-        return "redirect:/index";
-    }
-
-    /**
-     * Affiche la page de création de produits.
-     *
-     * @param website_name Le nom de la base de données.
-     * @param model   Le modèle Spring MVC.
-     */
-    @GetMapping
-    public String creaProd(@ModelAttribute("website_name") String website_name, Model model) {
-        BdCategories db = new BdCategories();
-        BdProducts dbp = new BdProducts();
-        try {
-            List<ProductCategory> categoryNamesList = db.getAllCategories(website_name);
-            model.addAttribute("categoryNamesList", categoryNamesList);
-            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(website_name);
-            model.addAttribute("subCategoryList", subCategoryList);
-            List<Product> productList = dbp.getAllProducts(website_name);
-            model.addAttribute("productList", productList);
-            model.addAttribute("bddname", website_name);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "products";
-    }
-
-    /**
-     * Ajoute un nouveau produit à la base de données.
-     *
-     * @param subCategoryid L'ID de la sous-catégorie.
-     * @param website_name       Le nom de la base de données.
-     * @param productName   Le nom du produit.
-     * @param description   La description du produit.
-     * @param price         Le prix du produit.
-     * @param stock         Le stock disponible du produit.
-     * @param image         L'URL de l'image du produit.
-     * @param model         Le modèle Spring MVC.
-     * @return La redirection vers la page des produits.
-     * @throws SQLException Si une erreur SQL se produit.
-     */
-    @PostMapping("/addProducts")
-    public String addProducts(@RequestParam int subCategoryid, @RequestParam String website_name, @RequestParam String productName,
+    @PostMapping("/products/addProducts")
+    public String addProducts(@RequestParam int id_subCategory, @RequestParam String productName,
                               @RequestParam String description, @RequestParam double price, @RequestParam int stock, @RequestParam String image,
                               Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        // Récupérer l'objet Authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // Récupérer le nom de la base de données à partir de l'objet Authentication
+        String website_name = getDatabaseNameFromAuthentication(authentication);
+
+
+        // Vérifier que le nom de la base de données n'est pas null ou vide
+        if (website_name == null || website_name.isEmpty()) {
+
+            throw new IllegalArgumentException("Database name cannot be null or empty");
+        }
+
+        // Insérer le nouveau produit
         BdProducts db = new BdProducts();
-        db.insertNewProduct(subCategoryid, website_name, productName, description, price, stock, image);
+        db.insertNewProduct(id_subCategory, website_name, productName, description, price, stock, image);
+
+        // Ajouter le nom de la base de données au modèle et aux attributs de redirection
         model.addAttribute("website_name", website_name);
         redirectAttributes.addFlashAttribute("website_name", website_name);
+
         return "redirect:/products";
     }
 
-    /**
-     * Met à jour un produit existant dans la base de données.
-     *
-     * @param subCategoryid L'ID de la sous-catégorie.
-     * @param website_name       Le nom de la base de données.
-     * @param productName   Le nom du produit.
-     * @param description   La description du produit.
-     * @param price         Le prix du produit.
-     * @param stock         Le stock disponible du produit.
-     * @param image         L'URL de l'image du produit.
-     * @param id_product    L'ID du produit à mettre à jour.
-     * @param model         Le modèle Spring MVC.
-     * @return La redirection vers la page des produits.
-     * @throws SQLException Si une erreur SQL se produit.
-     */
-    @PostMapping("/updateProducts")
-    public String updateProducts(@RequestParam int subCategoryid, @RequestParam String website_name, @RequestParam String productName,
-                                 @RequestParam String description, @RequestParam double price, @RequestParam int stock, @RequestParam String image,
-                                 @RequestParam int id_product, Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        BdProducts db = new BdProducts();
-        db.updateProduct(id_product, subCategoryid, website_name, productName, description, price, stock, image);
-        model.addAttribute("website_name", website_name);
-        redirectAttributes.addFlashAttribute("website_name", website_name);
-        return "redirect:/products";
+    @GetMapping("/products")
+    public String showProducts(Model model) {
+        // Vous pouvez ajouter ici la logique pour récupérer la liste des produits si nécessaire
+        return "products"; // Nom de la vue Thymeleaf
     }
 
-    /**
-     * Supprime un produit de la base de données.
-     *
-     * @param website_name     Le nom de la base de données.
-     * @param productName Le nom du produit.
-     * @param id_product  L'ID du produit à supprimer.
-     * @param model       Le modèle Spring MVC.
-     * @return La redirection vers la page des produits.
-     * @throws SQLException Si une erreur SQL se produit.
-     */
-    @PostMapping("/deleteProducts")
-    public String deleteProducts(@RequestParam String website_name, @RequestParam String productName, @RequestParam int id_product,
-                                 Model model, RedirectAttributes redirectAttributes) throws SQLException {
-        BdProducts db = new BdProducts();
-        db.deleteProduct(id_product, website_name, productName);
-        model.addAttribute("website_name", website_name);
-        redirectAttributes.addFlashAttribute("website_name", website_name);
-        return "redirect:/products";
+    private String getDatabaseNameFromAuthentication(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+            if (shopkeepers != null) {
+                return shopkeepers.getWebsiteName();
+            }
+        }
+        return null;
     }
 }

@@ -20,7 +20,7 @@ public class CategoryController {
     // Initialisation de l'attribut de session
     @ModelAttribute("website_name")
     public String setUpbddname() {
-        return ""; // Initialisez avec une valeur par défaut ou null
+        return "";
     }
 
     // Méthode pour nettoyer la session
@@ -45,11 +45,7 @@ public class CategoryController {
      * @param action               L'action à effectuer (ajout de catégorie ou ajout de produit).
      * @param website_name              Le nom de la base de données.
      * @param categoryName         Le nom de la catégorie.
-     * @param subcategoryName1     Le nom de la première sous-catégorie.
-     * @param subcategoryName2     Le nom de la deuxième sous-catégorie.
-     * @param subcategoryName3     Le nom de la troisième sous-catégorie.
-     * @param subcategoryName4     Le nom de la quatrième sous-catégorie.
-     * @param subcategoryName5     Le nom de la cinquième sous-catégorie.
+     * @param subcategories        tableau dans lequel on insère le nom des sous-catégories
      * @param model                Le modèle Spring MVC.
      * @param redirectAttributes   Les attributs de redirection.
      * @return Le nom de la vue à afficher après la soumission.
@@ -60,21 +56,22 @@ public class CategoryController {
             @RequestParam("action") String action,
             @RequestParam("website_name") String website_name,
             @RequestParam("categories1") String categoryName,
-            @RequestParam("subcategories1") String subcategoryName1,
-            @RequestParam("subcategories2") String subcategoryName2,
-            @RequestParam("subcategories3") String subcategoryName3,
-            @RequestParam("subcategories4") String subcategoryName4,
-            @RequestParam("subcategories5") String subcategoryName5,
+            @RequestParam("subcategories") String[] subcategories, // Accepter un tableau de sous-catégories
             Model model,
             RedirectAttributes redirectAttributes) throws SQLException {
 
-        System.out.println("Database name: " + website_name); // Ajouter un log pour vérifier le nom de la base de données
+
         BdCategories db = new BdCategories();
-        db.insertCategoryAndSubCategory(categoryName, subcategoryName1, subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5, website_name);
+        db.insertCategoryAndSubCategory(categoryName, subcategories, website_name);
+
         model.addAttribute("website_name", website_name);
+
         if ("ajoutcateg".equals(action)) {
+
             return "categories";
+
         } else if ("addProduct".equals(action)) {
+
             redirectAttributes.addFlashAttribute("website_name", website_name);
             return "redirect:/products";
         }
@@ -89,13 +86,16 @@ public class CategoryController {
      */
     @GetMapping("/gestionCategories")
     public String showCatalogue(@ModelAttribute("website_name") String website_name, Model model) {
-        System.out.println("Database name: " + website_name); // Ajouter un log pour vérifier le nom de la base de données
+
         BdCategories db = new BdCategories();
         try {
+
             List<ProductCategory> categoryNamesList = db.getAllCategories(website_name);
             model.addAttribute("categoryNamesList", categoryNamesList);
+
             List<ProductSubCategory> subCategoryList = db.getAllSubCategories(website_name);
             model.addAttribute("subCategoryList", subCategoryList);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

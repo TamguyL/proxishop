@@ -20,7 +20,7 @@ public class BdProducts {
      */
     public List<Product> getAllProducts(String bddname) throws SQLException {
         List<Product> productNamesList = new ArrayList<>();
-        String query = "SELECT * FROM product";
+        String query = "SELECT * FROM " + bddname + ".product";
         System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
         try (Connection connection = BdConnection.establishConnection(bddname);
              Statement statement = connection.createStatement();
@@ -44,8 +44,8 @@ public class BdProducts {
     /**
      * Inserts a new product into the database.
      *
-     * @param subCategoryid the ID of the subcategory
-     * @param website_name       the name of the database
+     * @param id_subCategory the ID of the subcategory
+     * @param website_name  the name of the database
      * @param productName   the name of the product
      * @param description   the description of the product
      * @param price         the price of the product
@@ -53,43 +53,50 @@ public class BdProducts {
      * @param image         the image of the product
      * @throws SQLException if a database access error occurs
      */
-    public void insertNewProduct(int subCategoryid, String website_name, String productName, String description, double price, int stock, String image) throws SQLException {
-        String query = "INSERT INTO " + website_name + ".product (productName, description, stock, image, price, id_subCategory) VALUES (?, ?, ?, ?, ?, ?)";
-        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+    public void insertNewProduct(int id_subCategory, String website_name, String productName, String description, double price, int stock, String image) throws SQLException {
+        String insertQuery = "INSERT INTO " + website_name + ".product (productName, description, stock, image, price, id_subCategory) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = BdConnection.establishConnection(website_name);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 
+            // Insérer le produit
             preparedStatement.setString(1, productName);
             preparedStatement.setString(2, description);
             preparedStatement.setInt(3, stock);
             preparedStatement.setString(4, image);
             preparedStatement.setDouble(5, price);
-            preparedStatement.setInt(6, subCategoryid);
+            preparedStatement.setInt(6, id_subCategory);
+
+            // Ajouter un log pour vérifier les valeurs insérées
+            System.out.println("Inserting product with values: " + productName + ", " + description + ", " + stock + ", " + image + ", " + price + ", " + id_subCategory);
+
             preparedStatement.executeUpdate();
 
             System.out.println("Product " + productName + " created successfully.");
         }
     }
 
+
     /**
      * Updates product data in the database.
      *
-     * @param productid      the ID of the product
-     * @param subCategoryid  the ID of the subcategory
-     * @param website_name        the name of the database
-     * @param productName    the name of the product
-     * @param description    the description of the product
-     * @param price          the price of the product
-     * @param stock          the stock of the product
-     * @param image          the image of the product
+     * @param productid     the ID of the product
+     * @param subCategoryid the ID of the subcategory
+     * @param website_name  the name of the database
+     * @param productName   the name of the product
+     * @param description   the description of the product
+     * @param price         the price of the product
+     * @param stock         the stock of the product
+     * @param image         the image of the product
      * @throws SQLException if a database access error occurs
      */
     public void updateProduct(int productid, int subCategoryid, String website_name, String productName, String description, double price, int stock, String image) throws SQLException {
-        String query = "UPDATE " + website_name + ".product SET productName = ?, description = ?, stock = ?, image = ?, price = ?, id_subCategory = ? WHERE id = ?";
-        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+        String updateQuery = "UPDATE " + website_name + ".product SET productName = ?, description = ?, stock = ?, image = ?, price = ?, id_subCategory = ? WHERE id = ?";
+        System.out.println("Executing query: " + updateQuery); // Ajouter un log pour vérifier la requête
+        System.out.println("Parameters: productid=" + productid + ", subCategoryid=" + subCategoryid + ", website_name=" + website_name + ", productName=" + productName + ", description=" + description + ", price=" + price + ", stock=" + stock + ", image=" + image); // Ajouter un log pour vérifier les paramètres
         try (Connection connection = BdConnection.establishConnection(website_name);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
+            // Mettre à jour le produit
             preparedStatement.setString(1, productName);
             preparedStatement.setString(2, description);
             preparedStatement.setInt(3, stock);
@@ -111,16 +118,18 @@ public class BdProducts {
      * Deletes a product from the database.
      *
      * @param productid   the ID of the product
-     * @param website_name     the name of the database
+     * @param website_name the name of the database
      * @param productName the name of the product
      * @throws SQLException if a database access error occurs
      */
     public void deleteProduct(int productid, String website_name, String productName) throws SQLException {
-        String query = "DELETE FROM " + website_name + ".product WHERE id = ?";
-        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+        String deleteQuery = "DELETE FROM " + website_name + ".product WHERE id = ?";
+        System.out.println("Executing query: " + deleteQuery); // Ajouter un log pour vérifier la requête
+        System.out.println("Parameters: productid=" + productid + ", website_name=" + website_name + ", productName=" + productName); // Ajouter un log pour vérifier les paramètres
         try (Connection connection = BdConnection.establishConnection(website_name);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
 
+            // Supprimer le produit
             preparedStatement.setInt(1, productid);
             int updated = preparedStatement.executeUpdate();
 

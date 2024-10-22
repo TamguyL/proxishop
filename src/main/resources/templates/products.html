@@ -124,7 +124,7 @@
 
     function addProduct(subCategoryId){
         const element = document.getElementById("addProduct");
-        element.innerHTML = `<form id="formAdd" action="/products/addProducts" method="post" >
+        element.innerHTML = `<form id="formAdd" action="/uploads/products/addProducts" method="post" >
             <input type="hidden" name="subCategoryid" value="${subCategoryId}">
             <input type="hidden" name="bddname" value="${bddname}">
             <label for="productName">Nom du produit :</label>

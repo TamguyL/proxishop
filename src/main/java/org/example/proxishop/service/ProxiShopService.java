@@ -18,13 +18,13 @@ public class ProxiShopService {
 
     @Transactional
     public void updateShopkeeper(int id, String website_name, int id_offer) {
-        // Récupérer l'entité existante de la base de données
+
         Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
-        // Mettre à jour les attributs de l'entité existante
+
         shopkeeper.setWebsiteName(website_name);
         shopkeeper.setId_offer(id_offer);
 
-        // Enregistrer l'entité mise à jour dans la base de données
+
         shopkeepersRepositoryProxi.save(shopkeeper);
     }
 
