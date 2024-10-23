@@ -5,8 +5,8 @@ import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Manages the insertion, update, and deletion of Categories and sub-categories in the database.
@@ -68,15 +68,15 @@ public class BdCategories {
      * Inserts category and subcategories into the database.
      *
      * @param categoryName     the name of the category
-     * @param subcategoryName1 the name of the first subcategory
-     * @param subcategoryName2 the name of the second subcategory
-     * @param subcategoryName3 the name of the third subcategory
-     * @param subcategoryName4 the name of the fourth subcategory
-     * @param subcategoryName5 the name of the fifth subcategory
-     * @param website_name          the name of the database
-     * @throws SQLException if a database access error occurs
+     * @param subcategories     an array list that contains the subcategories names
+     * @param website_name      the name of the database
+     * @throws SQLException     if a database access error occurs
      */
-    public void insertCategoryAndSubCategory(String categoryName, String subcategoryName1, String subcategoryName2, String subcategoryName3, String subcategoryName4, String subcategoryName5, String website_name) throws SQLException {
+
+    /* méthode insertCategoryAndSubCategory modifiée pour qu'elle accepte un tableau de sous-categories suite à la modification de leur création dans le dashboard
+     */
+
+    public void insertCategoryAndSubCategory(String categoryName, String[] subcategories, String website_name) throws SQLException {
         try (Connection connection = BdConnection.establishConnection(website_name);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "INSERT INTO productcategory (CategoryName) VALUES (?)")) {
@@ -86,12 +86,7 @@ public class BdCategories {
             System.out.println("Category " + categoryName + " created successfully.");
             int idrecup = getIdcategory(categoryName, website_name);
             System.out.println(idrecup);
-            List<String> productSubCategory = new ArrayList<>();
-            productSubCategory.add(subcategoryName1);
-            Stream.of(subcategoryName2, subcategoryName3, subcategoryName4, subcategoryName5)
-                    .filter(name -> !name.isEmpty())
-                    .forEach(productSubCategory::add);
-            insertSubProductCategoryData(productSubCategory, idrecup, website_name);
+            insertSubProductCategoryData(Arrays.asList(subcategories), idrecup, website_name);
         }
     }
 
@@ -126,17 +121,25 @@ public class BdCategories {
      * @param website_name            the name of the database
      * @throws SQLException if a database access error occurs
      */
+
+    /*
+
+    la méthode insertSubProductCategoryData vérifie désormais que le sous-catégorie qu'elle tente d'insérer ne soit pas vide
+
+     */
     private void insertSubProductCategoryData(List<String> productSubCategory, int id_category, String website_name) throws SQLException {
         for (String SubCategory : productSubCategory) {
-            try (Connection connection = BdConnection.establishConnection(website_name);
-                 PreparedStatement preparedStatement = connection.prepareStatement(
-                         "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
+            if (!SubCategory.isEmpty()) {
+                try (Connection connection = BdConnection.establishConnection(website_name);
+                     PreparedStatement preparedStatement = connection.prepareStatement(
+                             "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
 
-                preparedStatement.setString(1, SubCategory);
-                preparedStatement.setInt(2, id_category);
-                preparedStatement.executeUpdate();
+                    preparedStatement.setString(1, SubCategory);
+                    preparedStatement.setInt(2, id_category);
+                    preparedStatement.executeUpdate();
 
-                System.out.println("SubCategory " + SubCategory + " created successfully.");
+                    System.out.println("SubCategory " + SubCategory + " created successfully.");
+                }
             }
         }
     }
