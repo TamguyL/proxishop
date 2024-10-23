@@ -1,17 +1,34 @@
-body{
-    font-family: 'Lobster Two', sans-serif;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    color: #333;
-    background-color: #ccebcb;
-    display:flex;
-    flex-direction:column;
+.container{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 10px;
+    background-color:#C2D5C2;
+    font-size: 2.5em;
 }
+
+@media screen and (min-width: 681px) and (max-width: 1279px){
+    .container{
+        font-size: 2em;
+        background-color: aqua;
+    }
+}
+
+@media screen and (max-width: 680px){
+    .container{
+        font-size: 1.5em;
+        background-color: bisque;
+    }
+}
+
 header{
-    background-color: #005000;
-    color: #ecffeb;
-    padding: 20px;
+
+}
+.titre{
+    font-weight: bold;
+}
+.panier{
+    font-style: italic;
 }
 .flex_container{
     display:flex;
@@ -31,8 +48,8 @@ main{
 #main_title{
     font-family: 'Lobster Two', sans-serif;
     font-size:35px;
-
 }
+
 h2{
     color: #27332a;
 }
@@ -41,12 +58,6 @@ section{
     margin: 200px;
     background-color: #ffffff5e;
     box-shadow: 0 0 10px #005000;
-}
-.container{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
 }
 h3{
     font-family: 'Lobster Two', sans-serif;
@@ -81,14 +92,6 @@ h3{
 .template_choice{
     margin:2%;
     font-family: 'Lobster Two', sans-serif;
-}
-.titre{
-    font-size: 32px;
-    margin: 0 200px;
-}
-.panier{
-    font-size: 22px;
-    margin: 0 200px;
 }
 .infoPerso{
     position:relative;
@@ -170,7 +173,6 @@ p.footer_flex{
     margin-left: 1vw;
     margin-right:1vw;
     font-family: 'Quicksand', sans-serif;
-
 }
 
 p.text{
