@@ -14,14 +14,6 @@ public class HomeController extends HttpServlet {
     @Autowired
     private ProxiShopService proxiShopService;
 
-    /**
-     * Affiche la page d'accueil de ProxiShop.
-     *
-     */
-    @GetMapping("/proxishop")
-    public String proxishop() {
-        return "proxishop";
-    }
 
     /**
      * Affiche la première page de choix de template.

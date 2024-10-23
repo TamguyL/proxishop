@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -40,42 +39,50 @@ public class CategoryController {
     }
 
     /**
-     * Gère la soumission des catégories et sous-catégories.
+     * Gère l'ajout d'une catégorie via une requête POST.
      *
-     * @param action               L'action à effectuer (ajout de catégorie ou ajout de produit).
-     * @param website_name              Le nom de la base de données.
-     * @param categoryName         Le nom de la catégorie.
-     * @param subcategories        tableau dans lequel on insère le nom des sous-catégories
-     * @param model                Le modèle Spring MVC.
-     * @param redirectAttributes   Les attributs de redirection.
-     * @return Le nom de la vue à afficher après la soumission.
+     * @param website_name      Le nom de la base de données.
+     * @param categoryName      Le nom de la catégorie.
+     * @return Une réponse JSON indiquant le succès ou l'échec de l'opération.
      * @throws SQLException Si une erreur SQL se produit.
      */
-    @PostMapping
-    public String handleSubmit(
-            @RequestParam("action") String action,
+    @PostMapping("/addCategory")
+    @ResponseBody
+    public String addCategory(
             @RequestParam("website_name") String website_name,
-            @RequestParam("categories1") String categoryName,
-            @RequestParam("subcategories") String[] subcategories, // Accepter un tableau de sous-catégories
-            Model model,
-            RedirectAttributes redirectAttributes) throws SQLException {
-
+            @RequestParam("categoryName") String categoryName) throws SQLException {
 
         BdCategories db = new BdCategories();
-        db.insertCategoryAndSubCategory(categoryName, subcategories, website_name);
+        db.insertCategoryAndSubCategory(categoryName, new String[0], website_name);
 
-        model.addAttribute("website_name", website_name);
+        return "{\"status\": \"success\"}";
+    }
 
-        if ("ajoutcateg".equals(action)) {
+    /**
+     * Gère l'ajout de sous-catégories via une requête POST.
+     *
+     * @param website_name      Le nom de la base de données.
+     * @param categoryId        L'ID de la catégorie.
+     * @param subCategoryName   Le nom de la sous-catégorie.
+     * @return Une réponse JSON indiquant le succès ou l'échec de l'opération.
+     * @throws SQLException Si une erreur SQL se produit.
+     */
+    @PostMapping("/addSubCategory")
+    @ResponseBody
+    public String addSubCategory(
+            @RequestParam("website_name") String website_name,
+            @RequestParam("categoryId") int categoryId,
+            @RequestParam("subCategoryName") String subCategoryName) throws SQLException {
 
-            return "categories";
+        // Ajouter des logs pour vérifier les paramètres reçus
+        System.out.println("Received website_name: " + website_name);
+        System.out.println("Received categoryId: " + categoryId);
+        System.out.println("Received subCategoryName: " + subCategoryName);
 
-        } else if ("addProduct".equals(action)) {
+        BdCategories db = new BdCategories();
+        db.insertSubCategory(categoryId, subCategoryName, website_name);
 
-            redirectAttributes.addFlashAttribute("website_name", website_name);
-            return "redirect:/products";
-        }
-        return "error";
+        return "{\"status\": \"success\"}";
     }
 
     /**

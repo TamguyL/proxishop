@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class BdProducts {
 
+
+
+
     /**
      * Retrieves all products from the database.
      *

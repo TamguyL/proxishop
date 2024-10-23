@@ -8,18 +8,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 /**
  * Manages the insertion, update, and deletion of Categories and sub-categories in the database.
  */
 public class BdCategories {
 
-    /**
-     * Retrieves all categories from the database.
-     *
-     * @param website_name the name of the database
-     * @return a list of ProductCategory objects
-     * @throws SQLException if a database access error occurs
-     */
+    // Méthode pour vérifier l'existence de la table productcategory
+    public boolean checkIfTableExists(String website_name, String tableName) throws SQLException {
+        boolean tableExists = false;
+        String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = '" + tableName + "'";
+        System.out.println("Executing query: " + query); // Ajouter un log pour vérifier la requête
+
+        try (Connection connection = BdConnection.establishConnection(website_name);
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                tableExists = count > 0;
+            }
+        }
+
+        return tableExists;
+    }
+
+    // Méthode pour récupérer toutes les catégories
     public List<ProductCategory> getAllCategories(String website_name) throws SQLException {
         List<ProductCategory> categoryNamesList = new ArrayList<>();
         String query = "SELECT * FROM productcategory";
@@ -38,13 +52,7 @@ public class BdCategories {
         return categoryNamesList;
     }
 
-    /**
-     * Retrieves all subcategories from the database.
-     *
-     * @param website_name the name of the database
-     * @return a list of ProductSubCategory objects
-     * @throws SQLException if a database access error occurs
-     */
+    // Méthode pour récupérer toutes les sous-catégories
     public List<ProductSubCategory> getAllSubCategories(String website_name) throws SQLException {
         List<ProductSubCategory> subCategoryNamesList = new ArrayList<>();
         String query = "SELECT * FROM productsubcategory";
@@ -72,10 +80,6 @@ public class BdCategories {
      * @param website_name      the name of the database
      * @throws SQLException     if a database access error occurs
      */
-
-    /* méthode insertCategoryAndSubCategory modifiée pour qu'elle accepte un tableau de sous-categories suite à la modification de leur création dans le dashboard
-     */
-
     public void insertCategoryAndSubCategory(String categoryName, String[] subcategories, String website_name) throws SQLException {
         try (Connection connection = BdConnection.establishConnection(website_name);
              PreparedStatement preparedStatement = connection.prepareStatement(
@@ -87,6 +91,26 @@ public class BdCategories {
             int idrecup = getIdcategory(categoryName, website_name);
             System.out.println(idrecup);
             insertSubProductCategoryData(Arrays.asList(subcategories), idrecup, website_name);
+        }
+    }
+
+    /**
+     * Inserts a subcategory into the database.
+     *
+     * @param categoryId        the ID of the category
+     * @param subCategoryName   the name of the subcategory
+     * @param website_name      the name of the database
+     * @throws SQLException if a database access error occurs
+     */
+    public void insertSubCategory(int categoryId, String subCategoryName, String website_name) throws SQLException {
+        try (Connection connection = BdConnection.establishConnection(website_name);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "INSERT INTO productsubcategory (SubCategoryName, id_category) VALUES (?, ?)")) {
+
+            preparedStatement.setString(1, subCategoryName);
+            preparedStatement.setInt(2, categoryId);
+            preparedStatement.executeUpdate();
+            System.out.println("SubCategory " + subCategoryName + " created successfully.");
         }
     }
 
@@ -120,12 +144,6 @@ public class BdCategories {
      * @param id_category        the ID of the category
      * @param website_name            the name of the database
      * @throws SQLException if a database access error occurs
-     */
-
-    /*
-
-    la méthode insertSubProductCategoryData vérifie désormais que le sous-catégorie qu'elle tente d'insérer ne soit pas vide
-
      */
     private void insertSubProductCategoryData(List<String> productSubCategory, int id_category, String website_name) throws SQLException {
         for (String SubCategory : productSubCategory) {

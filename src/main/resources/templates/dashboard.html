@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <title>Dashboard</title>
     <div th:insert="fragments/fragments :: headerfiles"></div>
 </head>
@@ -17,14 +20,16 @@
     </div>
     <hr>
 
+    <div id="errorMessage" style="display: none; color: black;">
+        Rien à afficher pour l'instant... et si on commençait?
+    </div>
+
     <!-- AJOUTER CATEGORIE: Bouton pour ouvrir la fenêtre modale -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">
         Ajouter une catégorie
     </button>
 
-
     <div th:insert="fragments/fragments :: information"></div>
-
 
     <!-- AJOUTER CATEGORIE: Fenêtre modale pour ajouter une catégorie -->
     <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
@@ -43,13 +48,6 @@
                             <label for="categoryName">Nom de la catégorie:</label>
                             <input type="text" class="form-control" id="categoryName" name="categoryName" required>
                         </div>
-                        <div id="subcategoriesContainer">
-                            <div class="form-group">
-                                <label for="subcategories1">Sous-catégorie 1:</label>
-                                <input type="text" class="form-control" id="subcategories1" name="subcategories">
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" id="addSubcategory">Ajouter une sous-catégorie</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -60,176 +58,230 @@
         </div>
     </div>
 
-    <div th:each="category : ${categoryList}" class="border rounded p-3 mb-4">
-        <h2 th:text="${category.CategoryName}" class="text-success"></h2>
-        <a th:href="'/shopkeeper/updateCategory?id=' + ${category.id}"><button>Modifier Catégorie</button></a>
-        <a th:href="'/shopkeeper/supprCategory?id=' + ${category.id}"><button>Supprimer Catégorie</button></a>
-        <a th:href="'/shopkeeper/addSubcategory?id=' + ${category.id}"><button>Ajout Sous Catégorie</button></a>
-
-        <div th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}" class="border-top pt-3">
-            <h3 th:text="${subCategory.SubCategoryName}" class="ms-3"></h3>
-            <a th:href="'/shopkeeper/updateSubcategory?id=' + ${subCategory.id}"><button>Modifier Sous Catégorie</button></a> <!--bouton-->
-            <a th:href="'/shopkeeper/supprSubcategory?id=' + ${subCategory.id}"><button>Supprimer Sous Catégorie</button></a> <!--bouton-->
-
-            <!--  AJOUT PRODUIT: ci-dessous transmission de l'id de la sous-catégorie du produit en "hidden" et du csrf token   -->
-            <form method="post" action="/products/newProduct"> <!--bouton-->
-                <input type="hidden" th:value="${subCategory.id}" name="id_subcategory">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button>Ajout Produit</button>
-            </form>
-
-            <!-- AFFICHAGE PRODUITS -->
-            <div th:each="product : ${productList}" th:if="${product.id_subCategory == subCategory.id}" class="border rounded p-3 mb-3 d-flex align-items-center">
-                <div class="product-info">
-                    <p th:text="${product.productName}" class="fw-bold fs-4"></p>
-                    <p th:text="'Description : ' + ${product.description}"></p>
-                    <p th:text="'Stock : ' + ${product.stock}"></p>
-                    <p th:text="'Prix : ' + ${product.price}+ ' €'" class="fw-bold fs-5"></p>
-                </div>
-                <p><img th:src="@{${product.image}}" th:alt="'image de '+ ${product.productName}" class="product-image"/></p>
-
-                <!-- MODIFICATION PRODUIT -->
-                <form method="post" action="/products/updateProduct" >
-                    <input type="hidden" th:value="${product.id}" name="productid">
-                    <input type="hidden" th:value="${subCategory.id}" name="id_subcategory">
-                    <input type="hidden" th:value="${product.productName}" name="productName">
-                    <input type="hidden" th:value="${product.description}" name="productdescription">
-                    <input type="hidden" th:value="${product.price}" name="productprice">
-                    <input type="hidden" th:value="${product.stock}" name="productstock">
-                    <input type="hidden" th:value="${product.image}" name="file">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <input type="hidden" th:value="${product.id_subCategory}" th:name="id_subcategory" />
-
-                    <!--MODIFICATION PRODUIT: Bouton pour ouvrir la fenêtre modale -->
-                    <!--- transmettre id produit ici! -->
-
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateProductModal" th:data-product-id="${product.id}" th:data-subcategory-id="${product.id_subCategory}">
-                        Modifier Produit
+    <!-- AJOUTER SOUS-CATEGORIE: Fenêtre modale pour ajouter une sous-catégorie -->
+    <div class="modal fade" id="addSubCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addSubCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSubCategoryModalLabel">Ajouter une sous-catégorie</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
+                </div>
+                <div class="modal-body">
+                    <form id="subCategoryForm">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" id="categoryId" name="categoryId" />
+                        <div class="form-group">
+                            <label for="subCategoryName">Nom de la sous-catégorie:</label>
+                            <input type="text" class="form-control" id="subCategoryName" name="subCategoryName" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" id="submitSubCategory">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="conditionalContent">
+        <div th:each="category : ${categoryList}" class="border rounded p-3 mb-4">
+            <h2 th:text="${category.CategoryName}" class="text-success"></h2>
+            <a th:href="'/shopkeeper/updateCategory?id=' + ${category.id}"><button>Modifier Catégorie</button></a>
+            <a th:href="'/shopkeeper/supprCategory?id=' + ${category.id}"><button>Supprimer Catégorie</button></a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSubCategoryModal" th:data-category-id="${productcategory.id}">Ajouter une sous-catégorie</button>
+
+            <div th:each="subCategory : ${subCategoryList}" th:if="${subCategory.id_category == category.id}" class="border-top pt-3">
+                <h3 th:text="${subCategory.SubCategoryName}" class="ms-3"></h3>
+                <a th:href="'/shopkeeper/updateSubcategory?id=' + ${subCategory.id}"><button>Modifier Sous Catégorie</button></a> <!--bouton-->
+                <a th:href="'/shopkeeper/supprSubcategory?id=' + ${subCategory.id}"><button>Supprimer Sous Catégorie</button></a> <!--bouton-->
+
+                <!--  AJOUT PRODUIT: ci-dessous transmission de l'id de la sous-catégorie du produit en "hidden" et du csrf token   -->
+                <form method="post" action="/products/newProduct"> <!--bouton-->
+                    <input type="hidden" th:value="${subCategory.id}" name="id_subcategory">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button>Ajout Produit</button>
                 </form>
 
-                <!-- MODIFICATION PRODUIT: Fenêtre modale-->
-                <div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="updateProductModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="updateProductModalLabel">Modifier un Produit</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="productForm" method="post" action="/products/updateProduct" enctype="multipart/form-data">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                                    <input type="hidden" id="productid" th:name="productid" th:value="${product.id}" />
-                                    <input type="hidden" th:value="${subCategory.id}" name="id_subcategory" />
+                <!-- AFFICHAGE PRODUITS -->
+                <div th:each="product : ${productList}" th:if="${product.id_subCategory == subCategory.id}" class="border rounded p-3 mb-3 d-flex align-items-center">
+                    <div class="product-info">
+                        <p th:text="${product.productName}" class="fw-bold fs-4"></p>
+                        <p th:text="'Description : ' + ${product.description}"></p>
+                        <p th:text="'Stock : ' + ${product.stock}"></p>
+                        <p th:text="'Prix : ' + ${product.price}+ ' €'" class="fw-bold fs-5"></p>
+                    </div>
+                    <p><img th:src="@{${product.image}}" th:alt="'image de '+ ${product.productName}" class="product-image"/></p>
 
-                                    <div class="form-group">
-                                        <label for="productName">Nom du Produit:</label>
-                                        <input type="text"  class="form-control" id="productName" name="productName" th:value="${product.productName}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="productDescription">Description:</label>
-                                        <textarea class="form-control" id="productDescription" th:name="productdescription" th:value="${product.description}" ></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="productPrice">Prix:</label>
-                                        <input type="number" class="form-control" id="productPrice" th:name="productprice" th:value="${product.price}" >
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="productStock">Stock:</label>
-                                        <input type="number" class="form-control" id="productStock" th:name="productstock" th:value="${product.stock}" >
-                                    </div>
-                                    <div class="form-group">
+                    <!-- MODIFICATION PRODUIT -->
+                    <form method="post" action="/products/updateProduct" >
+                        <input type="hidden" th:value="${product.id}" name="productid">
+                        <input type="hidden" th:value="${subCategory.id}" name="id_subcategory">
+                        <input type="hidden" th:value="${product.productName}" name="productName">
+                        <input type="hidden" th:value="${product.description}" name="productdescription">
+                        <input type="hidden" th:value="${product.price}" name="productprice">
+                        <input type="hidden" th:value="${product.stock}" name="productstock">
+                        <input type="hidden" th:value="${product.image}" name="file">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <input type="hidden" th:value="${product.id_subCategory}" th:name="id_subcategory" />
 
-                                        <label for="file">Choisir une image produit:</label>
-                                        <input type="file" class="form-control" id="file" name="file" accept="image/png, image/jpeg, image/gif" /><br>
+                        <!--MODIFICATION PRODUIT: Bouton pour ouvrir la fenêtre modale -->
+                        <!--- transmettre id produit ici! -->
 
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                <button type="button" class="btn btn-primary" id="submitProduct">Modifier</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateProductModal" th:data-product-id="${product.id}" th:data-subcategory-id="${product.id_subCategory}">
+                            Modifier Produit
+                        </button>
+                    </form>
+
+                    <!-- MODIFICATION PRODUIT: Fenêtre modale-->
+                    <div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="updateProductModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateProductModalLabel">Modifier un Produit</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="productForm" method="post" action="/products/updateProduct" enctype="multipart/form-data">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        <input type="hidden" id="productid" th:name="productid" th:value="${product.id}" />
+                                        <input type="hidden" th:value="${subCategory.id}" name="id_subcategory" />
+
+                                        <div class="form-group">
+                                            <label for="productName">Nom du Produit:</label>
+                                            <input type="text"  class="form-control" id="productName" name="productName" th:value="${product.productName}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productDescription">Description:</label>
+                                            <textarea class="form-control" id="productDescription" th:name="productdescription" th:value="${product.description}" ></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productPrice">Prix:</label>
+                                            <input type="number" class="form-control" id="productPrice" th:name="productprice" th:value="${product.price}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productStock">Stock:</label>
+                                            <input type="number" class="form-control" id="productStock" th:name="productstock" th:value="${product.stock}" >
+                                        </div>
+                                        <div class="form-group">
+
+                                            <label for="file">Choisir une image produit:</label>
+                                            <input type="file" class="form-control" id="file" name="file" accept="image/png, image/jpeg, image/gif" /><br>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    <button type="button" class="btn btn-primary" id="submitProduct">Modifier</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+
+                    <!--  SUPPRESSION PRODUIT: ci-dessous transmission de l'id et du nom du produit en "hidden" ainsi du csrf token   -->
+                    <form method="post" action="/products/deleteProduct">
+                        <input type="hidden" th:value="${product.id}" name="productid">
+                        <input type="hidden" th:value="${product.productName}" name="productName">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button>supprimer Produit</button>
+                    </form>
+
                 </div>
 
-
-                <!--  SUPPRESSION PRODUIT: ci-dessous transmission de l'id et du nom du produit en "hidden" ainsi du csrf token   -->
-                <form method="post" action="/products/deleteProduct">
-                    <input type="hidden" th:value="${product.id}" name="productid">
-                    <input type="hidden" th:value="${product.productName}" name="productName">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button>supprimer Produit</button>
-                </form>
-
             </div>
-
         </div>
     </div>
 </div>
+
 <!--
-le script javascript ci-dessous gère l'ajout des sous-catég dans une fenêtre modale et envoie les dnnées au serveur via une requête ajax.
+le script javascript ci-dessous gère l'affichage (ou non) des données présentes dans les tables de notre shopkeeper après avoir vérifié leur existence.
+ de plus, il gère l'ajout des catégories, sous-catég' et produits grâce à des fenêtre modale et envoie les dnnées au serveur via une requête ajax.
 le nom du site web est récupéré à partir de thymeleaf ( [[${shopkeepers.websiteName}]] ).
 -->
-
 <script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var tableExists = /*[[${tableExists}]]*/ false;
+
+        if (!tableExists) {
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('conditionalContent').style.display = 'none';
+        }
+    });
+
     $(document).ready(function() {
-        var subcategoryCounter = 1;
-
-        $('#addSubcategory').click(function() {
-            subcategoryCounter++;
-            var newSubcategory = `
-                <div class="form-group">
-                    <label for="subcategories${subcategoryCounter}">Sous-catégorie ${subcategoryCounter}:</label>
-                    <input type="text" class="form-control" id="subcategories${subcategoryCounter}" name="subcategories">
-                </div>
-            `;
-            $('#subcategoriesContainer').append(newSubcategory);
-        });
-
         $('#submitCategory').click(function() {
             var categoryName = $('#categoryName').val();
-            var subcategories = [];
-            $('input[name="subcategories"]').each(function() {
-                subcategories.push($(this).val());
-            });
-
             var websiteName = [[${shopkeepers.websiteName}]];
             var csrfToken = $("input[name='_csrf']").val();
 
             $.ajax({
-                url: '/categories',
+                url: '/categories/addCategory',
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken
                 },
                 data: {
-                    action: 'ajoutcateg',
                     website_name: websiteName,
-                    categories1: categoryName,
-                    subcategories: subcategories
+                    categoryName: categoryName
                 },
                 success: function(response) {
                     alert('Catégorie ajoutée avec succès!');
                     $('#addCategoryModal').modal('hide');
-
+                    location.reload(); // Recharger la page pour afficher la nouvelle catégorie
                 },
                 error: function(error) {
                     alert('Erreur lors de l\'ajout de la catégorie.');
                 }
             });
         });
-    });
 
-    $(document).ready(function() {
+        $('#addSubCategoryModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Bouton qui a déclenché la modal
+            var categoryId = button.data('category-id'); // Récupérer l'ID de la catégorie
+            var modal = $(this);
+            modal.find('#categoryId').val(categoryId);
+
+
+        });
+
+        $('#submitSubCategory').click(function() {
+            var categoryId = $('#categoryId').val();
+            var subCategoryName = $('#subCategoryName').val();
+            var websiteName = [[${shopkeepers.websiteName}]];
+            var csrfToken = $("input[name='_csrf']").val();
+
+            $.ajax({
+                url: '/categories/addSubCategory',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                data: {
+                    website_name: websiteName,
+                    categoryId: categoryId,
+                    subCategoryName: subCategoryName
+                },
+                success: function(response) {
+                    alert('Sous-catégorie ajoutée avec succès!');
+                    $('#addSubCategoryModal').modal('hide');
+                },
+                error: function(error) {
+                    alert('Erreur lors de l\'ajout de la sous-catégorie.');
+console.log(' '+websiteName+' '+categoryId+' '+subCategoryName+' ')
+                }
+            });
+        });
+
         $('#updateProductModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Bouton qui a déclenché la modal
-            var productId = button.data('product-id'); // Récup' ID produit
-            var id_subcategory = button.data('subcategory-id'); // Récup' ID sous-categorie du produit
-
+            var productId = button.data('product-id'); // Récupérer l'ID du produit
+            var subcategoryId = button.data('subcategory-id'); // Récupérer l'ID de la sous-catégorie
             var modal = $(this);
 
             // Charger les données du produit via AJAX ou directement depuis les champs cachés
@@ -239,29 +291,25 @@ le nom du site web est récupéré à partir de thymeleaf ( [[${shopkeepers.webs
             var productStock = button.closest('form').find('input[name="productstock"]').val();
             var productImage = button.closest('form').find('input[name="productimage"]').val();
 
-
-
-
-            // transmission données produi-modal
+            // Transmission des données du produit au modal
             modal.find('#productName').val(productName);
             modal.find('#productDescription').val(productDescription);
             modal.find('#productPrice').val(productPrice);
             modal.find('#productStock').val(productStock);
             modal.find('#productImage').val(productImage);
 
-            // ajout des valeurs cachées au modal
+            // Ajout des valeurs cachées au modal
             modal.find('#productForm').append('<input type="hidden" name="productid" value="' + productId + '">');
-            modal.find('#productForm').append('<input type="hidden" name="id_subcategory" value="' + id_subcategory + '">');
+            modal.find('#productForm').append('<input type="hidden" name="id_subcategory" value="' + subcategoryId + '">');
 
-            //logs pour vérif' erreur transmission
+            // Logs pour vérifier la transmission des données
             console.log('Product ID:', productId);
             console.log('Product Name:', productName);
             console.log('Product Description:', productDescription);
             console.log('Product Price:', productPrice);
             console.log('Product Stock:', productStock);
             console.log('Product Image:', productImage);
-            console.log('Subcategory ID:', id_subcategory);
-
+            console.log('Subcategory ID:', subcategoryId);
         });
 
         $('#submitProduct').on('click', function() {
@@ -269,6 +317,6 @@ le nom du site web est récupéré à partir de thymeleaf ( [[${shopkeepers.webs
         });
     });
 </script>
-<script th:insert="fragments/fragments :: scriptBootstrap"></script>
+
 </body>
 </html>

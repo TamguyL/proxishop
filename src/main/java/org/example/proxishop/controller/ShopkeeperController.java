@@ -289,19 +289,34 @@ public class ShopkeeperController {
         Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
         BdCategories db = new BdCategories();
         BdProducts dbp = new BdProducts();
+
+        boolean tableExists = false;
         try {
-            List<ProductCategory> categoryList = db.getAllCategories(shopkeepers.getWebsiteName());
-            model.addAttribute("categoryList", categoryList);
-            List<ProductSubCategory> subCategoryList = db.getAllSubCategories(shopkeepers.getWebsiteName());
-            model.addAttribute("subCategoryList", subCategoryList);
-            List<Product> productList = dbp.getAllProducts(shopkeepers.getWebsiteName());
-            model.addAttribute("productList", productList);
+            tableExists = db.checkIfTableExists(shopkeepers.getWebsiteName(), "productcategory");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        model.addAttribute("tableExists", tableExists);
+
+        if (tableExists) {
+            try {
+                List<ProductCategory> categoryList = db.getAllCategories(shopkeepers.getWebsiteName());
+                model.addAttribute("categoryList", categoryList);
+
+                List<ProductSubCategory> subCategoryList = db.getAllSubCategories(shopkeepers.getWebsiteName());
+                model.addAttribute("subCategoryList", subCategoryList);
+
+                List<Product> productList = dbp.getAllProducts(shopkeepers.getWebsiteName());
+                model.addAttribute("productList", productList);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         model.addAttribute("shopkeepers", shopkeepers);
         return "dashboard";
     }
+
 
     @GetMapping("/accountUpdate")
     public String showAccountUpdate(Authentication authentication, Model model) {
