@@ -1,33 +1,116 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>créez votre site</title>
+    <div th:insert="fragments/fragments :: headerfiles"></div>
+    <title>Création du site</title>
+    <style>
+        .card.selected {
+            border-color: blue;
+            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+        }
+        .highlighted {
+            border-color: green;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+        /* Cacher les boutons radio */
+        .form-check-input {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<h1>Création de votre site web</h1>
 
-<form method="post" th:action="@{/shopkeeper/newbdd}">
-    <label for="website_name">Nom du site :</label>
-    <input type="text" id="website_name" name="website_name" required>
-    <br>
+<div th:insert="fragments/fragments :: headerProxi"></div>
 
-    <br>
-    <label>Choisissez votre Offre:</label>
-    <input type="radio" id="option1" name="id_offer" value="1" required>
-    <label for="option1">Option 1 : 1.99€</label>
-    <input type="radio" id="option2" name="id_offer" value="2">
-    <label for="option2">Option 2 : 4.99€</label>
-    <input type="radio" id="option3" name="id_offer" value="3">
-    <label for="option3">Option 3 : 8.99€</label>
-    <br>
-    <br>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Création de votre site web</h1>
 
-    <!-- Include CSRF token -->
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div th:insert="fragments/fragments :: information"></div>
 
-    <button type="submit">suivant</button>
-</form>
-<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+    <form method="post" th:action="@{/shopkeeper/newbdd}" class="p-4 bg-light rounded">
+        <div class="mb-3">
+            <label for="website_name" class="form-label">Nom du site :</label>
+            <input type="text" id="website_name" name="website_name" class="form-control" required>
+        </div>
+
+        <div class="row mb-4">
+            <label class="form-label mb-3">Choisissez votre Offre :</label>
+
+            <div class="col-md-4">
+                <div class="card offer-card" data-offer="1">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Basique - 1,99€</h5>
+                        <ul class="list-unstyled">
+                            <li>1 catégorie de Produit</li>
+                            <li>1 sous-catégorie de Produit</li>
+                            <li>Assistance sous 48h*</li>
+                        </ul>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="option1" name="id_offer" value="1" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card offer-card highlighted" data-offer="2">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Medium - 4,99€</h5>
+                        <ul class="list-unstyled">
+                            <li>1 à 3 catégories de Produits</li>
+                            <li>1 à 3 sous-catégories de Produit</li>
+                            <li>Assistance sous 24h*</li>
+                        </ul>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="option2" name="id_offer" value="2">
+                        </div>
+                    </div>
+                </div>
+                <span class="badge bg-success d-flex justify-content-center">Option la plus choisie</span>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card offer-card" data-offer="3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ultimate - 8,99€</h5>
+                        <ul class="list-unstyled">
+                            <li>1 à 5 catégories de Produits</li>
+                            <li>1 à 5 sous-catégories de Produit</li>
+                            <li>Assistance sous 2h*</li>
+                        </ul>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="option3" name="id_offer" value="3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Include CSRF token -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Suivant</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Fonction pour gérer la sélection des cartes
+    document.querySelectorAll('.offer-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Désélectionner toutes les cartes
+            document.querySelectorAll('.offer-card').forEach(c => {
+                c.classList.remove('selected');
+                c.querySelector('input[type="radio"]').checked = false;
+            });
+
+            // Sélectionner la carte cliquée
+            this.classList.add('selected');
+            this.querySelector('input[type="radio"]').checked = true;
+        });
+    });
+</script>
+
 </body>
 </html>

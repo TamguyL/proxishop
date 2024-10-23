@@ -96,13 +96,13 @@
             </div>
         </div>
 
+        <!-- CSRF Token -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
         <!-- Submit Button -->
         <div class="text-center mb-2">
             <button type="submit" class="btn btn-primary" id="submit-btn">Créer</button>
         </div>
-
-        <!-- CSRF Token -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
     </form>
 

@@ -72,6 +72,7 @@ public class BdCreation {
     private static List<String> generateCreateTableSQL(List<Class<?>> classes) {
         List<String> sqlStatements = new ArrayList<>();
         for (Class<?> clazz : classes) {
+            System.out.println(clazz.getName());
             StringBuilder sql = new StringBuilder();
             sql.append("CREATE TABLE IF NOT EXISTS ").append(clazz.getSimpleName()).append(" (");
             Field[] fields = clazz.getDeclaredFields();
@@ -126,18 +127,14 @@ public class BdCreation {
         // Requête de mise à jour
         Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
         String query = "UPDATE " + website_name + ".shopkeeper SET firstName = ?, lastName = ?, email = ? WHERE id = 1";
-
         // Préparation de la requête
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-
         // Assignation des valeurs des champs à mettre à jour
         preparedStatement.setString(1, firstName); // firstName
         preparedStatement.setString(2, lastName); // lastName
         preparedStatement.setString(3, email); // email
-
         // Exécution de la requête
         int rowsAffected = preparedStatement.executeUpdate();
-
         // Vérification si l'enregistrement a été mis à jour avec succès
         if (rowsAffected > 0) {
             System.out.println("Shopkeeper Profile Personnel updated successfully.");

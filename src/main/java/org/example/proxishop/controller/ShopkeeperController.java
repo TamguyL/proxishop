@@ -133,6 +133,8 @@ public class ShopkeeperController {
             return "accountCreation";
         }
 
+        System.out.println(authentication);
+
         // Validation du fichier image
         String imageUrl;
         try {
@@ -141,6 +143,8 @@ public class ShopkeeperController {
             model.addAttribute("error", e.getMessage());
             return "accountCreation";
         }
+
+        System.out.println("apres enregistrement image");
 
         String encryptedPassword = passwordEncoder.encode(password);
         Shopkeepers shopkeepers = new Shopkeepers();
@@ -174,16 +178,19 @@ public class ShopkeeperController {
 
     public String saveProfilePicture(MultipartFile file, Authentication authentication, Model model) throws IOException {
 
+        System.out.println("2"+ authentication);
         if (authentication != null) {
             Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
-            if (shopkeepers.getProfilePicture() != null) {
-                String oldImagePath = System.getProperty("user.dir") + "/src/main/resources/static" + shopkeepers.getProfilePicture();
-                File oldImageFile = new File(oldImagePath);
-                if (oldImageFile.exists()) {
-                    if (oldImageFile.delete()) {
-                        System.out.println("Ancienne photo supprimée avec succès.");
-                    } else {
-                        throw new IOException("Échec de la suppression de l'ancienne photo.");
+            if (shopkeepers != null) {
+                if (shopkeepers.getProfilePicture() != null) {
+                    String oldImagePath = System.getProperty("user.dir") + "/src/main/resources/static" + shopkeepers.getProfilePicture();
+                    File oldImageFile = new File(oldImagePath);
+                    if (oldImageFile.exists()) {
+                        if (oldImageFile.delete()) {
+                            System.out.println("Ancienne photo supprimée avec succès.");
+                        } else {
+                            throw new IOException("Échec de la suppression de l'ancienne photo.");
+                        }
                     }
                 }
             }
