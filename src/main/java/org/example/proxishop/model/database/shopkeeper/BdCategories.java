@@ -90,6 +90,8 @@ public class BdCategories {
         }
     }
 
+
+
     /**
      * Retrieves the ID of a category.
      *
@@ -109,6 +111,24 @@ public class BdCategories {
                 } else {
                     throw new SQLException("Category not found: " + categoryName);
                 }
+            }
+        }
+    }
+
+    public void deleteCategory(String website_name,int id_category) throws SQLException {
+        String deleteQuery = "DELETE FROM " + website_name + ".productcategory WHERE id = ?";
+
+        try (Connection connection = BdConnection.establishConnection(website_name);
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+
+            // Suppression de la sous-catégorie
+            preparedStatement.setInt(1, id_category);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("category successfully deleted.");
+            } else {
+                System.out.println(" an error occured while deleting category ");
             }
         }
     }
@@ -140,6 +160,47 @@ public class BdCategories {
 
                     System.out.println("SubCategory " + SubCategory + " created successfully.");
                 }
+            }
+        }
+    }
+
+
+    //requête pour supprimer tous les produits d'une sous-catégorie
+    public void deleteSubCategoryProducts(String website_name,int id_subCategory) throws SQLException {
+        String deleteQuery = "DELETE FROM " + website_name + ".product WHERE id_subCategory = ?";
+
+        try (Connection connection = BdConnection.establishConnection(website_name);
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+
+            // Supprimer les produits de la sous-catégorie
+            preparedStatement.setInt(1, id_subCategory);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("all products were deleted successfully.");
+            } else {
+                System.out.println(" Products weren't properly deleted");
+            }
+        }
+    }
+
+
+//requête pour supprimer une sous-catégorie
+
+    public void deleteSubCategory(String website_name,int id_subcategory) throws SQLException {
+        String deleteQuery = "DELETE FROM " + website_name + ".productsubcategory WHERE id = ?";
+
+        try (Connection connection = BdConnection.establishConnection(website_name);
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+
+            // Suppression de la sous-catégorie
+            preparedStatement.setInt(1, id_subcategory);
+            int updated = preparedStatement.executeUpdate();
+
+            if (updated > 0) {
+                System.out.println("subcategory successfully deleted.");
+            } else {
+                System.out.println(" an error occured while deleting subcategory ");
             }
         }
     }

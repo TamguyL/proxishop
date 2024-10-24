@@ -133,8 +133,6 @@ public class ShopkeeperController {
             return "accountCreation";
         }
 
-        System.out.println(authentication);
-
         // Validation du fichier image
         String imageUrl;
         try {
@@ -143,8 +141,6 @@ public class ShopkeeperController {
             model.addAttribute("error", e.getMessage());
             return "accountCreation";
         }
-
-        System.out.println("apres enregistrement image");
 
         String encryptedPassword = passwordEncoder.encode(password);
         Shopkeepers shopkeepers = new Shopkeepers();
@@ -178,7 +174,6 @@ public class ShopkeeperController {
 
     public String saveProfilePicture(MultipartFile file, Authentication authentication, Model model) throws IOException {
 
-        System.out.println("2"+ authentication);
         if (authentication != null) {
             Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
             if (shopkeepers != null) {

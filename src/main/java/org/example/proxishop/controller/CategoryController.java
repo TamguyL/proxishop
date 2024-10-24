@@ -1,8 +1,13 @@
 package org.example.proxishop.controller;
 
 import org.example.proxishop.model.database.shopkeeper.BdCategories;
+import org.example.proxishop.model.entities.proxi.Shopkeepers;
 import org.example.proxishop.model.entities.shopkeeper.ProductCategory;
 import org.example.proxishop.model.entities.shopkeeper.ProductSubCategory;
+import org.example.proxishop.service.ProxiShopService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +21,9 @@ import java.util.List;
 @RequestMapping("/categories")
 @SessionAttributes("website_name")
 public class CategoryController {
+
+    @Autowired
+    private ProxiShopService proxiShopService;
 
     // Initialisation de l'attribut de session
     @ModelAttribute("website_name")
@@ -101,4 +109,73 @@ public class CategoryController {
         }
         return "gestionCategories";
     }
+
+    //-----DELETE---CATEGORY-----------------------------------------------------------------------------------------------
+    @PostMapping("/deleteCategory")
+    public String deletecategory(@RequestParam int id_Category, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        // Récupérer l'objet Authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // Récupérer le nom de la base de données à partir de l'objet Authentication
+        String website_name = getDatabaseNameFromAuthentication(authentication);
+
+
+        // Vérifie si le nom de la BDD n'est pas "null" ou vide
+        if (website_name == null || website_name.isEmpty()) {
+            throw new IllegalArgumentException("Database name cannot be null or empty");
+        }
+
+        //Appelle la méthode deleteCategory de BdCategories et lui transmets les paramètres
+        BdCategories db = new BdCategories();
+        db.deleteCategory(website_name, id_Category);
+
+        // Ajoute le nom de la BDD au modèle et aux attributs de redirection
+        model.addAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("error", "la catégorie a bien été supprimée");
+
+        return "redirect:/shopkeeper/dashboard";
+    }
+
+
+    //-----DELETE---SUBCATEGORY-----------------------------------------------------------------------------------------------
+    @PostMapping("/deleteSubCategory")
+    public String deleteSubcategory(@RequestParam int id_subCategory, Model model, RedirectAttributes redirectAttributes) throws SQLException {
+        // Récupérer l'objet Authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+
+        // Récupérer le nom de la base de données à partir de l'objet Authentication
+        String website_name = getDatabaseNameFromAuthentication(authentication);
+
+
+        // Vérifie si le nom de la BDD n'est pas "null" ou vide
+        if (website_name == null || website_name.isEmpty()) {
+            throw new IllegalArgumentException("Database name cannot be null or empty");
+        }
+
+        //Appelle la méthode deleteSubCategoryProducts et deleteSubCategory de BdCategories et lui transmets les paramètres
+        BdCategories db = new BdCategories();
+        db.deleteSubCategoryProducts(website_name,id_subCategory);
+        db.deleteSubCategory(website_name, id_subCategory);
+
+        // Ajoute le nom de la BDD au modèle et aux attributs de redirection
+        model.addAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("website_name", website_name);
+        redirectAttributes.addFlashAttribute("error", "la sous-catégorie a bien été supprimée");
+
+        return "redirect:/shopkeeper/dashboard";
+    }
+
+    private String getDatabaseNameFromAuthentication(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Shopkeepers shopkeepers = proxiShopService.findByEmail(authentication.getName());
+            if (shopkeepers != null) {
+                return shopkeepers.getWebsiteName();
+            }
+        }
+        return null;
+    }
+
 }

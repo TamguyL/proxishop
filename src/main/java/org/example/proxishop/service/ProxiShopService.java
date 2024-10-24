@@ -18,13 +18,9 @@ public class ProxiShopService {
 
     @Transactional
     public void updateShopkeeper(int id, String website_name, int id_offer) {
-        // Récupérer l'entité existante de la base de données
         Shopkeepers shopkeeper = shopkeepersRepositoryProxi.findById(id);
-        // Mettre à jour les attributs de l'entité existante
         shopkeeper.setWebsiteName(website_name);
         shopkeeper.setId_offer(id_offer);
-
-        // Enregistrer l'entité mise à jour dans la base de données
         shopkeepersRepositoryProxi.save(shopkeeper);
     }
 
@@ -64,12 +60,12 @@ public class ProxiShopService {
         return shopkeepersRepositoryProxi.findByEmail(email);
     }
 
-    public Shopkeepers findByWebsiteName(String websiteName) {
-        return shopkeepersRepositoryProxi.findByWebsiteName(websiteName);
-    }
-
     public boolean existsByWebsiteName(String websiteName) {
         return shopkeepersRepositoryProxi.existsByWebsiteName(websiteName);
+    }
+
+    public Shopkeepers findByWebsiteName(String websiteName) {
+        return shopkeepersRepositoryProxi.findByWebsiteName(websiteName);
     }
 
     public boolean existsByEmail(String email) {
